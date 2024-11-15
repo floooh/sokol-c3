@@ -16,6 +16,10 @@
                 "MetalKit.framework",
                 "c"
             ]
+        },
+        "linux-x64": {
+        },
+        "windows-x64": {
         }
     }
 }

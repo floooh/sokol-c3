@@ -16,6 +16,11 @@ jobs:
       - uses: radekm/setup-c3@v1
         with:
           version: v0.6.4
+      - if: runner.os == 'Linux'
+        name: Install Linux Dependencies
+        run: |
+          sudo apt update
+          sudo apt install libglu1-mesa-dev mesa-common-dev xorg-dev libasound-dev
       - shell: bash
         run:
           ./build-examples.sh
