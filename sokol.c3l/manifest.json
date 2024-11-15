@@ -1,0 +1,21 @@
+{
+    "provides": "sokol",
+    "c-sources": ["c/sokol.c"],
+    "cflags": "-DIMPL",
+    "targets": {
+        "macos-aarch64": {
+            "cflags": "-mmacos-version-min=11.0 -x objective-c -DSOKOL_METAL",
+            "linked-libraries": [
+                "Foundation.framework",
+                "CoreGraphics.framework",
+                "Cocoa.framework",
+                "QuartzCore.framework",
+                "CoreAudio.framework",
+                "AudioToolbox.framework",
+                "Metal.framework",
+                "MetalKit.framework",
+                "c"
+            ]
+        }
+    }
+}
