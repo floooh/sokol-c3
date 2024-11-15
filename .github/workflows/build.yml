@@ -16,6 +16,4 @@ jobs:
           version: v0.6.4
       - shell: bash
         run:
-          mkdir -p build
-          cd build
-          c3c compile --libdir .. --lib sokol clear/main.c3
+          ./build-examples.sh
