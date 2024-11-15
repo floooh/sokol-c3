@@ -18,7 +18,16 @@
             ]
         },
         "linux-x64": {
-            "cflags": "-DSOKOL_GLCORE"
+            "cflags": "-DSOKOL_GLCORE",
+            "linked-libraries": [
+                "X11",
+                "Xi",
+                "Xcursor",
+                "GL",
+                "asound",
+                "dl",
+                "pthread"
+            ]
         },
         "windows-x64": {
             "cflags": "-DSOKOL_D3D11"
