@@ -18,8 +18,10 @@
             ]
         },
         "linux-x64": {
+            "cflags": "-DSOKOL_GLCORE"
         },
         "windows-x64": {
+            "cflags": "-DSOKOL_D3D11"
         }
     }
 }
