@@ -24,5 +24,6 @@ jobs:
           sudo apt update
           sudo apt install libglu1-mesa-dev mesa-common-dev xorg-dev libasound-dev
       - shell: bash
-        run:
+        run: |
           ./build-examples.sh
+          ls -l build
