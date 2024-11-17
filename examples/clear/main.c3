@@ -23,22 +23,17 @@ fn void init()
     {
         case backend::D3D11:
             io::printfn(">> using D3D11 backend");
-            break;
         case backend::GLCORE:
         case backend::GLES3:
             io::printfn(">> using GL backend");
-            break;
         case backend::METAL_MACOS:
         case backend::METAL_IOS:
         case backend::METAL_SIMULATOR:
             io::printfn(">> using Metal backend");
-            break;
         case backend::WGPU:
             io::printfn(">> using WebGPU backend");
-            break;
         case backend::DUMMY:
             io::printfn(">> using dummy backend");
-            break;
     }
 }
 
