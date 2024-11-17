@@ -510,12 +510,12 @@ const MouseCursor NUM = 11;
 module sokol::app;
 import sokol;
 
-def DataCb = fn void(void*);
 def AllocCb = fn void*(usz, void*);
-def Cb = fn void();
-def EventDataCb = fn void(Event*, void*);
 def FreeCb = fn void*(usz, void*);
-def ResponseCb = fn void(Html5FetchResponse*);
-def EventCb = fn void(Event*);
 def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+def Cb = fn void();
+def EventCb = fn void(Event*);
+def DataCb = fn void(void*);
+def EventDataCb = fn void(Event*, void*);
+def ResponseCb = fn void(Html5FetchResponse*);
 

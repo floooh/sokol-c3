@@ -161,7 +161,7 @@ struct Desc
     Logger logger;
 }
 
+def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
 def AllocCb = fn void*(usz, void*);
 def FreeCb = fn void*(usz, void*);
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
 

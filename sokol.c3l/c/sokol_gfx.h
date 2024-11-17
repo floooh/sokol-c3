@@ -10523,8 +10523,7 @@ _SOKOL_PRIVATE void _sg_d3d11_clear_state(void) {
 }
 
 _SOKOL_PRIVATE void _sg_d3d11_reset_state_cache(void) {
-    // just clear the d3d11 device context state
-    _sg_d3d11_clear_state();
+    // there's currently no state cache in the D3D11 backend, so this is a no-op
 }
 
 _SOKOL_PRIVATE sg_resource_state _sg_d3d11_create_buffer(_sg_buffer_t* buf, const sg_buffer_desc* desc) {
@@ -16598,7 +16597,7 @@ typedef struct {
     uint64_t lo, hi;
 } _sg_u128_t;
 
-_sg_u128_t _sg_u128(void) {
+_SOKOL_PRIVATE _sg_u128_t _sg_u128(void) {
     _sg_u128_t res;
     _sg_clear(&res, sizeof(res));
     return res;

@@ -83,9 +83,9 @@ struct Desc
     Logger logger;
 }
 
-def StreamCb = fn void(float*, CInt, CInt);
+def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
 def AllocCb = fn void*(usz, void*);
 def FreeCb = fn void*(usz, void*);
+def StreamCb = fn void(float*, CInt, CInt);
 def StreamDataCb = fn void(float*, CInt, CInt, void*);
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
 
