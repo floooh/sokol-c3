@@ -7,3 +7,4 @@ mkdir -p "$build_dir"
 cd "$build_dir"
 
 c3c compile --libdir .. --lib sokol ../examples/clear/*.c3 -o clear
+c3c compile --libdir .. --lib sokol ../examples/triangle/*.c3 -o triangle
