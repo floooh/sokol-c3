@@ -10,3 +10,4 @@ c3c compile --libdir .. --lib sokol ../examples/clear/*.c3 -o clear
 c3c compile --libdir .. --lib sokol ../examples/triangle/*.c3 -o triangle
 c3c compile --libdir .. --lib sokol ../examples/quad/*.c3 -o quad
 c3c compile --libdir .. --lib sokol ../examples/bufferoffsets/*.c3 -o bufferoffsets
+c3c compile --libdir .. --lib sokol ../examples/cube/*.c3 ../examples/math/*.c3 -o cube
