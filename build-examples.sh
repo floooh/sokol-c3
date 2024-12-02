@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 script_dir=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 build_dir="$script_dir/build"
