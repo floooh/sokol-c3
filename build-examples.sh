@@ -16,3 +16,4 @@ c3c compile --libdir .. --lib sokol ../examples/noninterleaved/*.c3 ../examples/
 c3c compile --libdir .. --lib sokol ../examples/texcube/*.c3 ../examples/math/*.c3 -o texcube
 c3c compile --libdir .. --lib sokol ../examples/vertexpull/*.c3 ../examples/math/*.c3 -o vertexpull
 c3c compile --libdir .. --lib sokol ../examples/shapes/*.c3 ../examples/math/*.c3 -o shapes
+c3c compile --libdir .. --lib sokol ../examples/offscreen/*.c3 ../examples/math/*.c3 -o offscreen
