@@ -12,6 +12,7 @@ c3c compile --libdir .. --lib sokol ../examples/triangle/*.c3 -o triangle
 c3c compile --libdir .. --lib sokol ../examples/quad/*.c3 -o quad
 c3c compile --libdir .. --lib sokol ../examples/bufferoffsets/*.c3 -o bufferoffsets
 c3c compile --libdir .. --lib sokol ../examples/cube/*.c3 ../examples/math/*.c3 -o cube
+c3c compile --libdir .. --lib sokol ../examples/noninterleaved/*.c3 ../examples/math/*.c3 -o noninterleaved
 c3c compile --libdir .. --lib sokol ../examples/texcube/*.c3 ../examples/math/*.c3 -o texcube
 c3c compile --libdir .. --lib sokol ../examples/vertexpull/*.c3 ../examples/math/*.c3 -o vertexpull
 c3c compile --libdir .. --lib sokol ../examples/shapes/*.c3 ../examples/math/*.c3 -o shapes
