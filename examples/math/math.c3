@@ -8,6 +8,9 @@ import std::math;
 const float TAU = 6.28318530717958647692528676655900576;
 const float PI = 3.14159265358979323846264338327950288;
 
+// TODO: Shall we use C3 vectors for `Vec2` and `Vec3`?
+//       They are usually aligned so their size may differ from arrays.
+//       For example `Vec3.sizeof` could be 16 but `float[3].sizeof` could be 12.
 distinct Vec2 = float[<2>];
 distinct Vec3 = float[<3>];
 distinct Mat4 = float[4][4];  // 4 columns, 4 rows.
