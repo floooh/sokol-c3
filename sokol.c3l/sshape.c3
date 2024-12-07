@@ -1,6 +1,6 @@
 // machine generated, do not edit
 
-module sokol::shape;
+module sokol::sshape;
 import sokol;
 
 extern fn Buffer build_plane(Buffer* buf, Plane* params) @extern("sshape_build_plane");
@@ -14,13 +14,13 @@ extern fn Sizes sphere_sizes(uint slices, uint stacks) @extern("sshape_sphere_si
 extern fn Sizes cylinder_sizes(uint slices, uint stacks) @extern("sshape_cylinder_sizes");
 extern fn Sizes torus_sizes(uint sides, uint rings) @extern("sshape_torus_sizes");
 extern fn ElementRange element_range(Buffer* buf) @extern("sshape_element_range");
-extern fn sokol::gfx::BufferDesc vertex_buffer_desc(Buffer* buf) @extern("sshape_vertex_buffer_desc");
-extern fn sokol::gfx::BufferDesc index_buffer_desc(Buffer* buf) @extern("sshape_index_buffer_desc");
-extern fn sokol::gfx::VertexBufferLayoutState vertex_buffer_layout_state() @extern("sshape_vertex_buffer_layout_state");
-extern fn sokol::gfx::VertexAttrState position_vertex_attr_state() @extern("sshape_position_vertex_attr_state");
-extern fn sokol::gfx::VertexAttrState normal_vertex_attr_state() @extern("sshape_normal_vertex_attr_state");
-extern fn sokol::gfx::VertexAttrState texcoord_vertex_attr_state() @extern("sshape_texcoord_vertex_attr_state");
-extern fn sokol::gfx::VertexAttrState color_vertex_attr_state() @extern("sshape_color_vertex_attr_state");
+extern fn sokol::sg::BufferDesc vertex_buffer_desc(Buffer* buf) @extern("sshape_vertex_buffer_desc");
+extern fn sokol::sg::BufferDesc index_buffer_desc(Buffer* buf) @extern("sshape_index_buffer_desc");
+extern fn sokol::sg::VertexBufferLayoutState vertex_buffer_layout_state() @extern("sshape_vertex_buffer_layout_state");
+extern fn sokol::sg::VertexAttrState position_vertex_attr_state() @extern("sshape_position_vertex_attr_state");
+extern fn sokol::sg::VertexAttrState normal_vertex_attr_state() @extern("sshape_normal_vertex_attr_state");
+extern fn sokol::sg::VertexAttrState texcoord_vertex_attr_state() @extern("sshape_texcoord_vertex_attr_state");
+extern fn sokol::sg::VertexAttrState color_vertex_attr_state() @extern("sshape_color_vertex_attr_state");
 extern fn uint color_4f(float r, float g, float b, float a) @extern("sshape_color_4f");
 extern fn uint color_3f(float r, float g, float b) @extern("sshape_color_3f");
 extern fn uint color_4b(char r, char g, char b, char a) @extern("sshape_color_4b");

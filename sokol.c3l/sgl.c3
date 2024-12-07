@@ -1,6 +1,6 @@
 // machine generated, do not edit
 
-module sokol::gl;
+module sokol::sgl;
 import sokol;
 
 extern fn void setup(Desc* desc) @extern("sgl_setup");
@@ -20,8 +20,8 @@ extern fn void draw() @extern("sgl_draw");
 extern fn void context_draw(Context ctx) @extern("sgl_context_draw");
 extern fn void draw_layer(CInt layer_id) @extern("sgl_draw_layer");
 extern fn void context_draw_layer(Context ctx, CInt layer_id) @extern("sgl_context_draw_layer");
-extern fn Pipeline make_pipeline(sokol::gfx::PipelineDesc* desc) @extern("sgl_make_pipeline");
-extern fn Pipeline context_make_pipeline(Context ctx, sokol::gfx::PipelineDesc* desc) @extern("sgl_context_make_pipeline");
+extern fn Pipeline make_pipeline(sokol::sg::PipelineDesc* desc) @extern("sgl_make_pipeline");
+extern fn Pipeline context_make_pipeline(Context ctx, sokol::sg::PipelineDesc* desc) @extern("sgl_context_make_pipeline");
 extern fn void destroy_pipeline(Pipeline pip) @extern("sgl_destroy_pipeline");
 extern fn void defaults() @extern("sgl_defaults");
 extern fn void viewport(CInt x, CInt y, CInt w, CInt h, bool origin_top_left) @extern("sgl_viewport");
@@ -30,7 +30,7 @@ extern fn void scissor_rect(CInt x, CInt y, CInt w, CInt h, bool origin_top_left
 extern fn void scissor_rectf(float x, float y, float w, float h, bool origin_top_left) @extern("sgl_scissor_rectf");
 extern fn void enable_texture() @extern("sgl_enable_texture");
 extern fn void disable_texture() @extern("sgl_disable_texture");
-extern fn void texture(sokol::gfx::Image img, sokol::gfx::Sampler smp) @extern("sgl_texture");
+extern fn void texture(sokol::sg::Image img, sokol::sg::Sampler smp) @extern("sgl_texture");
 extern fn void layer(CInt layer_id) @extern("sgl_layer");
 extern fn void load_default_pipeline() @extern("sgl_load_default_pipeline");
 extern fn void load_pipeline(Pipeline pip) @extern("sgl_load_pipeline");
@@ -93,7 +93,7 @@ extern fn void v3f_t2f_c1i(float x, float y, float z, float u, float v, uint rgb
 extern fn void end() @extern("sgl_end");
 
 distinct LogItem = int;
-module sokol::gl::log_item;
+module sokol::sgl::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
 const LogItem MAKE_PIPELINE_FAILED = 2;
@@ -101,7 +101,7 @@ const LogItem PIPELINE_POOL_EXHAUSTED = 3;
 const LogItem ADD_COMMIT_LISTENER_FAILED = 4;
 const LogItem CONTEXT_POOL_EXHAUSTED = 5;
 const LogItem CANNOT_DESTROY_DEFAULT_CONTEXT = 6;
-module sokol::gl;
+module sokol::sgl;
 import sokol;
 
 struct Logger
@@ -135,8 +135,8 @@ struct ContextDesc
 {
     CInt max_vertices;
     CInt max_commands;
-    sokol::gfx::PixelFormat color_format;
-    sokol::gfx::PixelFormat depth_format;
+    sokol::sg::PixelFormat color_format;
+    sokol::sg::PixelFormat depth_format;
     CInt sample_count;
 }
 
@@ -153,10 +153,10 @@ struct Desc
     CInt max_commands;
     CInt context_pool_size;
     CInt pipeline_pool_size;
-    sokol::gfx::PixelFormat color_format;
-    sokol::gfx::PixelFormat depth_format;
+    sokol::sg::PixelFormat color_format;
+    sokol::sg::PixelFormat depth_format;
     CInt sample_count;
-    sokol::gfx::FaceWinding face_winding;
+    sokol::sg::FaceWinding face_winding;
     Allocator allocator;
     Logger logger;
 }

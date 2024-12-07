@@ -16,9 +16,9 @@ const int NUM_PARTICLES_EMITTED_PER_FRAME = 10;
 
 struct State
 {
-    gfx::PassAction pass_action;
-    gfx::Pipeline pip;
-    gfx::Bindings bind;
+    sg::PassAction pass_action;
+    sg::Pipeline pip;
+    sg::Bindings bind;
     float ry;
     int cur_num_particles;
     Vec3[MAX_PARTICLES] pos;
@@ -29,9 +29,9 @@ State state;
 
 fn void init()
 {
-    gfx::setup(&&gfx::Desc {
-        .environment = glue::environment(),
-        .logger = { .func = &log::func },
+    sg::setup(&&sg::Desc {
+        .environment = sglue::environment(),
+        .logger = { .func = &slog::func },
     });
 
     // a pass action for the default render pass
@@ -48,7 +48,7 @@ fn void init()
           -r, 0.0, r,       0.0, 1.0, 1.0, 1.0,
         0.0,    r, 0.0,     1.0, 0.0, 1.0, 1.0,
     };
-    state.bind.vertex_buffers[0] = gfx::make_buffer(&&BufferDesc {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
         .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
     });
 
@@ -57,20 +57,20 @@ fn void init()
         0, 1, 2,    0, 2, 3,    0, 3, 4,    0, 4, 1,
         5, 1, 2,    5, 2, 3,    5, 3, 4,    5, 4, 1,
     };
-    state.bind.index_buffer = gfx::make_buffer(&&BufferDesc {
+    state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
         .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
     });
 
     // empty, dynamic instance-data vertex buffer, goes into vertex-buffer-slot 1
-    state.bind.vertex_buffers[1] = gfx::make_buffer(&&BufferDesc {
+    state.bind.vertex_buffers[1] = sg::make_buffer(&&BufferDesc {
         .size = MAX_PARTICLES * Vec3.sizeof,
         .usage = usage::STREAM,
     });
 
     // a shader and pipeline object
-    state.pip = gfx::make_pipeline(&&PipelineDesc {
-        .shader = gfx::make_shader(&&instancing_shader_desc(gfx::query_backend())),
+    state.pip = sg::make_pipeline(&&PipelineDesc {
+        .shader = sg::make_shader(&&instancing_shader_desc(sg::query_backend())),
         .layout = {
             .buffers = {
                 // vertex buffer at slot 1 must step per instance
@@ -95,7 +95,7 @@ fn void init()
 
 fn void frame()
 {
-    float frame_time = (float)app::frame_duration();
+    float frame_time = (float)sapp::frame_duration();
 
     // emit new particles
     for (int i = 0; i < NUM_PARTICLES_EMITTED_PER_FRAME; i++)
@@ -122,13 +122,13 @@ fn void frame()
     }
 
     // update instance data
-    gfx::update_buffer(state.bind.vertex_buffers[1], &&gfx::Range {
+    sg::update_buffer(state.bind.vertex_buffers[1], &&sg::Range {
         .ptr = &state.pos,
         .size = Vec3.sizeof * state.cur_num_particles,
     });
 
     // vertex shader uniform data with model-view-projection matrix
-    Mat4 proj = sokol_math::persp(fov: 60.0, aspect: app::widthf() / app::heightf(), near: 0.01, far: 50.0);
+    Mat4 proj = sokol_math::persp(fov: 60.0, aspect: sapp::widthf() / sapp::heightf(), near: 0.01, far: 50.0);
     Mat4 view = sokol_math::lookat(eye: {0.0, 1.5, 12.0}, center: {}, up: sokol_math::up());
     Mat4 view_proj = sokol_math::mul(proj, view);
     state.ry += 60.0 * frame_time;
@@ -137,23 +137,23 @@ fn void frame()
     };
 
     // ...and draw
-    gfx::begin_pass(&&Pass { .action = state.pass_action, .swapchain = glue::swapchain() });
-    gfx::apply_pipeline(state.pip);
-    gfx::apply_bindings(&state.bind);
-    gfx::apply_uniforms(UB_VS_PARAMS, &&gfx::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
-    gfx::draw(0, 24, state.cur_num_particles);
-    gfx::end_pass();
-    gfx::commit();
+    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::apply_pipeline(state.pip);
+    sg::apply_bindings(&state.bind);
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::draw(0, 24, state.cur_num_particles);
+    sg::end_pass();
+    sg::commit();
 }
 
 fn void cleanup()
 {
-    gfx::shutdown();
+    sg::shutdown();
 }
 
 fn void main()
 {
-    app::run(&&app::Desc {
+    sapp::run(&&sapp::Desc {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
@@ -162,7 +162,7 @@ fn void main()
         .sample_count = 4,
         .window_title = "instancing",
         .icon = { .sokol_default = true },
-        .logger = { .func = &log::func },
+        .logger = { .func = &slog::func },
     });
 }
 

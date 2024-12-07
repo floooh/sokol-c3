@@ -431,9 +431,9 @@ const char[436] FS_SOURCE_METAL_MACOS @private = {
     0x20,0x20,0x20,0x20,0x72,0x65,0x74,0x75,0x72,0x6e,0x20,0x6f,0x75,0x74,0x3b,0x0a,
     0x7d,0x0a,0x0a,0x00,
 };
-fn gfx::ShaderDesc texcube_shader_desc(gfx::Backend backend)
+fn sg::ShaderDesc texcube_shader_desc(sg::Backend backend)
 {
-    gfx::ShaderDesc desc;
+    sg::ShaderDesc desc;
     desc.label = "texcube_shader";
     switch (backend)
     {

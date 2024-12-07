@@ -17,21 +17,21 @@ struct State
 {
     struct offscreen
     {
-        gfx::PassAction pass_action;
-        gfx::Attachments attachments;
-        gfx::Pipeline pip;
-        gfx::Bindings bind;
+        sg::PassAction pass_action;
+        sg::Attachments attachments;
+        sg::Pipeline pip;
+        sg::Bindings bind;
     }
     // `default` is keyword, so we use `dflt`.
     struct dflt
     {
-        gfx::PassAction pass_action;
-        gfx::Pipeline pip;
-        gfx::Bindings bind;
+        sg::PassAction pass_action;
+        sg::Pipeline pip;
+        sg::Bindings bind;
     }
-    shape::ElementRange donut, sphere;
+    sshape::ElementRange donut, sphere;
     float rx, ry;
-    shape::Vertex[4000] vertices;
+    sshape::Vertex[4000] vertices;
     ushort[24_000] indices;
 }
 
@@ -39,9 +39,9 @@ State state;
 
 fn void init()
 {
-    gfx::setup(&&gfx::Desc {
-        .environment = glue::environment(),
-        .logger = { .func = &log::func },
+    sg::setup(&&sg::Desc {
+        .environment = sglue::environment(),
+        .logger = { .func = &slog::func },
     });
 
     // default pass action: clear to blue-ish
@@ -51,17 +51,17 @@ fn void init()
     state.offscreen.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.25, 0.25, 1.0 } };
 
     // a render pass with one color- and one depth-attachment image
-    gfx::ImageDesc img_desc = {
+    sg::ImageDesc img_desc = {
         .render_target = true,
         .width = 256,
         .height = 256,
         .pixel_format = pixel_format::RGBA8,
         .sample_count = OFFSCREEN_SAMPLE_COUNT,
     };
-    gfx::Image color_img = gfx::make_image(&img_desc);
+    sg::Image color_img = sg::make_image(&img_desc);
     img_desc.pixel_format = pixel_format::DEPTH;
-    gfx::Image depth_img = gfx::make_image(&img_desc);
-    state.offscreen.attachments = gfx::make_attachments(&&AttachmentsDesc {
+    sg::Image depth_img = sg::make_image(&img_desc);
+    state.offscreen.attachments = sg::make_attachments(&&AttachmentsDesc {
         .colors = {
             [0] = { .image = color_img },
         },
@@ -72,39 +72,39 @@ fn void init()
 
     // a donut shape which is rendered into the offscreen render target, and
     // a sphere shape which is rendered into the default framebuffer
-    shape::Buffer buf = {
+    sshape::Buffer buf = {
         .vertices = { .buffer = { .ptr = &state.vertices, .size = $typeof(state.vertices).sizeof } },
         .indices  = { .buffer = { .ptr = &state.indices, .size = $typeof(state.indices).sizeof } },
     };
 
-    buf = shape::build_torus(&buf, &&Torus {
+    buf = sshape::build_torus(&buf, &&Torus {
         .radius = 0.5,
         .ring_radius = 0.3,
         .sides = 20,
         .rings = 30,
     });
-    state.donut = shape::element_range(&buf);
+    state.donut = sshape::element_range(&buf);
 
-    buf = shape::build_sphere(&buf, &&Sphere {
+    buf = sshape::build_sphere(&buf, &&Sphere {
         .radius = 0.5,
         .slices = 72,
         .stacks = 40,
     });
-    state.sphere = shape::element_range(&buf);
+    state.sphere = sshape::element_range(&buf);
 
-    gfx::Buffer vbuf = gfx::make_buffer(&&shape::vertex_buffer_desc(&buf));
-    gfx::Buffer ibuf = gfx::make_buffer(&&shape::index_buffer_desc(&buf));
+    sg::Buffer vbuf = sg::make_buffer(&&sshape::vertex_buffer_desc(&buf));
+    sg::Buffer ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&buf));
 
     // pipeline-state-object for offscreen-rendered donut, don't need texture coord here
-    state.offscreen.pip = gfx::make_pipeline(&&PipelineDesc {
-        .shader = gfx::make_shader(&&offscreen_shader_desc(gfx::query_backend())),
+    state.offscreen.pip = sg::make_pipeline(&&PipelineDesc {
+        .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
             .buffers = {
-                [0] = shape::vertex_buffer_layout_state(),
+                [0] = sshape::vertex_buffer_layout_state(),
             },
             .attrs = {
-                [ATTR_OFFSCREEN_POSITION] = shape::position_vertex_attr_state(),
-                [ATTR_OFFSCREEN_NORMAL] = shape::normal_vertex_attr_state(),
+                [ATTR_OFFSCREEN_POSITION] = sshape::position_vertex_attr_state(),
+                [ATTR_OFFSCREEN_NORMAL] = sshape::normal_vertex_attr_state(),
             },
         },
         .index_type = index_type::UINT16,
@@ -121,16 +121,16 @@ fn void init()
     });
 
     // and another pipeline-state-object for the default pass
-    state.dflt.pip = gfx::make_pipeline(&&PipelineDesc {
-        .shader = gfx::make_shader(&&default_shader_desc(gfx::query_backend())),
+    state.dflt.pip = sg::make_pipeline(&&PipelineDesc {
+        .shader = sg::make_shader(&&default_shader_desc(sg::query_backend())),
         .layout = {
             .buffers = {
-                [0] = shape::vertex_buffer_layout_state(),
+                [0] = sshape::vertex_buffer_layout_state(),
             },
             .attrs = {
-                [ATTR_DEFAULT_POSITION] = shape::position_vertex_attr_state(),
-                [ATTR_DEFAULT_NORMAL] = shape::normal_vertex_attr_state(),
-                [ATTR_DEFAULT_TEXCOORD0] = shape::texcoord_vertex_attr_state(),
+                [ATTR_DEFAULT_POSITION] = sshape::position_vertex_attr_state(),
+                [ATTR_DEFAULT_NORMAL] = sshape::normal_vertex_attr_state(),
+                [ATTR_DEFAULT_TEXCOORD0] = sshape::texcoord_vertex_attr_state(),
             },
         },
         .index_type = index_type::UINT16,
@@ -142,7 +142,7 @@ fn void init()
     });
 
     // a sampler object for sampling the render target as texture
-    Sampler smp = gfx::make_sampler(&&SamplerDesc {
+    Sampler smp = sg::make_sampler(&&SamplerDesc {
         .min_filter = filter::LINEAR,
         .mag_filter = filter::LINEAR,
         .wrap_u = wrap::REPEAT,
@@ -170,7 +170,7 @@ fn void init()
 
 fn void frame()
 {
-    float t = (float)app::frame_duration() * 60;
+    float t = (float)sapp::frame_duration() * 60;
     state.rx += 1.0 * t;
     state.ry += 2.0 * t;
 
@@ -178,29 +178,29 @@ fn void frame()
     VsParams vs_params = {
         .mvp = compute_mvp(rx: state.rx, ry: state.ry, aspect: 1.0, eye_dist: 2.5),
     };
-    gfx::begin_pass(&&Pass { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
-    gfx::apply_pipeline(state.offscreen.pip);
-    gfx::apply_bindings(&state.offscreen.bind);
-    gfx::apply_uniforms(UB_VS_PARAMS, &&gfx::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
-    gfx::draw(state.donut.base_element, state.donut.num_elements, 1);
-    gfx::end_pass();
+    sg::begin_pass(&&Pass { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
+    sg::apply_pipeline(state.offscreen.pip);
+    sg::apply_bindings(&state.offscreen.bind);
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::draw(state.donut.base_element, state.donut.num_elements, 1);
+    sg::end_pass();
 
     // and the default-pass, rendering a rotating textured sphere which uses the
     // previously rendered offscreen render-target as texture
     vs_params.mvp = compute_mvp(
         rx: -state.rx * (float)0.25,
         ry: state.ry * 0.25,
-        aspect: app::widthf() / app::heightf(),
+        aspect: sapp::widthf() / sapp::heightf(),
         eye_dist: 2.0,
     );
-    gfx::begin_pass(&&Pass { .action = state.dflt.pass_action, .swapchain = glue::swapchain() });
-    gfx::apply_pipeline(state.dflt.pip);
-    gfx::apply_bindings(&state.dflt.bind);
-    gfx::apply_uniforms(UB_VS_PARAMS, &&gfx::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
-    gfx::draw(state.sphere.base_element, state.sphere.num_elements, 1);
-    gfx::end_pass();
+    sg::begin_pass(&&Pass { .action = state.dflt.pass_action, .swapchain = sglue::swapchain() });
+    sg::apply_pipeline(state.dflt.pip);
+    sg::apply_bindings(&state.dflt.bind);
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::draw(state.sphere.base_element, state.sphere.num_elements, 1);
+    sg::end_pass();
 
-    gfx::commit();
+    sg::commit();
 }
 
 fn Mat4 compute_mvp(float rx, float ry, float aspect, float eye_dist)
@@ -216,12 +216,12 @@ fn Mat4 compute_mvp(float rx, float ry, float aspect, float eye_dist)
 
 fn void cleanup()
 {
-    gfx::shutdown();
+    sg::shutdown();
 }
 
 fn void main()
 {
-    app::run(&&app::Desc {
+    sapp::run(&&sapp::Desc {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
@@ -230,6 +230,6 @@ fn void main()
         .sample_count = 4,
         .window_title = "offscreen",
         .icon = { .sokol_default = true },
-        .logger = { .func = &log::func },
+        .logger = { .func = &slog::func },
     });
 }

@@ -1,6 +1,6 @@
 // machine generated, do not edit
 
-module sokol::audio;
+module sokol::saudio;
 import sokol;
 
 extern fn void setup(Desc* desc) @extern("saudio_setup");
@@ -16,7 +16,7 @@ extern fn CInt expect() @extern("saudio_expect");
 extern fn CInt push(float* frames, CInt num_frames) @extern("saudio_push");
 
 distinct LogItem = int;
-module sokol::audio::log_item;
+module sokol::saudio::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
 const LogItem ALSA_SND_PCM_OPEN_FAILED = 2;
@@ -53,7 +53,7 @@ const LogItem COREAUDIO_NEW_OUTPUT_FAILED = 32;
 const LogItem COREAUDIO_ALLOCATE_BUFFER_FAILED = 33;
 const LogItem COREAUDIO_START_FAILED = 34;
 const LogItem BACKEND_BUFFER_SIZE_ISNT_MULTIPLE_OF_PACKET_SIZE = 35;
-module sokol::audio;
+module sokol::saudio;
 import sokol;
 
 struct Logger

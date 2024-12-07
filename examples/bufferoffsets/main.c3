@@ -10,9 +10,9 @@ import sokol;
 
 struct State
 {
-    gfx::Pipeline pip;
-    gfx::Bindings bind;
-    gfx::PassAction pass_action;
+    sg::Pipeline pip;
+    sg::Bindings bind;
+    sg::PassAction pass_action;
 }
 
 State state;
@@ -24,9 +24,9 @@ struct Vertex
 
 fn void init()
 {
-    gfx::setup(&&gfx::Desc {
-        .environment = glue::environment(),
-        .logger = { .func = &log::func },
+    sg::setup(&&sg::Desc {
+        .environment = sglue::environment(),
+        .logger = { .func = &slog::func },
     });
 
     // a 2D triangle and quad in 1 vertex buffer and 1 index buffer
@@ -47,17 +47,17 @@ fn void init()
         0, 1, 2, 0, 2, 3,
     };
 
-    state.bind.vertex_buffers[0] = gfx::make_buffer(&&BufferDesc {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
         .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
     });
-    state.bind.index_buffer = gfx::make_buffer(&&BufferDesc {
+    state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
         .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
     });
 
     // a shader and pipeline to render 2D shapes
-    state.pip = gfx::make_pipeline(&&PipelineDesc {
-        .shader = gfx::make_shader(&&bufferoffsets_shader_desc(gfx::query_backend())),
+    state.pip = sg::make_pipeline(&&PipelineDesc {
+        .shader = sg::make_shader(&&bufferoffsets_shader_desc(sg::query_backend())),
         .index_type = index_type::UINT16,
         .layout = {
             .attrs = {
@@ -77,33 +77,33 @@ fn void init()
 
 fn void frame()
 {
-    gfx::begin_pass(&&Pass { .action = state.pass_action, .swapchain = glue::swapchain() });
-    gfx::apply_pipeline(state.pip);
+    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::apply_pipeline(state.pip);
 
     // render the triangle
     state.bind.vertex_buffer_offsets[0] = 0;
     state.bind.index_buffer_offset = 0;
-    gfx::apply_bindings(&state.bind);
-    gfx::draw(0, 3, 1);
+    sg::apply_bindings(&state.bind);
+    sg::draw(0, 3, 1);
 
     // render the quad
     state.bind.vertex_buffer_offsets[0] = 3 * Vertex.sizeof;
     state.bind.index_buffer_offset = 3 * ushort.sizeof;
-    gfx::apply_bindings(&state.bind);
-    gfx::draw(0, 6, 1);
+    sg::apply_bindings(&state.bind);
+    sg::draw(0, 6, 1);
 
-    gfx::end_pass();
-    gfx::commit();
+    sg::end_pass();
+    sg::commit();
 }
 
 fn void cleanup()
 {
-    gfx::shutdown();
+    sg::shutdown();
 }
 
 fn void main()
 {
-    app::run(&&app::Desc {
+    sapp::run(&&sapp::Desc {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
@@ -111,6 +111,6 @@ fn void main()
         .height = 600,
         .window_title = "bufferoffsets",
         .icon = { .sokol_default = true },
-        .logger = { .func = &log::func },
+        .logger = { .func = &slog::func },
     });
 }

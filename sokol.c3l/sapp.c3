@@ -1,6 +1,6 @@
 // machine generated, do not edit
 
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 extern fn bool isvalid() @extern("sapp_isvalid");
@@ -71,7 +71,7 @@ const usz MAX_KEYCODES = 512;
 const usz MAX_ICONIMAGES = 8;
 
 distinct EventType = uint;
-module sokol::app::event_type;
+module sokol::sapp::event_type;
 const EventType INVALID = 0;
 const EventType KEY_DOWN = 1;
 const EventType KEY_UP = 2;
@@ -97,11 +97,11 @@ const EventType QUIT_REQUESTED = 21;
 const EventType CLIPBOARD_PASTED = 22;
 const EventType FILES_DROPPED = 23;
 const EventType NUM = 24;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 distinct Keycode = int;
-module sokol::app::keycode;
+module sokol::sapp::keycode;
 const Keycode INVALID = 0;
 const Keycode SPACE = 32;
 const Keycode APOSTROPHE = 39;
@@ -223,16 +223,16 @@ const Keycode RIGHT_CONTROL = 345;
 const Keycode RIGHT_ALT = 346;
 const Keycode RIGHT_SUPER = 347;
 const Keycode MENU = 348;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 distinct AndroidTooltype = int;
-module sokol::app::android_tooltype;
+module sokol::sapp::android_tooltype;
 const AndroidTooltype UNKNOWN = 0;
 const AndroidTooltype FINGER = 1;
 const AndroidTooltype STYLUS = 2;
 const AndroidTooltype MOUSE = 3;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 struct Touchpoint
@@ -245,12 +245,12 @@ struct Touchpoint
 }
 
 distinct Mousebutton = int;
-module sokol::app::mousebutton;
+module sokol::sapp::mousebutton;
 const Mousebutton LEFT = 0;
 const Mousebutton RIGHT = 1;
 const Mousebutton MIDDLE = 2;
 const Mousebutton INVALID = 256;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 const uint MODIFIER_SHIFT = 1;
@@ -311,7 +311,7 @@ struct Allocator
 }
 
 distinct LogItem = int;
-module sokol::app::log_item;
+module sokol::sapp::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
 const LogItem MACOS_INVALID_NSOPENGL_PROFILE = 2;
@@ -411,7 +411,7 @@ const LogItem WGPU_CREATE_INSTANCE_FAILED = 95;
 const LogItem IMAGE_DATA_SIZE_MISMATCH = 96;
 const LogItem DROPPED_FILE_PATH_TOO_LONG = 97;
 const LogItem CLIPBOARD_STRING_TOO_BIG = 98;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 struct Logger
@@ -452,7 +452,7 @@ struct Desc
     bool win32_console_utf8;
     bool win32_console_create;
     bool win32_console_attach;
-    ZString html5_canvas_name;
+    ZString html5_canvas_selector;
     bool html5_canvas_resize;
     bool html5_preserve_drawing_buffer;
     bool html5_premultiplied_alpha;
@@ -468,11 +468,11 @@ struct Desc
 }
 
 distinct Html5FetchError = int;
-module sokol::app::html5_fetch_error;
+module sokol::sapp::html5_fetch_error;
 const Html5FetchError FETCH_ERROR_NO_ERROR = 0;
 const Html5FetchError FETCH_ERROR_BUFFER_TOO_SMALL = 1;
 const Html5FetchError FETCH_ERROR_OTHER = 2;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 struct Html5FetchResponse
@@ -494,7 +494,7 @@ struct Html5FetchRequest
 }
 
 distinct MouseCursor = int;
-module sokol::app::mouse_cursor;
+module sokol::sapp::mouse_cursor;
 const MouseCursor DEFAULT = 0;
 const MouseCursor ARROW = 1;
 const MouseCursor IBEAM = 2;
@@ -507,7 +507,7 @@ const MouseCursor RESIZE_NESW = 8;
 const MouseCursor RESIZE_ALL = 9;
 const MouseCursor NOT_ALLOWED = 10;
 const MouseCursor NUM = 11;
-module sokol::app;
+module sokol::sapp;
 import sokol;
 
 def AllocCb = fn void*(usz, void*);

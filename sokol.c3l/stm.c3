@@ -1,6 +1,6 @@
 // machine generated, do not edit
 
-module sokol::time;
+module sokol::stm;
 import sokol;
 
 extern fn void setup() @extern("stm_setup");

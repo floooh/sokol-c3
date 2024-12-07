@@ -16,8 +16,8 @@ def Mat4 = sokol_math::Mat4;
 
 struct State
 {
-    gfx::Pipeline pip;
-    gfx::Bindings bind;
+    sg::Pipeline pip;
+    sg::Bindings bind;
     float rx, ry;
 }
 
@@ -25,9 +25,9 @@ State state;
 
 fn void init()
 {
-    gfx::setup(&&gfx::Desc {
-        .environment = glue::environment(),
-        .logger = { .func = &log::func },
+    sg::setup(&&sg::Desc {
+        .environment = sglue::environment(),
+        .logger = { .func = &slog::func },
     });
 
     // cube vertex buffer
@@ -48,7 +48,7 @@ fn void init()
          0.5, 1.0, 1.0, 1.0,  0.5, 1.0, 1.0, 1.0,  0.5, 1.0, 1.0, 1.0,  0.5, 1.0, 1.0, 1.0,
          1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,
     };
-    gfx::Buffer vbuf = gfx::make_buffer(&&BufferDesc {
+    sg::Buffer vbuf = sg::make_buffer(&&BufferDesc {
         .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
     });
 
@@ -61,14 +61,14 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    gfx::Buffer ibuf = gfx::make_buffer(&&BufferDesc {
+    sg::Buffer ibuf = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
         .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
     });
 
     // shader and pipeline object
-    state.pip = gfx::make_pipeline(&&PipelineDesc {
-        .shader = gfx::make_shader(&&noninterleaved_shader_desc(gfx::query_backend())),
+    state.pip = sg::make_pipeline(&&PipelineDesc {
+        .shader = sg::make_shader(&&noninterleaved_shader_desc(sg::query_backend())),
         .layout = {
             // note how the vertex components are pulled from different buffer bind slots
             .attrs = {
@@ -106,7 +106,7 @@ fn void init()
 
 fn void frame()
 {
-    float t = (float)app::frame_duration() * 60;
+    float t = (float)sapp::frame_duration() * 60;
     state.rx += 1.0 * t;
     state.ry += 2.0 * t;
 
@@ -116,18 +116,18 @@ fn void frame()
     };
 
     // default pass-action clears to grey
-    gfx::begin_pass(&&Pass { .swapchain = glue::swapchain() });
-    gfx::apply_pipeline(state.pip);
-    gfx::apply_bindings(&state.bind);
-    gfx::apply_uniforms(UB_VS_PARAMS, &&gfx::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
-    gfx::draw(0, 36, 1);
-    gfx::end_pass();
-    gfx::commit();
+    sg::begin_pass(&&Pass { .swapchain = sglue::swapchain() });
+    sg::apply_pipeline(state.pip);
+    sg::apply_bindings(&state.bind);
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::draw(0, 36, 1);
+    sg::end_pass();
+    sg::commit();
 }
 
 fn Mat4 compute_mvp(float rx, float ry)
 {
-    Mat4 proj = sokol_math::persp(fov: 60, aspect: app::widthf() / app::heightf(), near: 0.01, far: 10.0);
+    Mat4 proj = sokol_math::persp(fov: 60, aspect: sapp::widthf() / sapp::heightf(), near: 0.01, far: 10.0);
     Mat4 view = sokol_math::lookat(eye: {0.0, 1.5, 6.0}, center: {}, up: {0.0, 1.0, 0.0});
     Mat4 view_proj = sokol_math::mul(proj, view);
     Mat4 rxm = sokol_math::rotate(rx, {1.0, 0.0, 0.0});
@@ -138,12 +138,12 @@ fn Mat4 compute_mvp(float rx, float ry)
 
 fn void cleanup()
 {
-    gfx::shutdown();
+    sg::shutdown();
 }
 
 fn void main()
 {
-    app::run(&&app::Desc {
+    sapp::run(&&sapp::Desc {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
@@ -152,6 +152,6 @@ fn void main()
         .sample_count = 4,
         .window_title = "noninterleaved",
         .icon = { .sokol_default = true },
-        .logger = { .func = &log::func },
+        .logger = { .func = &slog::func },
     });
 }

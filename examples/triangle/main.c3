@@ -9,18 +9,18 @@ import sokol;
 
 struct State
 {
-    gfx::Pipeline pip;
-    gfx::Bindings bind;
-    gfx::PassAction pass_action;
+    sg::Pipeline pip;
+    sg::Bindings bind;
+    sg::PassAction pass_action;
 }
 
 State state;
 
 fn void init()
 {
-    gfx::setup(&&gfx::Desc {
-        .environment = glue::environment(),
-        .logger = { .func = &log::func },
+    sg::setup(&&sg::Desc {
+        .environment = sglue::environment(),
+        .logger = { .func = &slog::func },
     });
 
     // a vertex buffer with 3 vertices
@@ -30,13 +30,13 @@ fn void init()
          0.5, -0.5, 0.5,     0.0, 1.0, 0.0, 1.0,
         -0.5, -0.5, 0.5,     0.0, 0.0, 1.0, 1.0,
     };
-    state.bind.vertex_buffers[0] = gfx::make_buffer(&&BufferDesc {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
         .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
     });
 
     // create a shader and pipeline object (default render states are fine for triangle)
-    state.pip = gfx::make_pipeline(&&PipelineDesc {
-        .shader = gfx::make_shader(&&triangle_shader_desc(gfx::query_backend())),
+    state.pip = sg::make_pipeline(&&PipelineDesc {
+        .shader = sg::make_shader(&&triangle_shader_desc(sg::query_backend())),
         .layout = {
             .attrs = {
                 [ATTR_TRIANGLE_POSITION] = { .format = vertex_format::FLOAT3 },
@@ -55,22 +55,22 @@ fn void init()
 
 fn void frame()
 {
-    gfx::begin_pass(&&Pass { .action = state.pass_action, .swapchain = glue::swapchain() });
-    gfx::apply_pipeline(state.pip);
-    gfx::apply_bindings(&state.bind);
-    gfx::draw(0, 3, 1);
-    gfx::end_pass();
-    gfx::commit();
+    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::apply_pipeline(state.pip);
+    sg::apply_bindings(&state.bind);
+    sg::draw(0, 3, 1);
+    sg::end_pass();
+    sg::commit();
 }
 
 fn void cleanup()
 {
-    gfx::shutdown();
+    sg::shutdown();
 }
 
 fn void main()
 {
-    app::run(&&app::Desc {
+    sapp::run(&&sapp::Desc {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
@@ -78,6 +78,6 @@ fn void main()
         .height = 480,
         .window_title = "triangle",
         .icon = { .sokol_default = true },
-        .logger = { .func = &log::func },
+        .logger = { .func = &slog::func },
     });
 }

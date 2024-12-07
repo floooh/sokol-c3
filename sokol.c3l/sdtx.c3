@@ -1,6 +1,6 @@
 // machine generated, do not edit
 
-module sokol::debugtext;
+module sokol::sdtx;
 import sokol;
 
 extern fn void setup(Desc* desc) @extern("sdtx_setup");
@@ -42,14 +42,14 @@ extern fn void puts(ZString str) @extern("sdtx_puts");
 extern fn void putr(ZString str, CInt len) @extern("sdtx_putr");
 
 distinct LogItem = int;
-module sokol::debugtext::log_item;
+module sokol::sdtx::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
 const LogItem ADD_COMMIT_LISTENER_FAILED = 2;
 const LogItem COMMAND_BUFFER_FULL = 3;
 const LogItem CONTEXT_POOL_EXHAUSTED = 4;
 const LogItem CANNOT_DESTROY_DEFAULT_CONTEXT = 5;
-module sokol::debugtext;
+module sokol::sdtx;
 import sokol;
 
 struct Logger
@@ -83,8 +83,8 @@ struct ContextDesc
     float canvas_width;
     float canvas_height;
     CInt tab_width;
-    sokol::gfx::PixelFormat color_format;
-    sokol::gfx::PixelFormat depth_format;
+    sokol::sg::PixelFormat color_format;
+    sokol::sg::PixelFormat depth_format;
     CInt sample_count;
 }
 
