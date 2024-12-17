@@ -17,9 +17,9 @@ jobs:
     name: Build and run
     steps:
       - uses: actions/checkout@v4
-      - uses: radekm/setup-c3@v1
+      - uses: radekm/setup-c3@v2
         with:
-          version: v0.6.4
+          version: v0.6.5
       - if: runner.os == 'Linux'
         name: Install Linux Dependencies
         run: |
