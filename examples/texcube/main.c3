@@ -31,7 +31,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     /*
@@ -74,7 +74,7 @@ fn void init()
         {  1.0,  1.0, -1.0,  0xFF007FFF,     0, 32767 },
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // create an index buffer for the cube
@@ -88,7 +88,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // create a checkerboard texture
@@ -102,13 +102,7 @@ fn void init()
     state.bind.images[IMG_TEX] = sg::make_image(&&sg::ImageDesc {
         .width = 4,
         .height = 4,
-        .data = {
-            .subimage = {
-                [0] = {
-                    [0] = { .ptr = &pixels, .size = $typeof(pixels).sizeof },
-                },
-            },
-        },
+        .data.subimage[0][0] = { .ptr = &pixels, .size = $sizeof(pixels) },
     });
 
     // a sampler with default options to sample the above image as texture
@@ -133,11 +127,7 @@ fn void init()
     });
 
     // default pass action, clear to blue-ish
-    state.pass_action = {
-        .colors = {
-            [0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
-        },
-    };
+    state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } };
 }
 
 fn void frame()
@@ -150,15 +140,10 @@ fn void frame()
     VsParams vs_params = {
         .mvp = compute_mvp(state.rx, state.ry),
     };
-    sg::PassAction pass_action = {
-        .colors = {
-            [0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
-        },
-    };
-    sg::begin_pass(&&Pass { .action = pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -190,7 +175,7 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "texcube",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

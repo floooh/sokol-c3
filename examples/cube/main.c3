@@ -23,7 +23,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // cube vertex buffer
@@ -59,7 +59,7 @@ fn void init()
          1.0,  1.0, -1.0,   1.0, 0.0, 0.5, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // create an index buffer for the cube
@@ -73,7 +73,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // shader and pipeline object
@@ -82,9 +82,7 @@ fn void init()
         .index_type = index_type::UINT16,
         .layout = {
             // test to provide buffer stride, but no attr offsets
-            .buffers = {
-                [0] = { .stride = 28 },
-            },
+            .buffers[0].stride = 28,
             .attrs = {
                 [ATTR_CUBE_POSITION] = { .format = vertex_format::FLOAT3 },
                 [ATTR_CUBE_COLOR0] = { .format = vertex_format::FLOAT4 },
@@ -109,14 +107,12 @@ fn void frame()
         .mvp = compute_mvp(state.rx, state.ry),
     };
     sg::PassAction pass_action = {
-        .colors = {
-            [0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
-        },
+        .colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
     };
     sg::begin_pass(&&Pass { .action = pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -148,7 +144,7 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "cube",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

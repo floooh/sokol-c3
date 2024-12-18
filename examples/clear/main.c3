@@ -14,7 +14,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
     pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 1.0, 0.0, 0.0, 1.0 } };
 
@@ -60,7 +60,7 @@ fn void main()
         .width = 400,
         .height = 300,
         .window_title = "clear",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

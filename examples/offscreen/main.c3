@@ -41,7 +41,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // default pass action: clear to blue-ish
@@ -62,9 +62,7 @@ fn void init()
     img_desc.pixel_format = pixel_format::DEPTH;
     sg::Image depth_img = sg::make_image(&img_desc);
     state.offscreen.attachments = sg::make_attachments(&&AttachmentsDesc {
-        .colors = {
-            [0] = { .image = color_img },
-        },
+        .colors[0] = { .image = color_img },
         .depth_stencil = {
             .image = depth_img,
         },
@@ -73,8 +71,8 @@ fn void init()
     // a donut shape which is rendered into the offscreen render target, and
     // a sphere shape which is rendered into the default framebuffer
     sshape::Buffer buf = {
-        .vertices = { .buffer = { .ptr = &state.vertices, .size = $typeof(state.vertices).sizeof } },
-        .indices  = { .buffer = { .ptr = &state.indices, .size = $typeof(state.indices).sizeof } },
+        .vertices = { .buffer = { .ptr = &state.vertices, .size = $sizeof(state.vertices) } },
+        .indices  = { .buffer = { .ptr = &state.indices, .size = $sizeof(state.indices) } },
     };
 
     buf = sshape::build_torus(&buf, &&Torus {
@@ -99,9 +97,7 @@ fn void init()
     state.offscreen.pip = sg::make_pipeline(&&PipelineDesc {
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers = {
-                [0] = sshape::vertex_buffer_layout_state(),
-            },
+            .buffers[0] = sshape::vertex_buffer_layout_state(),
             .attrs = {
                 [ATTR_OFFSCREEN_POSITION] = sshape::position_vertex_attr_state(),
                 [ATTR_OFFSCREEN_NORMAL] = sshape::normal_vertex_attr_state(),
@@ -115,18 +111,14 @@ fn void init()
             .compare = compare_func::LESS_EQUAL,
             .write_enabled = true,
         },
-        .colors = {
-            [0] = { .pixel_format = pixel_format::RGBA8 },
-        },
+        .colors[0] = { .pixel_format = pixel_format::RGBA8 },
     });
 
     // and another pipeline-state-object for the default pass
     state.dflt.pip = sg::make_pipeline(&&PipelineDesc {
         .shader = sg::make_shader(&&default_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers = {
-                [0] = sshape::vertex_buffer_layout_state(),
-            },
+            .buffers[0] = sshape::vertex_buffer_layout_state(),
             .attrs = {
                 [ATTR_DEFAULT_POSITION] = sshape::position_vertex_attr_state(),
                 [ATTR_DEFAULT_NORMAL] = sshape::normal_vertex_attr_state(),
@@ -151,17 +143,13 @@ fn void init()
 
     // the resource bindings for rendering a non-textured cube into offscreen render target
     state.offscreen.bind = {
-        .vertex_buffers = {
-            [0] = vbuf,
-        },
+        .vertex_buffers[0] = vbuf,
         .index_buffer = ibuf,
     };
 
     // resource bindings to render a textured shape, using the offscreen render target as texture
     state.dflt.bind = {
-        .vertex_buffers = {
-            [0] = vbuf,
-        },
+        .vertex_buffers[0] = vbuf,
         .index_buffer = ibuf,
         .images = { [IMG_TEX] = color_img },
         .samplers = { [SMP_SMP] = smp },
@@ -181,7 +169,7 @@ fn void frame()
     sg::begin_pass(&&Pass { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.donut.base_element, state.donut.num_elements, 1);
     sg::end_pass();
 
@@ -196,7 +184,7 @@ fn void frame()
     sg::begin_pass(&&Pass { .action = state.dflt.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.dflt.pip);
     sg::apply_bindings(&state.dflt.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.sphere.base_element, state.sphere.num_elements, 1);
     sg::end_pass();
 
@@ -229,7 +217,7 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "offscreen",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

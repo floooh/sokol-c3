@@ -26,7 +26,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // a 2D triangle and quad in 1 vertex buffer and 1 index buffer
@@ -48,11 +48,11 @@ fn void init()
     };
 
     state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline to render 2D shapes
@@ -68,11 +68,7 @@ fn void init()
     });
 
     // pass action for clearing to blue-ish
-    state.pass_action = {
-        .colors = {
-            [0] = { .load_action = load_action::CLEAR, .clear_value = { .r = 0.5, .g = 0.5, .b = 1, .a = 1 }},
-        },
-    };
+    state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { .r = 0.5, .g = 0.5, .b = 1, .a = 1 }};
 }
 
 fn void frame()
@@ -110,7 +106,7 @@ fn void main()
         .width = 800,
         .height = 600,
         .window_title = "bufferoffsets",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

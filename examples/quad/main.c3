@@ -20,7 +20,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // a vertex buffer with 4 vertices
@@ -32,14 +32,14 @@ fn void init()
         -0.5, -0.5, 0.5,     1.0, 1.0, 0.0, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // an index buffer
     ushort[*] indices = { 0, 1, 2,  0, 2, 3 };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline object
@@ -55,11 +55,7 @@ fn void init()
     });
 
     // a pass action to clear framebuffer to black
-    state.pass_action = {
-        .colors = {
-            [0] = { .load_action = load_action::CLEAR, .clear_value = { .r = 0, .g = 0, .b = 0, .a = 1 }},
-        },
-    };
+    state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { .r = 0, .g = 0, .b = 0, .a = 1 }};
 }
 
 fn void frame()
@@ -86,7 +82,7 @@ fn void main()
         .width = 800,
         .height = 600,
         .window_title = "quad",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

@@ -13,7 +13,15 @@ const float PI = 3.14159265358979323846264338327950288;
 //       For example `Vec3.sizeof` could be 16 but `float[3].sizeof` could be 12.
 distinct Vec2 = float[<2>];
 distinct Vec3 = float[<3>];
-distinct Mat4 = float[4][4];  // 4 columns, 4 rows.
+// Matrix type is `float[number_of_rows][number_of_columns]`.
+// It has column major layout in memory.
+// So in memory matrix is stored as an array of columns `{ column0, column1, column2, ... }`
+// where each column is an array with length `number_of_rows`.
+// But when indexing we have to use opposite order `m[column_index][row_index]`.
+// The reason is that matrix has type `T[number_of_columns]` where `T` is `float[number_of_rows]`.
+// So when indexing matrix by column `m[column_index]` it returns item of type `T`
+// which is array and can be indexed by `row_index`.
+distinct Mat4 = float[4][4];
 
 fn float radians(float degrees)
 {

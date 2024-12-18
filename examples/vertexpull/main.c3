@@ -25,7 +25,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // if storage buffers are not supported on the current backend, just
@@ -68,7 +68,7 @@ fn void init()
     };
     state.bind.storage_buffers[SBUF_SSBO] = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::STORAGEBUFFER,
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // a regular index buffer
@@ -82,7 +82,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline object, not that there is no vertex layout definition
@@ -113,7 +113,7 @@ fn void frame()
     {
         sg::apply_pipeline(state.pip);
         sg::apply_bindings(&state.bind);
-        sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof } );
+        sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) } );
         sg::draw(0, 36, 1);
     }
     sg::end_pass();
@@ -146,7 +146,7 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "vertexpull",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

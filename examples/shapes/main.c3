@@ -1,3 +1,4 @@
+//------------------------------------------------------------------------------
 //  shapes/main.c3
 //  Simple sokol/shape demo.
 //------------------------------------------------------------------------------
@@ -37,7 +38,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
     sdtx::setup(&&sdtx::Desc {
         .fonts = { [0] = sdtx::font_oric() },
@@ -51,9 +52,7 @@ fn void init()
     state.pip = sg::make_pipeline(&&PipelineDesc {
         .shader = sg::make_shader(&&shapes_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers = {
-                [0] = sshape::vertex_buffer_layout_state(),
-            },
+            .buffers[0] = sshape::vertex_buffer_layout_state(),
             .attrs = {
                 [ATTR_SHAPES_POSITION] = sshape::position_vertex_attr_state(),
                 [ATTR_SHAPES_NORMAL]   = sshape::normal_vertex_attr_state(),
@@ -80,8 +79,8 @@ fn void init()
     Vertex[6 * 1024] vertices;
     ushort[16 * 1024] indices;
     sshape::Buffer buf = {
-        .vertices = { .buffer = { .ptr = &vertices, .size = $typeof(vertices).sizeof } },
-        .indices  = { .buffer = { .ptr = &indices, .size = $typeof(indices).sizeof } },
+        .vertices = { .buffer = { .ptr = &vertices, .size = $sizeof(vertices) } },
+        .indices  = { .buffer = { .ptr = &indices, .size = $sizeof(indices) } },
     };
 
     buf = sshape::build_box(&buf, &&Box {
@@ -167,7 +166,7 @@ fn void frame()
         // per shape model-view-projection matrix
         Mat4 model = sokol_math::mul(sokol_math::translate(state.shapes[i].pos), rm);
         state.vs_params.mvp = sokol_math::mul(view_proj, model);
-        sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &state.vs_params, .size = $typeof(state.vs_params).sizeof });
+        sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &state.vs_params, .size = $sizeof(state.vs_params) });
         sg::draw(state.shapes[i].draw.base_element, state.shapes[i].draw.num_elements, 1);
     }
     sdtx::draw();
@@ -208,7 +207,7 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "shapes",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

@@ -27,7 +27,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // cube vertex buffer
@@ -49,7 +49,7 @@ fn void init()
          1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,
     };
     sg::Buffer vbuf = sg::make_buffer(&&BufferDesc {
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // create an index buffer for the cube
@@ -63,7 +63,7 @@ fn void init()
     };
     sg::Buffer ibuf = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // shader and pipeline object
@@ -119,7 +119,7 @@ fn void frame()
     sg::begin_pass(&&Pass { .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -151,7 +151,7 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "noninterleaved",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }

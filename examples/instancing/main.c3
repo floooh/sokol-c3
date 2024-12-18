@@ -31,7 +31,7 @@ fn void init()
 {
     sg::setup(&&sg::Desc {
         .environment = sglue::environment(),
-        .logger = { .func = &slog::func },
+        .logger.func = &slog::func,
     });
 
     // a pass action for the default render pass
@@ -49,7 +49,7 @@ fn void init()
         0.0,    r, 0.0,     1.0, 0.0, 1.0, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
-        .data = { .ptr = &vertices, .size = $typeof(vertices).sizeof },
+        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // index buffer for static geometry
@@ -59,7 +59,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
         .type = buffer_type::INDEXBUFFER,
-        .data = { .ptr = &indices, .size = $typeof(indices).sizeof },
+        .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // empty, dynamic instance-data vertex buffer, goes into vertex-buffer-slot 1
@@ -140,7 +140,7 @@ fn void frame()
     sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $typeof(vs_params).sizeof });
+    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(0, 24, state.cur_num_particles);
     sg::end_pass();
     sg::commit();
@@ -161,8 +161,8 @@ fn void main()
         .height = 600,
         .sample_count = 4,
         .window_title = "instancing",
-        .icon = { .sokol_default = true },
-        .logger = { .func = &slog::func },
+        .icon.sokol_default = true,
+        .logger.func = &slog::func,
     });
 }
 
