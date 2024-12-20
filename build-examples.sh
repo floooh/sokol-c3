@@ -18,3 +18,4 @@ c3c compile --libdir .. --lib sokol ../examples/vertexpull/*.c3 ../examples/math
 c3c compile --libdir .. --lib sokol ../examples/shapes/*.c3 ../examples/math/*.c3 -o shapes
 c3c compile --libdir .. --lib sokol ../examples/offscreen/*.c3 ../examples/math/*.c3 -o offscreen
 c3c compile --libdir .. --lib sokol ../examples/instancing/*.c3 ../examples/math/*.c3 -o instancing
+c3c compile --libdir .. --lib sokol ../examples/mrt/*.c3 ../examples/math/*.c3 -o mrt
