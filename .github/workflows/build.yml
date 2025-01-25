@@ -12,14 +12,14 @@ jobs:
           - os: ubuntu-latest
             arch: x64
           - os: windows-latest
-            arch: x64   
+            arch: x64
     runs-on: ${{ matrix.os }}
     name: Build and run
     steps:
       - uses: actions/checkout@v4
       - uses: radekm/setup-c3@v2
         with:
-          version: v0.6.5
+          version: v0.6.6
       - if: runner.os == 'Linux'
         name: Install Linux Dependencies
         run: |
