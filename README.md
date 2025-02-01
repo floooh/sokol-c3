@@ -1,4 +1,4 @@
-[![C3](https://github.com/floooh/sokol-c3/actions/workflows/main.yml/badge.svg)](https://github.com/floooh/sokol-c3/actions/workflows/main.yml)
+[![C3](https://github.com/floooh/sokol-c3/actions/workflows/build.yml/badge.svg)](https://github.com/floooh/sokol-c3/actions/workflows/build.yml)
 
 Auto-generated [C3](https://github.com/c3lang/c3c) bindings for the [sokol headers](https://github.com/floooh/sokol).
 
