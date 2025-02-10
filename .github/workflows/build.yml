@@ -1,4 +1,6 @@
-on: [push]
+name: C3
+
+on: [push, pull_request]
 
 jobs:
   build-and-run:
