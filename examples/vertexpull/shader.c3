@@ -21,8 +21,9 @@ import sokol;
             C3 struct: VsParams
             Bind slot: UB_VS_PARAMS => 0
         Storage buffer 'ssbo':
-            C3 struct: Ssbo
+            C3 struct: SbVertex
             Bind slot: SBUF_SSBO => 0
+            Readonly: true
 */
 const int UB_VS_PARAMS = 0;
 const int SBUF_SSBO = 0;
