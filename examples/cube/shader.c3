@@ -359,7 +359,9 @@ fn sg::ShaderDesc cube_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].glsl_name = "position";
+            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[1].glsl_name = "color0";
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
             desc.uniform_blocks[0].layout = uniform_layout::STD140;
@@ -374,8 +376,10 @@ fn sg::ShaderDesc cube_shader_desc(sg::Backend backend)
             desc.fragment_func.source = (ZString)&FS_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
+            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[1].hlsl_sem_name = "TEXCOORD";
             desc.attrs[1].hlsl_sem_index = 1;
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
@@ -387,6 +391,8 @@ fn sg::ShaderDesc cube_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
             desc.uniform_blocks[0].layout = uniform_layout::STD140;
             desc.uniform_blocks[0].size = 64;

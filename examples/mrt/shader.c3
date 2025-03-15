@@ -1215,6 +1215,7 @@ fn sg::ShaderDesc dbg_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_DBG_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].glsl_name = "pos";
             desc.images[0].stage = shader_stage::FRAGMENT;
             desc.images[0].multisampled = false;
@@ -1233,6 +1234,7 @@ fn sg::ShaderDesc dbg_shader_desc(sg::Backend backend)
             desc.fragment_func.source = (ZString)&FS_DBG_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
             desc.images[0].stage = shader_stage::FRAGMENT;
@@ -1251,6 +1253,7 @@ fn sg::ShaderDesc dbg_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_DBG_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.images[0].stage = shader_stage::FRAGMENT;
             desc.images[0].multisampled = false;
             desc.images[0].image_type = image_type::TYPE_2D;
@@ -1276,6 +1279,7 @@ fn sg::ShaderDesc fsq_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_FSQ_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].glsl_name = "pos";
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
             desc.uniform_blocks[0].layout = uniform_layout::STD140;
@@ -1316,6 +1320,7 @@ fn sg::ShaderDesc fsq_shader_desc(sg::Backend backend)
             desc.fragment_func.source = (ZString)&FS_FSQ_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
@@ -1354,6 +1359,7 @@ fn sg::ShaderDesc fsq_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_FSQ_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
             desc.uniform_blocks[0].layout = uniform_layout::STD140;
             desc.uniform_blocks[0].size = 16;
@@ -1399,7 +1405,9 @@ fn sg::ShaderDesc offscreen_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_OFFSCREEN_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].glsl_name = "pos";
+            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[1].glsl_name = "bright0";
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
             desc.uniform_blocks[0].layout = uniform_layout::STD140;
@@ -1414,8 +1422,10 @@ fn sg::ShaderDesc offscreen_shader_desc(sg::Backend backend)
             desc.fragment_func.source = (ZString)&FS_OFFSCREEN_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
+            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
             desc.attrs[1].hlsl_sem_name = "TEXCOORD";
             desc.attrs[1].hlsl_sem_index = 1;
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
@@ -1427,6 +1437,8 @@ fn sg::ShaderDesc offscreen_shader_desc(sg::Backend backend)
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_OFFSCREEN_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
+            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
             desc.uniform_blocks[0].stage = shader_stage::VERTEX;
             desc.uniform_blocks[0].layout = uniform_layout::STD140;
             desc.uniform_blocks[0].size = 64;
