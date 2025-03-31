@@ -1,10 +1,9 @@
 {
     "provides": "sokol",
     "c-sources": ["c/sokol.c"],
-    "cflags": "-DIMPL",
     "targets": {
         "macos-aarch64": {
-            "cflags": "-mmacos-version-min=11.0 -x objective-c -DSOKOL_METAL",
+            "cflags-override": "-DIMPL -mmacos-version-min=11.0 -x objective-c -DSOKOL_METAL",
             "linked-libraries": [
                 "Foundation.framework",
                 "CoreGraphics.framework",
@@ -18,7 +17,7 @@
             ]
         },
         "linux-x64": {
-            "cflags": "-DSOKOL_GLCORE",
+            "cflags-override": "-DIMPL -DSOKOL_GLCORE",
             "linked-libraries": [
                 "X11",
                 "Xi",
@@ -30,7 +29,7 @@
             ]
         },
         "windows-x64": {
-            "cflags": "-DSOKOL_D3D11"
+            "cflags-override": "-DIMPL -DSOKOL_D3D11"
         }
     }
 }

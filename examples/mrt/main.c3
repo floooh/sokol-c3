@@ -10,7 +10,7 @@ import std;
 import sokol;
 import sokol_math;
 
-def Mat4 = sokol_math::Mat4;
+alias Mat4 = sokol_math::Mat4;
 
 const int OFFSCREEN_SAMPLE_COUNT = 1;
 
@@ -95,7 +95,7 @@ fn void event(sapp::Event* ev)
 
 fn void init()
 {
-    sg::setup(&&sg::Desc {
+    sg::setup(&&(sg::Desc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -144,7 +144,7 @@ fn void init()
         {  1.0,  1.0,  1.0,   0.7 },
         {  1.0,  1.0, -1.0,   0.7 },
     };
-    sg::Buffer cube_vbuf = sg::make_buffer(&&BufferDesc {
+    sg::Buffer cube_vbuf = sg::make_buffer(&&(BufferDesc) {
         .data = { .ptr = &cube_vertices, .size = $sizeof(cube_vertices) },
     });
 
@@ -157,7 +157,7 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    sg::Buffer cube_ibuf = sg::make_buffer(&&BufferDesc {
+    sg::Buffer cube_ibuf = sg::make_buffer(&&(BufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &cube_indices, .size = $sizeof(cube_indices) },
     });
@@ -170,7 +170,7 @@ fn void init()
     };
 
     // shader and pipeline object for offscreen-renderer cube
-    state.offscreen.pip = sg::make_pipeline(&&PipelineDesc {
+    state.offscreen.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0].stride = Vertex.sizeof,
@@ -198,12 +198,12 @@ fn void init()
 
     // a vertex buffer to render a fullscreen rectangle
     float[*] quad_vertices = { 0.0, 0.0,  1.0, 0.0,  0.0, 1.0,  1.0, 1.0 };
-    sg::Buffer quad_vbuf = sg::make_buffer(&&BufferDesc {
+    sg::Buffer quad_vbuf = sg::make_buffer(&&(BufferDesc) {
         .data = { .ptr = &quad_vertices, .size = $sizeof(quad_vertices) },
     });
 
     // shader and pipeline object to render the fullscreen quad
-    state.fsq.pip = sg::make_pipeline(&&PipelineDesc {
+    state.fsq.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&fsq_shader_desc(sg::query_backend())),
         .layout = {
             .attrs = {
@@ -214,7 +214,7 @@ fn void init()
     });
 
     // a sampler object to sample the offscreen render target as texture
-    sg::Sampler smp = sg::make_sampler(&&SamplerDesc {
+    sg::Sampler smp = sg::make_sampler(&&(SamplerDesc) {
         .min_filter = filter::LINEAR,
         .mag_filter = filter::LINEAR,
         .wrap_u = wrap::CLAMP_TO_EDGE,
@@ -233,7 +233,7 @@ fn void init()
     };
 
     // pipeline and resource bindings to render debug-visualization quads
-    state.dbg.pip = sg::make_pipeline(&&PipelineDesc {
+    state.dbg.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&dbg_shader_desc(sg::query_backend())),
         .layout = {
             .attrs = {
@@ -268,18 +268,18 @@ fn void frame()
     };
 
     // render cube into MRT offscreen render targets
-    sg::begin_pass(&&Pass { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
+    sg::begin_pass(&&(Pass) { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_OFFSCREEN_PARAMS, &&sg::Range { .ptr = &offscreen_params, .size = $sizeof(offscreen_params) });
+    sg::apply_uniforms(UB_OFFSCREEN_PARAMS, &&(sg::Range) { .ptr = &offscreen_params, .size = $sizeof(offscreen_params) });
     sg::draw(0, 36, 1);
     sg::end_pass();
 
     // render fullscreen quad with the 'composed image', plus 3 small debug-view quads
-    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(Pass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.fsq.pip);
     sg::apply_bindings(&state.fsq.bind);
-    sg::apply_uniforms(UB_FSQ_PARAMS, &&sg::Range { .ptr = &fsq_params, .size = $sizeof(fsq_params) });
+    sg::apply_uniforms(UB_FSQ_PARAMS, &&(sg::Range) { .ptr = &fsq_params, .size = $sizeof(fsq_params) });
     sg::draw(0, 4, 1);
     sg::apply_pipeline(state.dbg.pip);
     for (int i = 0; i < 3; i++)
@@ -301,7 +301,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&sapp::Desc {
+    sapp::run(&&(sapp::Desc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .event_cb = &event,
