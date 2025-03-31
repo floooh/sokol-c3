@@ -63,6 +63,8 @@ extern fn void* wgpu_get_depth_stencil_view() @extern("sapp_wgpu_get_depth_stenc
 extern fn uint gl_get_framebuffer() @extern("sapp_gl_get_framebuffer");
 extern fn CInt gl_get_major_version() @extern("sapp_gl_get_major_version");
 extern fn CInt gl_get_minor_version() @extern("sapp_gl_get_minor_version");
+extern fn void* x11_get_window() @extern("sapp_x11_get_window");
+extern fn void* x11_get_display() @extern("sapp_x11_get_display");
 extern fn void* android_get_native_activity() @extern("sapp_android_get_native_activity");
 
 const usz MAX_TOUCHPOINTS = 8;
