@@ -207,7 +207,7 @@ struct Color
     float a;
 }
 
-distinct Backend = int;
+typedef Backend = int;
 module sokol::sg::backend;
 const Backend GLCORE = 0;
 const Backend GLES3 = 1;
@@ -220,7 +220,7 @@ const Backend DUMMY = 7;
 module sokol::sg;
 import sokol;
 
-distinct PixelFormat = uint;
+typedef PixelFormat = uint;
 module sokol::sg::pixel_format;
 const PixelFormat DEFAULT = 0;
 const PixelFormat NONE = 1;
@@ -328,7 +328,7 @@ struct Limits
     CInt gl_max_combined_texture_image_units;
 }
 
-distinct ResourceState = uint;
+typedef ResourceState = uint;
 module sokol::sg::resource_state;
 const ResourceState INITIAL = 0;
 const ResourceState ALLOC = 1;
@@ -338,7 +338,7 @@ const ResourceState INVALID = 4;
 module sokol::sg;
 import sokol;
 
-distinct Usage = uint;
+typedef Usage = uint;
 module sokol::sg::usage;
 const Usage DEFAULT = 0;
 const Usage IMMUTABLE = 1;
@@ -348,7 +348,7 @@ const Usage NUM = 4;
 module sokol::sg;
 import sokol;
 
-distinct BufferType = uint;
+typedef BufferType = uint;
 module sokol::sg::buffer_type;
 const BufferType DEFAULT = 0;
 const BufferType VERTEXBUFFER = 1;
@@ -358,7 +358,7 @@ const BufferType NUM = 4;
 module sokol::sg;
 import sokol;
 
-distinct IndexType = uint;
+typedef IndexType = uint;
 module sokol::sg::index_type;
 const IndexType DEFAULT = 0;
 const IndexType NONE = 1;
@@ -368,7 +368,7 @@ const IndexType NUM = 4;
 module sokol::sg;
 import sokol;
 
-distinct ImageType = uint;
+typedef ImageType = uint;
 module sokol::sg::image_type;
 const ImageType DEFAULT = 0;
 const ImageType TYPE_2D = 1;
@@ -379,7 +379,7 @@ const ImageType NUM = 5;
 module sokol::sg;
 import sokol;
 
-distinct ImageSampleType = uint;
+typedef ImageSampleType = uint;
 module sokol::sg::image_sample_type;
 const ImageSampleType DEFAULT = 0;
 const ImageSampleType FLOAT = 1;
@@ -391,7 +391,7 @@ const ImageSampleType NUM = 6;
 module sokol::sg;
 import sokol;
 
-distinct SamplerType = uint;
+typedef SamplerType = uint;
 module sokol::sg::sampler_type;
 const SamplerType DEFAULT = 0;
 const SamplerType FILTERING = 1;
@@ -401,7 +401,7 @@ const SamplerType NUM = 4;
 module sokol::sg;
 import sokol;
 
-distinct CubeFace = uint;
+typedef CubeFace = uint;
 module sokol::sg::cube_face;
 const CubeFace POS_X = 0;
 const CubeFace NEG_X = 1;
@@ -413,7 +413,7 @@ const CubeFace NUM = 6;
 module sokol::sg;
 import sokol;
 
-distinct PrimitiveType = uint;
+typedef PrimitiveType = uint;
 module sokol::sg::primitive_type;
 const PrimitiveType DEFAULT = 0;
 const PrimitiveType POINTS = 1;
@@ -425,7 +425,7 @@ const PrimitiveType NUM = 6;
 module sokol::sg;
 import sokol;
 
-distinct Filter = uint;
+typedef Filter = uint;
 module sokol::sg::filter;
 const Filter DEFAULT = 0;
 const Filter NEAREST = 1;
@@ -434,7 +434,7 @@ const Filter NUM = 3;
 module sokol::sg;
 import sokol;
 
-distinct Wrap = uint;
+typedef Wrap = uint;
 module sokol::sg::wrap;
 const Wrap DEFAULT = 0;
 const Wrap REPEAT = 1;
@@ -445,7 +445,7 @@ const Wrap NUM = 5;
 module sokol::sg;
 import sokol;
 
-distinct BorderColor = uint;
+typedef BorderColor = uint;
 module sokol::sg::border_color;
 const BorderColor DEFAULT = 0;
 const BorderColor TRANSPARENT_BLACK = 1;
@@ -455,7 +455,7 @@ const BorderColor NUM = 4;
 module sokol::sg;
 import sokol;
 
-distinct VertexFormat = uint;
+typedef VertexFormat = uint;
 module sokol::sg::vertex_format;
 const VertexFormat INVALID = 0;
 const VertexFormat FLOAT = 1;
@@ -489,7 +489,7 @@ const VertexFormat NUM = 28;
 module sokol::sg;
 import sokol;
 
-distinct VertexStep = uint;
+typedef VertexStep = uint;
 module sokol::sg::vertex_step;
 const VertexStep DEFAULT = 0;
 const VertexStep PER_VERTEX = 1;
@@ -498,7 +498,7 @@ const VertexStep NUM = 3;
 module sokol::sg;
 import sokol;
 
-distinct UniformType = uint;
+typedef UniformType = uint;
 module sokol::sg::uniform_type;
 const UniformType INVALID = 0;
 const UniformType FLOAT = 1;
@@ -514,7 +514,7 @@ const UniformType NUM = 10;
 module sokol::sg;
 import sokol;
 
-distinct UniformLayout = uint;
+typedef UniformLayout = uint;
 module sokol::sg::uniform_layout;
 const UniformLayout DEFAULT = 0;
 const UniformLayout NATIVE = 1;
@@ -523,7 +523,7 @@ const UniformLayout NUM = 3;
 module sokol::sg;
 import sokol;
 
-distinct CullMode = uint;
+typedef CullMode = uint;
 module sokol::sg::cull_mode;
 const CullMode DEFAULT = 0;
 const CullMode NONE = 1;
@@ -533,7 +533,7 @@ const CullMode NUM = 4;
 module sokol::sg;
 import sokol;
 
-distinct FaceWinding = uint;
+typedef FaceWinding = uint;
 module sokol::sg::face_winding;
 const FaceWinding DEFAULT = 0;
 const FaceWinding CCW = 1;
@@ -542,7 +542,7 @@ const FaceWinding NUM = 3;
 module sokol::sg;
 import sokol;
 
-distinct CompareFunc = uint;
+typedef CompareFunc = uint;
 module sokol::sg::compare_func;
 const CompareFunc DEFAULT = 0;
 const CompareFunc NEVER = 1;
@@ -557,7 +557,7 @@ const CompareFunc NUM = 9;
 module sokol::sg;
 import sokol;
 
-distinct StencilOp = uint;
+typedef StencilOp = uint;
 module sokol::sg::stencil_op;
 const StencilOp DEFAULT = 0;
 const StencilOp KEEP = 1;
@@ -572,7 +572,7 @@ const StencilOp NUM = 9;
 module sokol::sg;
 import sokol;
 
-distinct BlendFactor = uint;
+typedef BlendFactor = uint;
 module sokol::sg::blend_factor;
 const BlendFactor DEFAULT = 0;
 const BlendFactor ZERO = 1;
@@ -594,7 +594,7 @@ const BlendFactor NUM = 16;
 module sokol::sg;
 import sokol;
 
-distinct BlendOp = uint;
+typedef BlendOp = uint;
 module sokol::sg::blend_op;
 const BlendOp DEFAULT = 0;
 const BlendOp ADD = 1;
@@ -606,7 +606,7 @@ const BlendOp NUM = 6;
 module sokol::sg;
 import sokol;
 
-distinct ColorMask = uint;
+typedef ColorMask = uint;
 module sokol::sg::color_mask;
 const ColorMask DEFAULT = 0;
 const ColorMask NONE = 16;
@@ -628,7 +628,7 @@ const ColorMask RGBA = 15;
 module sokol::sg;
 import sokol;
 
-distinct LoadAction = uint;
+typedef LoadAction = uint;
 module sokol::sg::load_action;
 const LoadAction DEFAULT = 0;
 const LoadAction CLEAR = 1;
@@ -637,7 +637,7 @@ const LoadAction DONTCARE = 3;
 module sokol::sg;
 import sokol;
 
-distinct StoreAction = uint;
+typedef StoreAction = uint;
 module sokol::sg::store_action;
 const StoreAction DEFAULT = 0;
 const StoreAction STORE = 1;
@@ -802,7 +802,7 @@ struct SamplerDesc
     uint _end_canary;
 }
 
-distinct ShaderStage = uint;
+typedef ShaderStage = uint;
 module sokol::sg::shader_stage;
 const ShaderStage NONE = 0;
 const ShaderStage VERTEX = 1;
@@ -819,7 +819,7 @@ struct ShaderFunction
     ZString d3d11_target;
 }
 
-distinct ShaderAttrBaseType = uint;
+typedef ShaderAttrBaseType = uint;
 module sokol::sg::shader_attr_base_type;
 const ShaderAttrBaseType UNDEFINED = 0;
 const ShaderAttrBaseType FLOAT = 1;
@@ -1241,7 +1241,7 @@ struct FrameStats
     FrameStatsWgpu wgpu;
 }
 
-distinct LogItem = int;
+typedef LogItem = int;
 module sokol::sg::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
@@ -1806,8 +1806,8 @@ struct GlAttachmentsInfo
     uint[4] msaa_resolve_framebuffer;
 }
 
-def DataCb = fn void(void*);
-def AllocCb = fn void*(usz, void*);
-def FreeCb = fn void*(usz, void*);
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+alias DataCb = fn void(void*);
+alias AllocCb = fn void*(usz, void*);
+alias FreeCb = fn void*(usz, void*);
+alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
 
