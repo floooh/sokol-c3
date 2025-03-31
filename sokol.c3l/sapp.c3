@@ -70,7 +70,7 @@ const usz MAX_MOUSEBUTTONS = 3;
 const usz MAX_KEYCODES = 512;
 const usz MAX_ICONIMAGES = 8;
 
-distinct EventType = uint;
+typedef EventType = uint;
 module sokol::sapp::event_type;
 const EventType INVALID = 0;
 const EventType KEY_DOWN = 1;
@@ -100,7 +100,7 @@ const EventType NUM = 24;
 module sokol::sapp;
 import sokol;
 
-distinct Keycode = int;
+typedef Keycode = int;
 module sokol::sapp::keycode;
 const Keycode INVALID = 0;
 const Keycode SPACE = 32;
@@ -226,7 +226,7 @@ const Keycode MENU = 348;
 module sokol::sapp;
 import sokol;
 
-distinct AndroidTooltype = int;
+typedef AndroidTooltype = int;
 module sokol::sapp::android_tooltype;
 const AndroidTooltype UNKNOWN = 0;
 const AndroidTooltype FINGER = 1;
@@ -244,7 +244,7 @@ struct Touchpoint
     bool changed;
 }
 
-distinct Mousebutton = int;
+typedef Mousebutton = int;
 module sokol::sapp::mousebutton;
 const Mousebutton LEFT = 0;
 const Mousebutton RIGHT = 1;
@@ -310,7 +310,7 @@ struct Allocator
     void* user_data;
 }
 
-distinct LogItem = int;
+typedef LogItem = int;
 module sokol::sapp::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
@@ -468,7 +468,7 @@ struct Desc
     bool ios_keyboard_resizes_canvas;
 }
 
-distinct Html5FetchError = int;
+typedef Html5FetchError = int;
 module sokol::sapp::html5_fetch_error;
 const Html5FetchError FETCH_ERROR_NO_ERROR = 0;
 const Html5FetchError FETCH_ERROR_BUFFER_TOO_SMALL = 1;
@@ -494,7 +494,7 @@ struct Html5FetchRequest
     void* user_data;
 }
 
-distinct MouseCursor = int;
+typedef MouseCursor = int;
 module sokol::sapp::mouse_cursor;
 const MouseCursor DEFAULT = 0;
 const MouseCursor ARROW = 1;
@@ -511,12 +511,12 @@ const MouseCursor NUM = 11;
 module sokol::sapp;
 import sokol;
 
-def AllocCb = fn void*(usz, void*);
-def FreeCb = fn void*(usz, void*);
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
-def Cb = fn void();
-def EventCb = fn void(Event*);
-def DataCb = fn void(void*);
-def EventDataCb = fn void(Event*, void*);
-def ResponseCb = fn void(Html5FetchResponse*);
+alias AllocCb = fn void*(usz, void*);
+alias FreeCb = fn void*(usz, void*);
+alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+alias Cb = fn void();
+alias EventCb = fn void(Event*);
+alias DataCb = fn void(void*);
+alias EventDataCb = fn void(Event*, void*);
+alias ResponseCb = fn void(Html5FetchResponse*);
 

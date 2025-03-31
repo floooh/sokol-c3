@@ -11,8 +11,8 @@ const float PI = 3.14159265358979323846264338327950288;
 // TODO: Shall we use C3 vectors for `Vec2` and `Vec3`?
 //       They are usually aligned so their size may differ from arrays.
 //       For example `Vec3.sizeof` could be 16 but `float[3].sizeof` could be 12.
-distinct Vec2 = float[<2>];
-distinct Vec3 = float[<3>];
+typedef Vec2 = float[<2>];
+typedef Vec3 = float[<3>];
 // Matrix type is `float[number_of_rows][number_of_columns]`.
 // It has column major layout in memory.
 // So in memory matrix is stored as an array of columns `{ column0, column1, column2, ... }`
@@ -21,7 +21,7 @@ distinct Vec3 = float[<3>];
 // The reason is that matrix has type `T[number_of_columns]` where `T` is `float[number_of_rows]`.
 // So when indexing matrix by column `m[column_index]` it returns item of type `T`
 // which is array and can be indexed by `row_index`.
-distinct Mat4 = float[4][4];
+typedef Mat4 = float[4][4];
 
 fn float radians(float degrees)
 {

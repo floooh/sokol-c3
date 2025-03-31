@@ -92,7 +92,7 @@ extern fn void v3f_t2f_c4b(float x, float y, float z, float u, float v, char r, 
 extern fn void v3f_t2f_c1i(float x, float y, float z, float u, float v, uint rgba) @extern("sgl_v3f_t2f_c1i");
 extern fn void end() @extern("sgl_end");
 
-distinct LogItem = int;
+typedef LogItem = int;
 module sokol::sgl::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
@@ -161,7 +161,7 @@ struct Desc
     Logger logger;
 }
 
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
-def AllocCb = fn void*(usz, void*);
-def FreeCb = fn void*(usz, void*);
+alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+alias AllocCb = fn void*(usz, void*);
+alias FreeCb = fn void*(usz, void*);
 

@@ -15,7 +15,7 @@ extern fn bool suspended() @extern("saudio_suspended");
 extern fn CInt expect() @extern("saudio_expect");
 extern fn CInt push(float* frames, CInt num_frames) @extern("saudio_push");
 
-distinct LogItem = int;
+typedef LogItem = int;
 module sokol::saudio::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
@@ -83,9 +83,9 @@ struct Desc
     Logger logger;
 }
 
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
-def AllocCb = fn void*(usz, void*);
-def FreeCb = fn void*(usz, void*);
-def StreamCb = fn void(float*, CInt, CInt);
-def StreamDataCb = fn void(float*, CInt, CInt, void*);
+alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+alias AllocCb = fn void*(usz, void*);
+alias FreeCb = fn void*(usz, void*);
+alias StreamCb = fn void(float*, CInt, CInt);
+alias StreamDataCb = fn void(float*, CInt, CInt, void*);
 
