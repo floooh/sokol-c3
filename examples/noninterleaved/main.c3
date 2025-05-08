@@ -62,7 +62,7 @@ fn void init()
         22, 21, 20,  23, 22, 20,
     };
     sg::Buffer ibuf = sg::make_buffer(&&BufferDesc {
-        .type = buffer_type::INDEXBUFFER,
+        .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
