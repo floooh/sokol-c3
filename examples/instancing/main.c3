@@ -58,14 +58,14 @@ fn void init()
         5, 1, 2,    5, 2, 3,    5, 3, 4,    5, 4, 1,
     };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
-        .type = buffer_type::INDEXBUFFER,
+        .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // empty, dynamic instance-data vertex buffer, goes into vertex-buffer-slot 1
     state.bind.vertex_buffers[1] = sg::make_buffer(&&BufferDesc {
         .size = MAX_PARTICLES * Vec3.sizeof,
-        .usage = usage::STREAM,
+        .usage = { .stream_update = true },
     });
 
     // a shader and pipeline object
@@ -100,7 +100,7 @@ fn void frame()
     // emit new particles
     for (int i = 0; i < NUM_PARTICLES_EMITTED_PER_FRAME; i++)
     {
-        if (state.cur_num_particles >= MAX_PARTICLES) break; 
+        if (state.cur_num_particles >= MAX_PARTICLES) break;
         state.pos[state.cur_num_particles] = {};
         state.vel[state.cur_num_particles] = { rand(-0.5, 0.5), rand(2.0, 2.5), rand(-0.5, 0.5) };
         state.cur_num_particles++;

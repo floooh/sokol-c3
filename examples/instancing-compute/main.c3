@@ -51,7 +51,7 @@ fn void init() {
 
     // a zero-initialized storage buffer for the particle state
     sg::Buffer sbuf = sg::make_buffer(&&sg::BufferDesc{
-        .type = buffer_type::STORAGEBUFFER,
+        .usage = { .storage_buffer = true },
         .size = Particle.sizeof * MAX_PARTICLES,
         .label = "particle-buffer",
     });
@@ -84,7 +84,7 @@ fn void init() {
         5, 1, 2,    5, 2, 3,    5, 3, 4,    5, 4, 1,
     };
     state.display.bind.index_buffer = sg::make_buffer(&&sg::BufferDesc{
-        .type = buffer_type::INDEXBUFFER,
+        .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
