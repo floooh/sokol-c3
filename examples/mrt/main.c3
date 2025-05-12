@@ -58,7 +58,7 @@ fn void create_offscreen_attachments(int width, int height)
 
     // create offscreen rendertarget images and pass
     sg::ImageDesc color_img_desc = {
-        .render_target = true,
+        .usage = { .render_attachment = true },
         .width = width,
         .height = height,
         .sample_count = OFFSCREEN_SAMPLE_COUNT,
@@ -158,7 +158,7 @@ fn void init()
         22, 21, 20,  23, 22, 20,
     };
     sg::Buffer cube_ibuf = sg::make_buffer(&&BufferDesc {
-        .type = buffer_type::INDEXBUFFER,
+        .usage = { .index_buffer = true },
         .data = { .ptr = &cube_indices, .size = $sizeof(cube_indices) },
     });
 
