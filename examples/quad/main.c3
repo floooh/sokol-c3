@@ -38,7 +38,7 @@ fn void init()
     // an index buffer
     ushort[*] indices = { 0, 1, 2,  0, 2, 3 };
     state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
-        .type = buffer_type::INDEXBUFFER,
+        .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
