@@ -41,7 +41,7 @@ extern fn void putc(char c) @extern("sdtx_putc");
 extern fn void puts(ZString str) @extern("sdtx_puts");
 extern fn void putr(ZString str, CInt len) @extern("sdtx_putr");
 
-distinct LogItem = int;
+typedef LogItem = int;
 module sokol::sdtx::log_item;
 const LogItem OK = 0;
 const LogItem MALLOC_FAILED = 1;
@@ -105,7 +105,7 @@ struct Desc
     Logger logger;
 }
 
-def LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
-def AllocCb = fn void*(usz, void*);
-def FreeCb = fn void*(usz, void*);
+alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+alias AllocCb = fn void*(usz, void*);
+alias FreeCb = fn void*(usz, void*);
 

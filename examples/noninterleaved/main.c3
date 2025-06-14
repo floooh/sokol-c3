@@ -12,7 +12,7 @@ module main;
 import sokol;
 import sokol_math;
 
-def Mat4 = sokol_math::Mat4;
+alias Mat4 = sokol_math::Mat4;
 
 struct State
 {
@@ -25,7 +25,7 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&sg::Desc {
+    sg::setup(&&(sg::Desc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -48,7 +48,7 @@ fn void init()
          0.5, 1.0, 1.0, 1.0,  0.5, 1.0, 1.0, 1.0,  0.5, 1.0, 1.0, 1.0,  0.5, 1.0, 1.0, 1.0,
          1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,
     };
-    sg::Buffer vbuf = sg::make_buffer(&&BufferDesc {
+    sg::Buffer vbuf = sg::make_buffer(&&(BufferDesc) {
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
@@ -61,13 +61,13 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    sg::Buffer ibuf = sg::make_buffer(&&BufferDesc {
+    sg::Buffer ibuf = sg::make_buffer(&&(BufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // shader and pipeline object
-    state.pip = sg::make_pipeline(&&PipelineDesc {
+    state.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&noninterleaved_shader_desc(sg::query_backend())),
         .layout = {
             // note how the vertex components are pulled from different buffer bind slots
@@ -116,10 +116,10 @@ fn void frame()
     };
 
     // default pass-action clears to grey
-    sg::begin_pass(&&Pass { .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(Pass) { .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -143,7 +143,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&sapp::Desc {
+    sapp::run(&&(sapp::Desc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

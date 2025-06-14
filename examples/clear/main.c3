@@ -12,7 +12,7 @@ PassAction pass_action;
 
 fn void init()
 {
-    sg::setup(&&sg::Desc {
+    sg::setup(&&(sg::Desc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -41,7 +41,7 @@ fn void frame()
 {
     float g = pass_action.colors[0].clear_value.g + 0.01;
     pass_action.colors[0].clear_value.g = g > 1.0 ? 0.0 : g;
-    sg::begin_pass(&&Pass { .action = pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(Pass) { .action = pass_action, .swapchain = sglue::swapchain() });
     sg::end_pass();
     sg::commit();
 }
@@ -53,7 +53,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&sapp::Desc {
+    sapp::run(&&(sapp::Desc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

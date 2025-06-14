@@ -18,7 +18,7 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&sg::Desc {
+    sg::setup(&&(sg::Desc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -31,19 +31,19 @@ fn void init()
          0.5, -0.5, 0.5,     0.0, 0.0, 1.0, 1.0,
         -0.5, -0.5, 0.5,     1.0, 1.0, 0.0, 1.0,
     };
-    state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&(BufferDesc) {
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
     // an index buffer
     ushort[*] indices = { 0, 1, 2,  0, 2, 3 };
-    state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
+    state.bind.index_buffer = sg::make_buffer(&&(BufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline object
-    state.pip = sg::make_pipeline(&&PipelineDesc {
+    state.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&quad_shader_desc(sg::query_backend())),
         .index_type = index_type::UINT16,
         .layout = {
@@ -60,7 +60,7 @@ fn void init()
 
 fn void frame()
 {
-    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(Pass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
     sg::draw(0, 6, 1);
@@ -75,7 +75,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&sapp::Desc {
+    sapp::run(&&(sapp::Desc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

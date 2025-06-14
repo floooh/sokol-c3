@@ -9,7 +9,7 @@ module main;
 import sokol;
 import sokol_math;
 
-def Mat4 = sokol_math::Mat4;
+alias Mat4 = sokol_math::Mat4;
 
 const int OFFSCREEN_SAMPLE_COUNT = 1;
 
@@ -39,7 +39,7 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&sg::Desc {
+    sg::setup(&&(sg::Desc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -61,7 +61,7 @@ fn void init()
     sg::Image color_img = sg::make_image(&img_desc);
     img_desc.pixel_format = pixel_format::DEPTH;
     sg::Image depth_img = sg::make_image(&img_desc);
-    state.offscreen.attachments = sg::make_attachments(&&AttachmentsDesc {
+    state.offscreen.attachments = sg::make_attachments(&&(AttachmentsDesc) {
         .colors[0] = { .image = color_img },
         .depth_stencil = {
             .image = depth_img,
@@ -75,7 +75,7 @@ fn void init()
         .indices  = { .buffer = { .ptr = &state.indices, .size = $sizeof(state.indices) } },
     };
 
-    buf = sshape::build_torus(&buf, &&Torus {
+    buf = sshape::build_torus(&buf, &&(Torus) {
         .radius = 0.5,
         .ring_radius = 0.3,
         .sides = 20,
@@ -83,7 +83,7 @@ fn void init()
     });
     state.donut = sshape::element_range(&buf);
 
-    buf = sshape::build_sphere(&buf, &&Sphere {
+    buf = sshape::build_sphere(&buf, &&(Sphere) {
         .radius = 0.5,
         .slices = 72,
         .stacks = 40,
@@ -94,7 +94,7 @@ fn void init()
     sg::Buffer ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&buf));
 
     // pipeline-state-object for offscreen-rendered donut, don't need texture coord here
-    state.offscreen.pip = sg::make_pipeline(&&PipelineDesc {
+    state.offscreen.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -115,7 +115,7 @@ fn void init()
     });
 
     // and another pipeline-state-object for the default pass
-    state.dflt.pip = sg::make_pipeline(&&PipelineDesc {
+    state.dflt.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&default_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -134,7 +134,7 @@ fn void init()
     });
 
     // a sampler object for sampling the render target as texture
-    Sampler smp = sg::make_sampler(&&SamplerDesc {
+    Sampler smp = sg::make_sampler(&&(SamplerDesc) {
         .min_filter = filter::LINEAR,
         .mag_filter = filter::LINEAR,
         .wrap_u = wrap::REPEAT,
@@ -166,10 +166,10 @@ fn void frame()
     VsParams vs_params = {
         .mvp = compute_mvp(rx: state.rx, ry: state.ry, aspect: 1.0, eye_dist: 2.5),
     };
-    sg::begin_pass(&&Pass { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
+    sg::begin_pass(&&(Pass) { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.donut.base_element, state.donut.num_elements, 1);
     sg::end_pass();
 
@@ -181,10 +181,10 @@ fn void frame()
         aspect: sapp::widthf() / sapp::heightf(),
         eye_dist: 2.0,
     );
-    sg::begin_pass(&&Pass { .action = state.dflt.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(Pass) { .action = state.dflt.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.dflt.pip);
     sg::apply_bindings(&state.dflt.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.sphere.base_element, state.sphere.num_elements, 1);
     sg::end_pass();
 
@@ -209,7 +209,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&sapp::Desc {
+    sapp::run(&&(sapp::Desc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

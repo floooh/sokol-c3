@@ -7,7 +7,7 @@ module main;
 import sokol;
 import sokol_math;
 
-def Mat4 = sokol_math::Mat4;
+alias Mat4 = sokol_math::Mat4;
 
 struct State
 {
@@ -29,7 +29,7 @@ struct Vertex
 
 fn void init()
 {
-    sg::setup(&&sg::Desc {
+    sg::setup(&&(sg::Desc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -73,7 +73,7 @@ fn void init()
         {  1.0,  1.0,  1.0,  0xFF007FFF, 32767, 32767 },
         {  1.0,  1.0, -1.0,  0xFF007FFF,     0, 32767 },
     };
-    state.bind.vertex_buffers[0] = sg::make_buffer(&&BufferDesc {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&(BufferDesc) {
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
@@ -86,7 +86,7 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    state.bind.index_buffer = sg::make_buffer(&&BufferDesc {
+    state.bind.index_buffer = sg::make_buffer(&&(BufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
@@ -99,17 +99,17 @@ fn void init()
         0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
     };
     /* NOTE: SLOT_tex is provided by shader code generation */
-    state.bind.images[IMG_TEX] = sg::make_image(&&sg::ImageDesc {
+    state.bind.images[IMG_TEX] = sg::make_image(&&(sg::ImageDesc) {
         .width = 4,
         .height = 4,
         .data.subimage[0][0] = { .ptr = &pixels, .size = $sizeof(pixels) },
     });
 
     // a sampler with default options to sample the above image as texture
-    state.bind.samplers[SMP_SMP] = sg::make_sampler(&&sg::SamplerDesc {});
+    state.bind.samplers[SMP_SMP] = sg::make_sampler(&&(sg::SamplerDesc) {});
 
     // shader and pipeline object
-    state.pip = sg::make_pipeline(&&PipelineDesc {
+    state.pip = sg::make_pipeline(&&(PipelineDesc) {
         .shader = sg::make_shader(&&texcube_shader_desc(sg::query_backend())),
         .layout = {
             .attrs = {
@@ -140,10 +140,10 @@ fn void frame()
     VsParams vs_params = {
         .mvp = compute_mvp(state.rx, state.ry),
     };
-    sg::begin_pass(&&Pass { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(Pass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&sg::Range { .ptr = &vs_params, .size = $sizeof(vs_params) } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -167,7 +167,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&sapp::Desc {
+    sapp::run(&&(sapp::Desc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
