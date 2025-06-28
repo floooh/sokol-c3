@@ -817,6 +817,7 @@ struct ShaderFunction
     Range bytecode;
     ZString entry;
     ZString d3d11_target;
+    ZString d3d11_filepath;
 }
 
 typedef ShaderAttrBaseType = uint;
