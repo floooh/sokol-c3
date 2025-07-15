@@ -40,6 +40,7 @@ extern fn void color1i(uint rgba) @extern("sdtx_color1i");
 extern fn void putc(char c) @extern("sdtx_putc");
 extern fn void puts(ZString str) @extern("sdtx_puts");
 extern fn void putr(ZString str, CInt len) @extern("sdtx_putr");
+extern fn Range get_cleared_fmt_buffer() @extern("sdtx_get_cleared_fmt_buffer");
 
 typedef LogItem = int;
 module sokol::sdtx::log_item;
