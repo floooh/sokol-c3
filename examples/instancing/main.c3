@@ -110,14 +110,12 @@ fn void frame()
     for (int i = 0; i < state.cur_num_particles; i++)
     {
         state.vel[i].y -= 1.0 * frame_time;
-        // TODO: Can we get rid of casts to `float[<3>]` and then back to `Vec3`?
-        state.pos[i] += (Vec3)((float[<3>])state.vel[i] * frame_time);
+        state.pos[i] = state.pos[i] + state.vel[i] * (Vec3){ frame_time, frame_time, frame_time };
         // bounce back from ground
         if (state.pos[i].y < -2.0)
         {
             state.pos[i].y = -1.8;
-            state.vel[i].y = -state.vel[i].y;
-            state.vel[i] *= 0.8;
+            state.vel[i] = state.vel[i] * (Vec3){ 0.8, -0.8, 0.8 };
         }
     }
 

@@ -38,7 +38,7 @@ fn void init()
     // otherwise use a regular clear color...
     state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.75, 0.5, 0.25, 1 } };
 
-    // a storage buffer with cube vertices, this is using the code-generated
+    // a buffer with cube vertices and a storage buffer view, this is using the code-generated
     // per-vertex struct from the shader
     SbVertex[*] vertices = {
         { .pos = { -1.0, -1.0, -1.0 }, .color = { 1.0, 0.0, 0.0, 1.0} },
@@ -66,9 +66,11 @@ fn void init()
         { .pos = {  1.0,  1.0,  1.0 }, .color = { 1.0, 0.0, 0.5, 1.0} },
         { .pos = {  1.0,  1.0, -1.0 }, .color = { 1.0, 0.0, 0.5, 1.0} },
     };
-    state.bind.storage_buffers[SBUF_SSBO] = sg::make_buffer(&&(BufferDesc) {
-        .usage = { .storage_buffer = true },
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+    state.bind.views[VIEW_SSBO] = sg::make_view(&&(ViewDesc){
+        .storage_buffer.buffer = sg::make_buffer(&&(BufferDesc){
+            .usage = { .storage_buffer = true },
+            .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        }),
     });
 
     // a regular index buffer
@@ -109,8 +111,7 @@ fn void frame()
     };
 
     sg::begin_pass(&&(Pass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
-    if (sg::query_features().compute)
-    {
+    if (sg::query_features().compute) {
         sg::apply_pipeline(state.pip);
         sg::apply_bindings(&state.bind);
         sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) } );

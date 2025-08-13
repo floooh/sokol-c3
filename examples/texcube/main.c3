@@ -91,18 +91,19 @@ fn void init()
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
-    // create a checkerboard texture
+    // create a checkerboard image and texture view
     uint[4*4] pixels = {
         0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000,
         0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
         0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000,
         0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
     };
-    /* NOTE: SLOT_tex is provided by shader code generation */
-    state.bind.images[IMG_TEX] = sg::make_image(&&(sg::ImageDesc) {
-        .width = 4,
-        .height = 4,
-        .data.subimage[0][0] = { .ptr = &pixels, .size = $sizeof(pixels) },
+    state.bind.views[VIEW_TEX] = sg::make_view(&&(sg::ViewDesc) {
+        .texture.image = sg::make_image(&&(sg::ImageDesc) {
+            .width = 4,
+            .height = 4,
+            .data.subimage[0][0] = { .ptr = &pixels, .size = $sizeof(pixels) },
+        }),
     });
 
     // a sampler with default options to sample the above image as texture
