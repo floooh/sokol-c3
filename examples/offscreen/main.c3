@@ -11,19 +11,16 @@ import sokol_math;
 
 alias Mat4 = sokol_math::Mat4;
 
-const int OFFSCREEN_SAMPLE_COUNT = 1;
-
 struct State
 {
     struct offscreen
     {
-        sg::PassAction pass_action;
-        sg::Attachments attachments;
+        sg::Pass pass;
         sg::Pipeline pip;
         sg::Bindings bind;
     }
     // `default` is keyword, so we use `dflt`.
-    struct dflt
+    struct display
     {
         sg::PassAction pass_action;
         sg::Pipeline pip;
@@ -45,27 +42,41 @@ fn void init()
     });
 
     // default pass action: clear to blue-ish
-    state.dflt.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.45, 0.65, 1.0 } };
+    state.display.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.45, 0.65, 1.0 } };
 
     // offscreen pass action: clear to grey
-    state.offscreen.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.25, 0.25, 1.0 } };
+    state.offscreen.pass.action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.25, 0.25, 1.0 } };
 
-    // a render pass with one color- and one depth-attachment image
-    sg::ImageDesc img_desc = {
-        .usage = { .render_attachment = true },
-        .width = 256,
-        .height = 256,
-        .pixel_format = pixel_format::RGBA8,
+    // setup color- and depth-stencil-attachment images and views
+    const int OFFSCREEN_WIDTH = 256;
+    const int OFFSCREEN_HEIGHT = 256;
+    const int OFFSCREEN_SAMPLE_COUNT = 1;
+    sg::Image color_img = sg::make_image(&&(sg::ImageDesc){
+        .usage = { .color_attachment = true },
+        .width = OFFSCREEN_WIDTH,
+        .height = OFFSCREEN_HEIGHT,
         .sample_count = OFFSCREEN_SAMPLE_COUNT,
-    };
-    sg::Image color_img = sg::make_image(&img_desc);
-    img_desc.pixel_format = pixel_format::DEPTH;
-    sg::Image depth_img = sg::make_image(&img_desc);
-    state.offscreen.attachments = sg::make_attachments(&&(AttachmentsDesc) {
-        .colors[0] = { .image = color_img },
-        .depth_stencil = {
-            .image = depth_img,
-        },
+        .pixel_format = pixel_format::RGBA8,
+    });
+    sg::Image depth_img = sg::make_image(&&(sg::ImageDesc){
+        .usage = { .depth_stencil_attachment = true },
+        .width = OFFSCREEN_WIDTH,
+        .height = OFFSCREEN_HEIGHT,
+        .sample_count = OFFSCREEN_SAMPLE_COUNT,
+        .pixel_format = pixel_format::DEPTH,
+    });
+
+    // the offscreen render pass needs a color- and depth-stencil-attachment view
+    state.offscreen.pass.attachments.colors[0] = sg::make_view(&&(sg::ViewDesc){
+        .color_attachment = { .image = color_img },
+    });
+    state.offscreen.pass.attachments.depth_stencil = sg::make_view(&&(sg::ViewDesc){
+        .depth_stencil_attachment = { .image = depth_img },
+    });
+
+    // the display render pass needs a texture view on the color image
+    state.display.bind.views[VIEW_TEX] = sg::make_view(&&(sg::ViewDesc){
+        .texture = { .image = color_img },
     });
 
     // a donut shape which is rendered into the offscreen render target, and
@@ -91,10 +102,14 @@ fn void init()
     state.sphere = sshape::element_range(&buf);
 
     sg::Buffer vbuf = sg::make_buffer(&&sshape::vertex_buffer_desc(&buf));
+    state.offscreen.bind.vertex_buffers[0] = vbuf;
+    state.display.bind.vertex_buffers[0] = vbuf;
     sg::Buffer ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&buf));
+    state.offscreen.bind.index_buffer = ibuf;
+    state.display.bind.index_buffer = ibuf;
 
     // pipeline-state-object for offscreen-rendered donut, don't need texture coord here
-    state.offscreen.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.offscreen.pip = sg::make_pipeline(&&(sg::PipelineDesc) {
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -115,7 +130,7 @@ fn void init()
     });
 
     // and another pipeline-state-object for the default pass
-    state.dflt.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.display.pip = sg::make_pipeline(&&(sg::PipelineDesc) {
         .shader = sg::make_shader(&&default_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -134,7 +149,7 @@ fn void init()
     });
 
     // a sampler object for sampling the render target as texture
-    Sampler smp = sg::make_sampler(&&(SamplerDesc) {
+    state.display.bind.samplers[SMP_SMP] = sg::make_sampler(&&(sg::SamplerDesc) {
         .min_filter = filter::LINEAR,
         .mag_filter = filter::LINEAR,
         .wrap_u = wrap::REPEAT,
@@ -145,14 +160,6 @@ fn void init()
     state.offscreen.bind = {
         .vertex_buffers[0] = vbuf,
         .index_buffer = ibuf,
-    };
-
-    // resource bindings to render a textured shape, using the offscreen render target as texture
-    state.dflt.bind = {
-        .vertex_buffers[0] = vbuf,
-        .index_buffer = ibuf,
-        .images = { [IMG_TEX] = color_img },
-        .samplers = { [SMP_SMP] = smp },
     };
 }
 
@@ -166,7 +173,7 @@ fn void frame()
     VsParams vs_params = {
         .mvp = compute_mvp(rx: state.rx, ry: state.ry, aspect: 1.0, eye_dist: 2.5),
     };
-    sg::begin_pass(&&(Pass) { .action = state.offscreen.pass_action, .attachments = state.offscreen.attachments });
+    sg::begin_pass(&state.offscreen.pass);
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
     sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) });
@@ -181,9 +188,9 @@ fn void frame()
         aspect: sapp::widthf() / sapp::heightf(),
         eye_dist: 2.0,
     );
-    sg::begin_pass(&&(Pass) { .action = state.dflt.pass_action, .swapchain = sglue::swapchain() });
-    sg::apply_pipeline(state.dflt.pip);
-    sg::apply_bindings(&state.dflt.bind);
+    sg::begin_pass(&&(Pass) { .action = state.display.pass_action, .swapchain = sglue::swapchain() });
+    sg::apply_pipeline(state.display.pip);
+    sg::apply_bindings(&state.display.bind);
     sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.sphere.base_element, state.sphere.num_elements, 1);
     sg::end_pass();

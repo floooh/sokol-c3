@@ -30,7 +30,7 @@ extern fn void scissor_rect(CInt x, CInt y, CInt w, CInt h, bool origin_top_left
 extern fn void scissor_rectf(float x, float y, float w, float h, bool origin_top_left) @extern("sgl_scissor_rectf");
 extern fn void enable_texture() @extern("sgl_enable_texture");
 extern fn void disable_texture() @extern("sgl_disable_texture");
-extern fn void texture(sokol::sg::Image img, sokol::sg::Sampler smp) @extern("sgl_texture");
+extern fn void texture(sokol::sg::View tex_view, sokol::sg::Sampler smp) @extern("sgl_texture");
 extern fn void layer(CInt layer_id) @extern("sgl_layer");
 extern fn void load_default_pipeline() @extern("sgl_load_default_pipeline");
 extern fn void load_pipeline(Pipeline pip) @extern("sgl_load_pipeline");

@@ -49,14 +49,17 @@ fn void init() {
         .colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0, 0.1, 0.2, 1 } },
     };
 
-    // a zero-initialized storage buffer for the particle state
+    // a buffer for the particle state with a storage buffer view
     sg::Buffer sbuf = sg::make_buffer(&&(sg::BufferDesc){
         .usage = { .storage_buffer = true },
         .size = Particle.sizeof * MAX_PARTICLES,
         .label = "particle-buffer",
     });
-    state.compute.bind.storage_buffers[SBUF_CS_SSBO] = sbuf;
-    state.display.bind.storage_buffers[SBUF_VS_SSBO] = sbuf;
+    sg::View sbuf_view = sg::make_view(&&(sg::ViewDesc){
+        .storage_buffer = { .buffer = sbuf },
+    });
+    state.compute.bind.views[VIEW_CS_SSBO] = sbuf_view;
+    state.display.bind.views[VIEW_VS_SSBO] = sbuf_view;
 
     // a compute shader and pipeline object for updating the particle state
     state.compute.pip = sg::make_pipeline(&&(sg::PipelineDesc){

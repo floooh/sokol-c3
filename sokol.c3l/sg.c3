@@ -16,13 +16,13 @@ extern fn Image make_image(ImageDesc* desc) @extern("sg_make_image");
 extern fn Sampler make_sampler(SamplerDesc* desc) @extern("sg_make_sampler");
 extern fn Shader make_shader(ShaderDesc* desc) @extern("sg_make_shader");
 extern fn Pipeline make_pipeline(PipelineDesc* desc) @extern("sg_make_pipeline");
-extern fn Attachments make_attachments(AttachmentsDesc* desc) @extern("sg_make_attachments");
+extern fn View make_view(ViewDesc* desc) @extern("sg_make_view");
 extern fn void destroy_buffer(Buffer buf) @extern("sg_destroy_buffer");
 extern fn void destroy_image(Image img) @extern("sg_destroy_image");
 extern fn void destroy_sampler(Sampler smp) @extern("sg_destroy_sampler");
 extern fn void destroy_shader(Shader shd) @extern("sg_destroy_shader");
 extern fn void destroy_pipeline(Pipeline pip) @extern("sg_destroy_pipeline");
-extern fn void destroy_attachments(Attachments atts) @extern("sg_destroy_attachments");
+extern fn void destroy_view(View view) @extern("sg_destroy_view");
 extern fn void update_buffer(Buffer buf, Range* data) @extern("sg_update_buffer");
 extern fn void update_image(Image img, ImageData* data) @extern("sg_update_image");
 extern fn CInt append_buffer(Buffer buf, Range* data) @extern("sg_append_buffer");
@@ -52,25 +52,25 @@ extern fn ResourceState query_image_state(Image img) @extern("sg_query_image_sta
 extern fn ResourceState query_sampler_state(Sampler smp) @extern("sg_query_sampler_state");
 extern fn ResourceState query_shader_state(Shader shd) @extern("sg_query_shader_state");
 extern fn ResourceState query_pipeline_state(Pipeline pip) @extern("sg_query_pipeline_state");
-extern fn ResourceState query_attachments_state(Attachments atts) @extern("sg_query_attachments_state");
+extern fn ResourceState query_view_state(View view) @extern("sg_query_view_state");
 extern fn BufferInfo query_buffer_info(Buffer buf) @extern("sg_query_buffer_info");
 extern fn ImageInfo query_image_info(Image img) @extern("sg_query_image_info");
 extern fn SamplerInfo query_sampler_info(Sampler smp) @extern("sg_query_sampler_info");
 extern fn ShaderInfo query_shader_info(Shader shd) @extern("sg_query_shader_info");
 extern fn PipelineInfo query_pipeline_info(Pipeline pip) @extern("sg_query_pipeline_info");
-extern fn AttachmentsInfo query_attachments_info(Attachments atts) @extern("sg_query_attachments_info");
+extern fn ViewInfo query_view_info(View view) @extern("sg_query_view_info");
 extern fn BufferDesc query_buffer_desc(Buffer buf) @extern("sg_query_buffer_desc");
 extern fn ImageDesc query_image_desc(Image img) @extern("sg_query_image_desc");
 extern fn SamplerDesc query_sampler_desc(Sampler smp) @extern("sg_query_sampler_desc");
 extern fn ShaderDesc query_shader_desc(Shader shd) @extern("sg_query_shader_desc");
 extern fn PipelineDesc query_pipeline_desc(Pipeline pip) @extern("sg_query_pipeline_desc");
-extern fn AttachmentsDesc query_attachments_desc(Attachments atts) @extern("sg_query_attachments_desc");
+extern fn ViewDesc query_view_desc(View view) @extern("sg_query_view_desc");
 extern fn BufferDesc query_buffer_defaults(BufferDesc* desc) @extern("sg_query_buffer_defaults");
 extern fn ImageDesc query_image_defaults(ImageDesc* desc) @extern("sg_query_image_defaults");
 extern fn SamplerDesc query_sampler_defaults(SamplerDesc* desc) @extern("sg_query_sampler_defaults");
 extern fn ShaderDesc query_shader_defaults(ShaderDesc* desc) @extern("sg_query_shader_defaults");
 extern fn PipelineDesc query_pipeline_defaults(PipelineDesc* desc) @extern("sg_query_pipeline_defaults");
-extern fn AttachmentsDesc query_attachments_defaults(AttachmentsDesc* desc) @extern("sg_query_attachments_defaults");
+extern fn ViewDesc query_view_defaults(ViewDesc* desc) @extern("sg_query_view_defaults");
 extern fn usz query_buffer_size(Buffer buf) @extern("sg_query_buffer_size");
 extern fn BufferUsage query_buffer_usage(Buffer buf) @extern("sg_query_buffer_usage");
 extern fn ImageType query_image_type(Image img) @extern("sg_query_image_type");
@@ -81,36 +81,39 @@ extern fn CInt query_image_num_mipmaps(Image img) @extern("sg_query_image_num_mi
 extern fn PixelFormat query_image_pixelformat(Image img) @extern("sg_query_image_pixelformat");
 extern fn ImageUsage query_image_usage(Image img) @extern("sg_query_image_usage");
 extern fn CInt query_image_sample_count(Image img) @extern("sg_query_image_sample_count");
+extern fn ViewType query_view_type(View view) @extern("sg_query_view_type");
+extern fn Image query_view_image(View view) @extern("sg_query_view_image");
+extern fn Buffer query_view_buffer(View view) @extern("sg_query_view_buffer");
 extern fn Buffer alloc_buffer() @extern("sg_alloc_buffer");
 extern fn Image alloc_image() @extern("sg_alloc_image");
 extern fn Sampler alloc_sampler() @extern("sg_alloc_sampler");
 extern fn Shader alloc_shader() @extern("sg_alloc_shader");
 extern fn Pipeline alloc_pipeline() @extern("sg_alloc_pipeline");
-extern fn Attachments alloc_attachments() @extern("sg_alloc_attachments");
+extern fn View alloc_view() @extern("sg_alloc_view");
 extern fn void dealloc_buffer(Buffer buf) @extern("sg_dealloc_buffer");
 extern fn void dealloc_image(Image img) @extern("sg_dealloc_image");
 extern fn void dealloc_sampler(Sampler smp) @extern("sg_dealloc_sampler");
 extern fn void dealloc_shader(Shader shd) @extern("sg_dealloc_shader");
 extern fn void dealloc_pipeline(Pipeline pip) @extern("sg_dealloc_pipeline");
-extern fn void dealloc_attachments(Attachments attachments) @extern("sg_dealloc_attachments");
+extern fn void dealloc_view(View view) @extern("sg_dealloc_view");
 extern fn void init_buffer(Buffer buf, BufferDesc* desc) @extern("sg_init_buffer");
 extern fn void init_image(Image img, ImageDesc* desc) @extern("sg_init_image");
 extern fn void init_sampler(Sampler smg, SamplerDesc* desc) @extern("sg_init_sampler");
 extern fn void init_shader(Shader shd, ShaderDesc* desc) @extern("sg_init_shader");
 extern fn void init_pipeline(Pipeline pip, PipelineDesc* desc) @extern("sg_init_pipeline");
-extern fn void init_attachments(Attachments attachments, AttachmentsDesc* desc) @extern("sg_init_attachments");
+extern fn void init_view(View view, ViewDesc* desc) @extern("sg_init_view");
 extern fn void uninit_buffer(Buffer buf) @extern("sg_uninit_buffer");
 extern fn void uninit_image(Image img) @extern("sg_uninit_image");
 extern fn void uninit_sampler(Sampler smp) @extern("sg_uninit_sampler");
 extern fn void uninit_shader(Shader shd) @extern("sg_uninit_shader");
 extern fn void uninit_pipeline(Pipeline pip) @extern("sg_uninit_pipeline");
-extern fn void uninit_attachments(Attachments atts) @extern("sg_uninit_attachments");
+extern fn void uninit_view(View view) @extern("sg_uninit_view");
 extern fn void fail_buffer(Buffer buf) @extern("sg_fail_buffer");
 extern fn void fail_image(Image img) @extern("sg_fail_image");
 extern fn void fail_sampler(Sampler smp) @extern("sg_fail_sampler");
 extern fn void fail_shader(Shader shd) @extern("sg_fail_shader");
 extern fn void fail_pipeline(Pipeline pip) @extern("sg_fail_pipeline");
-extern fn void fail_attachments(Attachments atts) @extern("sg_fail_attachments");
+extern fn void fail_view(View view) @extern("sg_fail_view");
 extern fn void enable_frame_stats() @extern("sg_enable_frame_stats");
 extern fn void disable_frame_stats() @extern("sg_disable_frame_stats");
 extern fn bool frame_stats_enabled() @extern("sg_frame_stats_enabled");
@@ -122,7 +125,7 @@ extern fn D3d11ImageInfo d3d11_query_image_info(Image img) @extern("sg_d3d11_que
 extern fn D3d11SamplerInfo d3d11_query_sampler_info(Sampler smp) @extern("sg_d3d11_query_sampler_info");
 extern fn D3d11ShaderInfo d3d11_query_shader_info(Shader shd) @extern("sg_d3d11_query_shader_info");
 extern fn D3d11PipelineInfo d3d11_query_pipeline_info(Pipeline pip) @extern("sg_d3d11_query_pipeline_info");
-extern fn D3d11AttachmentsInfo d3d11_query_attachments_info(Attachments atts) @extern("sg_d3d11_query_attachments_info");
+extern fn D3d11ViewInfo d3d11_query_view_info(View view) @extern("sg_d3d11_query_view_info");
 extern fn void* mtl_device() @extern("sg_mtl_device");
 extern fn void* mtl_render_command_encoder() @extern("sg_mtl_render_command_encoder");
 extern fn void* mtl_compute_command_encoder() @extern("sg_mtl_compute_command_encoder");
@@ -141,12 +144,12 @@ extern fn WgpuImageInfo wgpu_query_image_info(Image img) @extern("sg_wgpu_query_
 extern fn WgpuSamplerInfo wgpu_query_sampler_info(Sampler smp) @extern("sg_wgpu_query_sampler_info");
 extern fn WgpuShaderInfo wgpu_query_shader_info(Shader shd) @extern("sg_wgpu_query_shader_info");
 extern fn WgpuPipelineInfo wgpu_query_pipeline_info(Pipeline pip) @extern("sg_wgpu_query_pipeline_info");
-extern fn WgpuAttachmentsInfo wgpu_query_attachments_info(Attachments atts) @extern("sg_wgpu_query_attachments_info");
+extern fn WgpuViewInfo wgpu_query_view_info(View view) @extern("sg_wgpu_query_view_info");
 extern fn GlBufferInfo gl_query_buffer_info(Buffer buf) @extern("sg_gl_query_buffer_info");
 extern fn GlImageInfo gl_query_image_info(Image img) @extern("sg_gl_query_image_info");
 extern fn GlSamplerInfo gl_query_sampler_info(Sampler smp) @extern("sg_gl_query_sampler_info");
 extern fn GlShaderInfo gl_query_shader_info(Shader shd) @extern("sg_gl_query_shader_info");
-extern fn GlAttachmentsInfo gl_query_attachments_info(Attachments atts) @extern("sg_gl_query_attachments_info");
+extern fn GlViewInfo gl_query_view_info(View view) @extern("sg_gl_query_view_info");
 
 struct Buffer
 {
@@ -173,7 +176,7 @@ struct Pipeline
     uint id;
 }
 
-struct Attachments
+struct View
 {
     uint id;
 }
@@ -187,17 +190,15 @@ struct Range
 const uint INVALID_ID = 0;
 const usz NUM_INFLIGHT_FRAMES = 2;
 const usz MAX_COLOR_ATTACHMENTS = 4;
-const usz MAX_STORAGE_ATTACHMENTS = 4;
 const usz MAX_UNIFORMBLOCK_MEMBERS = 16;
 const usz MAX_VERTEX_ATTRIBUTES = 16;
 const usz MAX_MIPMAPS = 16;
 const usz MAX_TEXTUREARRAY_LAYERS = 128;
-const usz MAX_UNIFORMBLOCK_BINDSLOTS = 8;
 const usz MAX_VERTEXBUFFER_BINDSLOTS = 8;
-const usz MAX_IMAGE_BINDSLOTS = 16;
+const usz MAX_UNIFORMBLOCK_BINDSLOTS = 8;
+const usz MAX_VIEW_BINDSLOTS = 28;
 const usz MAX_SAMPLER_BINDSLOTS = 16;
-const usz MAX_STORAGEBUFFER_BINDSLOTS = 8;
-const usz MAX_IMAGE_SAMPLER_PAIRS = 16;
+const usz MAX_TEXTURE_SAMPLER_PAIRS = 16;
 
 struct Color
 {
@@ -315,8 +316,9 @@ struct Features
     bool mrt_independent_blend_state;
     bool mrt_independent_write_mask;
     bool compute;
-    bool msaa_image_bindings;
+    bool msaa_texture_bindings;
     bool separate_buffer_types;
+    bool gl_texture_views;
 }
 
 struct Limits
@@ -695,6 +697,13 @@ struct Swapchain
     GlSwapchain gl;
 }
 
+struct Attachments
+{
+    View[4] colors;
+    View[4] resolves;
+    View depth_stencil;
+}
+
 struct Pass
 {
     uint _start_canary;
@@ -713,9 +722,8 @@ struct Bindings
     CInt[8] vertex_buffer_offsets;
     Buffer index_buffer;
     CInt index_buffer_offset;
-    Image[16] images;
+    View[28] views;
     Sampler[16] samplers;
-    Buffer[8] storage_buffers;
     uint _end_canary;
 }
 
@@ -745,12 +753,26 @@ struct BufferDesc
 
 struct ImageUsage
 {
-    bool render_attachment;
-    bool storage_attachment;
+    bool storage_image;
+    bool color_attachment;
+    bool resolve_attachment;
+    bool depth_stencil_attachment;
     bool immutable;
     bool dynamic_update;
     bool stream_update;
 }
+
+typedef ViewType = uint;
+module sokol::sg::view_type;
+const ViewType INVALID = 0;
+const ViewType STORAGEBUFFER = 1;
+const ViewType STORAGEIMAGE = 2;
+const ViewType TEXTURE = 3;
+const ViewType COLORATTACHMENT = 4;
+const ViewType RESOLVEATTACHMENT = 5;
+const ViewType DEPTHSTENCILATTACHMENT = 6;
+module sokol::sg;
+import sokol;
 
 struct ImageData
 {
@@ -774,9 +796,7 @@ struct ImageDesc
     uint gl_texture_target;
     void*[2] mtl_textures;
     void* d3d11_texture;
-    void* d3d11_shader_resource_view;
     void* wgpu_texture;
-    void* wgpu_texture_view;
     uint _end_canary;
 }
 
@@ -855,7 +875,7 @@ struct ShaderUniformBlock
     GlslShaderUniform[16] glsl_uniforms;
 }
 
-struct ShaderImage
+struct ShaderTextureView
 {
     ShaderStage stage;
     ImageType image_type;
@@ -864,6 +884,36 @@ struct ShaderImage
     char hlsl_register_t_n;
     char msl_texture_n;
     char wgsl_group1_binding_n;
+}
+
+struct ShaderStorageBufferView
+{
+    ShaderStage stage;
+    bool readonly;
+    char hlsl_register_t_n;
+    char hlsl_register_u_n;
+    char msl_buffer_n;
+    char wgsl_group1_binding_n;
+    char glsl_binding_n;
+}
+
+struct ShaderStorageImageView
+{
+    ShaderStage stage;
+    ImageType image_type;
+    PixelFormat access_format;
+    bool writeonly;
+    char hlsl_register_u_n;
+    char msl_texture_n;
+    char wgsl_group1_binding_n;
+    char glsl_binding_n;
+}
+
+struct ShaderView
+{
+    ShaderTextureView texture;
+    ShaderStorageBufferView storage_buffer;
+    ShaderStorageImageView storage_image;
 }
 
 struct ShaderSampler
@@ -875,33 +925,10 @@ struct ShaderSampler
     char wgsl_group1_binding_n;
 }
 
-struct ShaderStorageBuffer
+struct ShaderTextureSamplerPair
 {
     ShaderStage stage;
-    bool readonly;
-    char hlsl_register_t_n;
-    char hlsl_register_u_n;
-    char msl_buffer_n;
-    char wgsl_group1_binding_n;
-    char glsl_binding_n;
-}
-
-struct ShaderStorageImage
-{
-    ShaderStage stage;
-    ImageType image_type;
-    PixelFormat access_format;
-    bool writeonly;
-    char hlsl_register_u_n;
-    char msl_texture_n;
-    char wgsl_group2_binding_n;
-    char glsl_binding_n;
-}
-
-struct ShaderImageSamplerPair
-{
-    ShaderStage stage;
-    char image_slot;
+    char view_slot;
     char sampler_slot;
     ZString glsl_name;
 }
@@ -921,11 +948,9 @@ struct ShaderDesc
     ShaderFunction compute_func;
     ShaderVertexAttr[16] attrs;
     ShaderUniformBlock[8] uniform_blocks;
-    ShaderStorageBuffer[8] storage_buffers;
-    ShaderImage[16] images;
+    ShaderView[28] views;
     ShaderSampler[16] samplers;
-    ShaderImageSamplerPair[16] image_sampler_pairs;
-    ShaderStorageImage[4] storage_images;
+    ShaderTextureSamplerPair[16] texture_sampler_pairs;
     MtlShaderThreadsPerThreadgroup mtl_threads_per_threadgroup;
     ZString label;
     uint _end_canary;
@@ -1018,20 +1043,41 @@ struct PipelineDesc
     uint _end_canary;
 }
 
-struct AttachmentDesc
+struct BufferViewDesc
+{
+    Buffer buffer;
+    CInt offset;
+}
+
+struct ImageViewDesc
 {
     Image image;
     CInt mip_level;
     CInt slice;
 }
 
-struct AttachmentsDesc
+struct TextureViewRange
+{
+    CInt base;
+    CInt count;
+}
+
+struct TextureViewDesc
+{
+    Image image;
+    TextureViewRange mip_levels;
+    TextureViewRange slices;
+}
+
+struct ViewDesc
 {
     uint _start_canary;
-    AttachmentDesc[4] colors;
-    AttachmentDesc[4] resolves;
-    AttachmentDesc depth_stencil;
-    AttachmentDesc[4] storages;
+    TextureViewDesc texture;
+    BufferViewDesc storage_buffer;
+    ImageViewDesc storage_image;
+    ImageViewDesc color_attachment;
+    ImageViewDesc resolve_attachment;
+    ImageViewDesc depth_stencil_attachment;
     ZString label;
     uint _end_canary;
 }
@@ -1077,7 +1123,7 @@ struct PipelineInfo
     SlotInfo slot;
 }
 
-struct AttachmentsInfo
+struct ViewInfo
 {
     SlotInfo slot;
 }
@@ -1088,6 +1134,7 @@ struct FrameStatsGl
     uint num_active_texture;
     uint num_bind_texture;
     uint num_bind_sampler;
+    uint num_bind_image_texture;
     uint num_use_program;
     uint num_render_state;
     uint num_vertex_attrib_pointer;
@@ -1179,14 +1226,26 @@ struct FrameStatsMetalPipeline
 struct FrameStatsMetalBindings
 {
     uint num_set_vertex_buffer;
+    uint num_set_vertex_buffer_offset;
+    uint num_skip_redundant_vertex_buffer;
     uint num_set_vertex_texture;
+    uint num_skip_redundant_vertex_texture;
     uint num_set_vertex_sampler_state;
+    uint num_skip_redundant_vertex_sampler_state;
     uint num_set_fragment_buffer;
+    uint num_set_fragment_buffer_offset;
+    uint num_skip_redundant_fragment_buffer;
     uint num_set_fragment_texture;
+    uint num_skip_redundant_fragment_texture;
     uint num_set_fragment_sampler_state;
+    uint num_skip_redundant_fragment_sampler_state;
     uint num_set_compute_buffer;
+    uint num_set_compute_buffer_offset;
+    uint num_skip_redundant_compute_buffer;
     uint num_set_compute_texture;
+    uint num_skip_redundant_compute_texture;
     uint num_set_compute_sampler_state;
+    uint num_skip_redundant_compute_sampler_state;
 }
 
 struct FrameStatsMetalUniforms
@@ -1294,8 +1353,8 @@ const LogItem D3D11_UNIFORMBLOCK_HLSL_REGISTER_B_OUT_OF_RANGE = 31;
 const LogItem D3D11_STORAGEBUFFER_HLSL_REGISTER_T_OUT_OF_RANGE = 32;
 const LogItem D3D11_STORAGEBUFFER_HLSL_REGISTER_U_OUT_OF_RANGE = 33;
 const LogItem D3D11_IMAGE_HLSL_REGISTER_T_OUT_OF_RANGE = 34;
-const LogItem D3D11_SAMPLER_HLSL_REGISTER_S_OUT_OF_RANGE = 35;
-const LogItem D3D11_STORAGEIMAGE_HLSL_REGISTER_U_OUT_OF_RANGE = 36;
+const LogItem D3D11_STORAGEIMAGE_HLSL_REGISTER_U_OUT_OF_RANGE = 35;
+const LogItem D3D11_SAMPLER_HLSL_REGISTER_S_OUT_OF_RANGE = 36;
 const LogItem D3D11_LOAD_D3DCOMPILER_47_DLL_FAILED = 37;
 const LogItem D3D11_SHADER_COMPILATION_FAILED = 38;
 const LogItem D3D11_SHADER_COMPILATION_OUTPUT = 39;
@@ -1339,148 +1398,148 @@ const LogItem WGPU_CREATE_SAMPLER_FAILED = 76;
 const LogItem WGPU_CREATE_SHADER_MODULE_FAILED = 77;
 const LogItem WGPU_SHADER_CREATE_BINDGROUP_LAYOUT_FAILED = 78;
 const LogItem WGPU_UNIFORMBLOCK_WGSL_GROUP0_BINDING_OUT_OF_RANGE = 79;
-const LogItem WGPU_STORAGEBUFFER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 80;
-const LogItem WGPU_IMAGE_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 81;
-const LogItem WGPU_SAMPLER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 82;
-const LogItem WGPU_STORAGEIMAGE_WGSL_GROUP2_BINDING_OUT_OF_RANGE = 83;
+const LogItem WGPU_TEXTURE_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 80;
+const LogItem WGPU_STORAGEBUFFER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 81;
+const LogItem WGPU_STORAGEIMAGE_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 82;
+const LogItem WGPU_SAMPLER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 83;
 const LogItem WGPU_CREATE_PIPELINE_LAYOUT_FAILED = 84;
 const LogItem WGPU_CREATE_RENDER_PIPELINE_FAILED = 85;
 const LogItem WGPU_CREATE_COMPUTE_PIPELINE_FAILED = 86;
-const LogItem WGPU_ATTACHMENTS_CREATE_TEXTURE_VIEW_FAILED = 87;
-const LogItem IDENTICAL_COMMIT_LISTENER = 88;
-const LogItem COMMIT_LISTENER_ARRAY_FULL = 89;
-const LogItem TRACE_HOOKS_NOT_ENABLED = 90;
-const LogItem DEALLOC_BUFFER_INVALID_STATE = 91;
-const LogItem DEALLOC_IMAGE_INVALID_STATE = 92;
-const LogItem DEALLOC_SAMPLER_INVALID_STATE = 93;
-const LogItem DEALLOC_SHADER_INVALID_STATE = 94;
-const LogItem DEALLOC_PIPELINE_INVALID_STATE = 95;
-const LogItem DEALLOC_ATTACHMENTS_INVALID_STATE = 96;
-const LogItem INIT_BUFFER_INVALID_STATE = 97;
-const LogItem INIT_IMAGE_INVALID_STATE = 98;
-const LogItem INIT_SAMPLER_INVALID_STATE = 99;
-const LogItem INIT_SHADER_INVALID_STATE = 100;
-const LogItem INIT_PIPELINE_INVALID_STATE = 101;
-const LogItem INIT_ATTACHMENTS_INVALID_STATE = 102;
-const LogItem UNINIT_BUFFER_INVALID_STATE = 103;
-const LogItem UNINIT_IMAGE_INVALID_STATE = 104;
-const LogItem UNINIT_SAMPLER_INVALID_STATE = 105;
-const LogItem UNINIT_SHADER_INVALID_STATE = 106;
-const LogItem UNINIT_PIPELINE_INVALID_STATE = 107;
-const LogItem UNINIT_ATTACHMENTS_INVALID_STATE = 108;
-const LogItem FAIL_BUFFER_INVALID_STATE = 109;
-const LogItem FAIL_IMAGE_INVALID_STATE = 110;
-const LogItem FAIL_SAMPLER_INVALID_STATE = 111;
-const LogItem FAIL_SHADER_INVALID_STATE = 112;
-const LogItem FAIL_PIPELINE_INVALID_STATE = 113;
-const LogItem FAIL_ATTACHMENTS_INVALID_STATE = 114;
-const LogItem BUFFER_POOL_EXHAUSTED = 115;
-const LogItem IMAGE_POOL_EXHAUSTED = 116;
-const LogItem SAMPLER_POOL_EXHAUSTED = 117;
-const LogItem SHADER_POOL_EXHAUSTED = 118;
-const LogItem PIPELINE_POOL_EXHAUSTED = 119;
-const LogItem PASS_POOL_EXHAUSTED = 120;
-const LogItem BEGINPASS_ATTACHMENT_INVALID = 121;
-const LogItem APPLY_BINDINGS_STORAGE_BUFFER_TRACKER_EXHAUSTED = 122;
-const LogItem DRAW_WITHOUT_BINDINGS = 123;
-const LogItem VALIDATE_BUFFERDESC_CANARY = 124;
-const LogItem VALIDATE_BUFFERDESC_IMMUTABLE_DYNAMIC_STREAM = 125;
-const LogItem VALIDATE_BUFFERDESC_SEPARATE_BUFFER_TYPES = 126;
-const LogItem VALIDATE_BUFFERDESC_EXPECT_NONZERO_SIZE = 127;
-const LogItem VALIDATE_BUFFERDESC_EXPECT_MATCHING_DATA_SIZE = 128;
-const LogItem VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE = 129;
-const LogItem VALIDATE_BUFFERDESC_EXPECT_NO_DATA = 130;
-const LogItem VALIDATE_BUFFERDESC_EXPECT_DATA = 131;
-const LogItem VALIDATE_BUFFERDESC_STORAGEBUFFER_SUPPORTED = 132;
-const LogItem VALIDATE_BUFFERDESC_STORAGEBUFFER_SIZE_MULTIPLE_4 = 133;
-const LogItem VALIDATE_IMAGEDATA_NODATA = 134;
-const LogItem VALIDATE_IMAGEDATA_DATA_SIZE = 135;
-const LogItem VALIDATE_IMAGEDESC_CANARY = 136;
-const LogItem VALIDATE_IMAGEDESC_IMMUTABLE_DYNAMIC_STREAM = 137;
-const LogItem VALIDATE_IMAGEDESC_RENDER_VS_STORAGE_ATTACHMENT = 138;
-const LogItem VALIDATE_IMAGEDESC_WIDTH = 139;
-const LogItem VALIDATE_IMAGEDESC_HEIGHT = 140;
-const LogItem VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT = 141;
-const LogItem VALIDATE_IMAGEDESC_MSAA_BUT_NO_ATTACHMENT = 142;
-const LogItem VALIDATE_IMAGEDESC_DEPTH_3D_IMAGE = 143;
-const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_IMMUTABLE = 144;
-const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_NO_DATA = 145;
-const LogItem VALIDATE_IMAGEDESC_RENDERATTACHMENT_NO_MSAA_SUPPORT = 146;
-const LogItem VALIDATE_IMAGEDESC_RENDERATTACHMENT_MSAA_NUM_MIPMAPS = 147;
-const LogItem VALIDATE_IMAGEDESC_RENDERATTACHMENT_MSAA_3D_IMAGE = 148;
-const LogItem VALIDATE_IMAGEDESC_RENDERATTACHMENT_MSAA_CUBE_IMAGE = 149;
-const LogItem VALIDATE_IMAGEDESC_RENDERATTACHMENT_MSAA_ARRAY_IMAGE = 150;
-const LogItem VALIDATE_IMAGEDESC_RENDERATTACHMENT_PIXELFORMAT = 151;
-const LogItem VALIDATE_IMAGEDESC_STORAGEATTACHMENT_PIXELFORMAT = 152;
-const LogItem VALIDATE_IMAGEDESC_STORAGEATTACHMENT_EXPECT_NO_MSAA = 153;
-const LogItem VALIDATE_IMAGEDESC_INJECTED_NO_DATA = 154;
-const LogItem VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA = 155;
-const LogItem VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE = 156;
-const LogItem VALIDATE_SAMPLERDESC_CANARY = 157;
-const LogItem VALIDATE_SAMPLERDESC_ANISTROPIC_REQUIRES_LINEAR_FILTERING = 158;
-const LogItem VALIDATE_SHADERDESC_CANARY = 159;
-const LogItem VALIDATE_SHADERDESC_VERTEX_SOURCE = 160;
-const LogItem VALIDATE_SHADERDESC_FRAGMENT_SOURCE = 161;
-const LogItem VALIDATE_SHADERDESC_COMPUTE_SOURCE = 162;
-const LogItem VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE = 163;
-const LogItem VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE = 164;
-const LogItem VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE = 165;
-const LogItem VALIDATE_SHADERDESC_INVALID_SHADER_COMBO = 166;
-const LogItem VALIDATE_SHADERDESC_NO_BYTECODE_SIZE = 167;
-const LogItem VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP = 168;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS = 169;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO = 170;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_OUT_OF_RANGE = 171;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION = 172;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_OUT_OF_RANGE = 173;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION = 174;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_OUT_OF_RANGE = 175;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION = 176;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS = 177;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME = 178;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH = 179;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT = 180;
-const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE = 181;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_METAL_BUFFER_SLOT_OUT_OF_RANGE = 182;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_METAL_BUFFER_SLOT_COLLISION = 183;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_HLSL_REGISTER_T_OUT_OF_RANGE = 184;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_HLSL_REGISTER_T_COLLISION = 185;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_HLSL_REGISTER_U_OUT_OF_RANGE = 186;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_HLSL_REGISTER_U_COLLISION = 187;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_GLSL_BINDING_OUT_OF_RANGE = 188;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_GLSL_BINDING_COLLISION = 189;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 190;
-const LogItem VALIDATE_SHADERDESC_STORAGEBUFFER_WGSL_GROUP1_BINDING_COLLISION = 191;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_EXPECT_COMPUTE_STAGE = 192;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_METAL_TEXTURE_SLOT_OUT_OF_RANGE = 193;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_METAL_TEXTURE_SLOT_COLLISION = 194;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_HLSL_REGISTER_U_OUT_OF_RANGE = 195;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_HLSL_REGISTER_U_COLLISION = 196;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_GLSL_BINDING_OUT_OF_RANGE = 197;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_GLSL_BINDING_COLLISION = 198;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_WGSL_GROUP2_BINDING_OUT_OF_RANGE = 199;
-const LogItem VALIDATE_SHADERDESC_STORAGEIMAGE_WGSL_GROUP2_BINDING_COLLISION = 200;
-const LogItem VALIDATE_SHADERDESC_IMAGE_METAL_TEXTURE_SLOT_OUT_OF_RANGE = 201;
-const LogItem VALIDATE_SHADERDESC_IMAGE_METAL_TEXTURE_SLOT_COLLISION = 202;
-const LogItem VALIDATE_SHADERDESC_IMAGE_HLSL_REGISTER_T_OUT_OF_RANGE = 203;
-const LogItem VALIDATE_SHADERDESC_IMAGE_HLSL_REGISTER_T_COLLISION = 204;
-const LogItem VALIDATE_SHADERDESC_IMAGE_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 205;
-const LogItem VALIDATE_SHADERDESC_IMAGE_WGSL_GROUP1_BINDING_COLLISION = 206;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_OUT_OF_RANGE = 207;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION = 208;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_OUT_OF_RANGE = 209;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION = 210;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 211;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION = 212;
-const LogItem VALIDATE_SHADERDESC_IMAGE_SAMPLER_PAIR_IMAGE_SLOT_OUT_OF_RANGE = 213;
-const LogItem VALIDATE_SHADERDESC_IMAGE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE = 214;
-const LogItem VALIDATE_SHADERDESC_IMAGE_SAMPLER_PAIR_IMAGE_STAGE_MISMATCH = 215;
-const LogItem VALIDATE_SHADERDESC_IMAGE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH = 216;
-const LogItem VALIDATE_SHADERDESC_IMAGE_SAMPLER_PAIR_GLSL_NAME = 217;
+const LogItem IDENTICAL_COMMIT_LISTENER = 87;
+const LogItem COMMIT_LISTENER_ARRAY_FULL = 88;
+const LogItem TRACE_HOOKS_NOT_ENABLED = 89;
+const LogItem DEALLOC_BUFFER_INVALID_STATE = 90;
+const LogItem DEALLOC_IMAGE_INVALID_STATE = 91;
+const LogItem DEALLOC_SAMPLER_INVALID_STATE = 92;
+const LogItem DEALLOC_SHADER_INVALID_STATE = 93;
+const LogItem DEALLOC_PIPELINE_INVALID_STATE = 94;
+const LogItem DEALLOC_VIEW_INVALID_STATE = 95;
+const LogItem INIT_BUFFER_INVALID_STATE = 96;
+const LogItem INIT_IMAGE_INVALID_STATE = 97;
+const LogItem INIT_SAMPLER_INVALID_STATE = 98;
+const LogItem INIT_SHADER_INVALID_STATE = 99;
+const LogItem INIT_PIPELINE_INVALID_STATE = 100;
+const LogItem INIT_VIEW_INVALID_STATE = 101;
+const LogItem UNINIT_BUFFER_INVALID_STATE = 102;
+const LogItem UNINIT_IMAGE_INVALID_STATE = 103;
+const LogItem UNINIT_SAMPLER_INVALID_STATE = 104;
+const LogItem UNINIT_SHADER_INVALID_STATE = 105;
+const LogItem UNINIT_PIPELINE_INVALID_STATE = 106;
+const LogItem UNINIT_VIEW_INVALID_STATE = 107;
+const LogItem FAIL_BUFFER_INVALID_STATE = 108;
+const LogItem FAIL_IMAGE_INVALID_STATE = 109;
+const LogItem FAIL_SAMPLER_INVALID_STATE = 110;
+const LogItem FAIL_SHADER_INVALID_STATE = 111;
+const LogItem FAIL_PIPELINE_INVALID_STATE = 112;
+const LogItem FAIL_VIEW_INVALID_STATE = 113;
+const LogItem BUFFER_POOL_EXHAUSTED = 114;
+const LogItem IMAGE_POOL_EXHAUSTED = 115;
+const LogItem SAMPLER_POOL_EXHAUSTED = 116;
+const LogItem SHADER_POOL_EXHAUSTED = 117;
+const LogItem PIPELINE_POOL_EXHAUSTED = 118;
+const LogItem VIEW_POOL_EXHAUSTED = 119;
+const LogItem BEGINPASS_ATTACHMENTS_ALIVE = 120;
+const LogItem DRAW_WITHOUT_BINDINGS = 121;
+const LogItem VALIDATE_BUFFERDESC_CANARY = 122;
+const LogItem VALIDATE_BUFFERDESC_IMMUTABLE_DYNAMIC_STREAM = 123;
+const LogItem VALIDATE_BUFFERDESC_SEPARATE_BUFFER_TYPES = 124;
+const LogItem VALIDATE_BUFFERDESC_EXPECT_NONZERO_SIZE = 125;
+const LogItem VALIDATE_BUFFERDESC_EXPECT_MATCHING_DATA_SIZE = 126;
+const LogItem VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE = 127;
+const LogItem VALIDATE_BUFFERDESC_EXPECT_NO_DATA = 128;
+const LogItem VALIDATE_BUFFERDESC_EXPECT_DATA = 129;
+const LogItem VALIDATE_BUFFERDESC_STORAGEBUFFER_SUPPORTED = 130;
+const LogItem VALIDATE_BUFFERDESC_STORAGEBUFFER_SIZE_MULTIPLE_4 = 131;
+const LogItem VALIDATE_IMAGEDATA_NODATA = 132;
+const LogItem VALIDATE_IMAGEDATA_DATA_SIZE = 133;
+const LogItem VALIDATE_IMAGEDESC_CANARY = 134;
+const LogItem VALIDATE_IMAGEDESC_IMMUTABLE_DYNAMIC_STREAM = 135;
+const LogItem VALIDATE_IMAGEDESC_WIDTH = 136;
+const LogItem VALIDATE_IMAGEDESC_HEIGHT = 137;
+const LogItem VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT = 138;
+const LogItem VALIDATE_IMAGEDESC_MSAA_BUT_NO_ATTACHMENT = 139;
+const LogItem VALIDATE_IMAGEDESC_DEPTH_3D_IMAGE = 140;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_IMMUTABLE = 141;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_NO_DATA = 142;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_PIXELFORMAT = 143;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_RESOLVE_EXPECT_NO_MSAA = 144;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_NO_MSAA_SUPPORT = 145;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_NUM_MIPMAPS = 146;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_3D_IMAGE = 147;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_CUBE_IMAGE = 148;
+const LogItem VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_ARRAY_IMAGE = 149;
+const LogItem VALIDATE_IMAGEDESC_STORAGEIMAGE_PIXELFORMAT = 150;
+const LogItem VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_MSAA = 151;
+const LogItem VALIDATE_IMAGEDESC_INJECTED_NO_DATA = 152;
+const LogItem VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA = 153;
+const LogItem VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE = 154;
+const LogItem VALIDATE_SAMPLERDESC_CANARY = 155;
+const LogItem VALIDATE_SAMPLERDESC_ANISTROPIC_REQUIRES_LINEAR_FILTERING = 156;
+const LogItem VALIDATE_SHADERDESC_CANARY = 157;
+const LogItem VALIDATE_SHADERDESC_VERTEX_SOURCE = 158;
+const LogItem VALIDATE_SHADERDESC_FRAGMENT_SOURCE = 159;
+const LogItem VALIDATE_SHADERDESC_COMPUTE_SOURCE = 160;
+const LogItem VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE = 161;
+const LogItem VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE = 162;
+const LogItem VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE = 163;
+const LogItem VALIDATE_SHADERDESC_INVALID_SHADER_COMBO = 164;
+const LogItem VALIDATE_SHADERDESC_NO_BYTECODE_SIZE = 165;
+const LogItem VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED = 166;
+const LogItem VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32 = 167;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS = 168;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO = 169;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_OUT_OF_RANGE = 170;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION = 171;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_OUT_OF_RANGE = 172;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION = 173;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_OUT_OF_RANGE = 174;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION = 175;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS = 176;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME = 177;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH = 178;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT = 179;
+const LogItem VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE = 180;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_METAL_BUFFER_SLOT_OUT_OF_RANGE = 181;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_METAL_BUFFER_SLOT_COLLISION = 182;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_T_OUT_OF_RANGE = 183;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_T_COLLISION = 184;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_U_OUT_OF_RANGE = 185;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_U_COLLISION = 186;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_OUT_OF_RANGE = 187;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION = 188;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 189;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_WGSL_GROUP1_BINDING_COLLISION = 190;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE = 191;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_METAL_TEXTURE_SLOT_OUT_OF_RANGE = 192;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_METAL_TEXTURE_SLOT_COLLISION = 193;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_HLSL_REGISTER_U_OUT_OF_RANGE = 194;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_HLSL_REGISTER_U_COLLISION = 195;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_OUT_OF_RANGE = 196;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION = 197;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 198;
+const LogItem VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_WGSL_GROUP1_BINDING_COLLISION = 199;
+const LogItem VALIDATE_SHADERDESC_VIEW_TEXTURE_METAL_TEXTURE_SLOT_OUT_OF_RANGE = 200;
+const LogItem VALIDATE_SHADERDESC_VIEW_TEXTURE_METAL_TEXTURE_SLOT_COLLISION = 201;
+const LogItem VALIDATE_SHADERDESC_VIEW_TEXTURE_HLSL_REGISTER_T_OUT_OF_RANGE = 202;
+const LogItem VALIDATE_SHADERDESC_VIEW_TEXTURE_HLSL_REGISTER_T_COLLISION = 203;
+const LogItem VALIDATE_SHADERDESC_VIEW_TEXTURE_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 204;
+const LogItem VALIDATE_SHADERDESC_VIEW_TEXTURE_WGSL_GROUP1_BINDING_COLLISION = 205;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_OUT_OF_RANGE = 206;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION = 207;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_OUT_OF_RANGE = 208;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION = 209;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_OUT_OF_RANGE = 210;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION = 211;
+const LogItem VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE = 212;
+const LogItem VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE = 213;
+const LogItem VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH = 214;
+const LogItem VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW = 215;
+const LogItem VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH = 216;
+const LogItem VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME = 217;
 const LogItem VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED = 218;
 const LogItem VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED = 219;
-const LogItem VALIDATE_SHADERDESC_IMAGE_NOT_REFERENCED_BY_IMAGE_SAMPLER_PAIRS = 220;
-const LogItem VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_IMAGE_SAMPLER_PAIRS = 221;
+const LogItem VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS = 220;
+const LogItem VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS = 221;
 const LogItem VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG = 222;
 const LogItem VALIDATE_PIPELINEDESC_CANARY = 223;
 const LogItem VALIDATE_PIPELINEDESC_SHADER = 224;
@@ -1492,178 +1551,180 @@ const LogItem VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4 = 229;
 const LogItem VALIDATE_PIPELINEDESC_ATTR_SEMANTICS = 230;
 const LogItem VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS = 231;
 const LogItem VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE = 232;
-const LogItem VALIDATE_ATTACHMENTSDESC_CANARY = 233;
-const LogItem VALIDATE_ATTACHMENTSDESC_NO_ATTACHMENTS = 234;
-const LogItem VALIDATE_ATTACHMENTSDESC_NO_CONT_COLOR_ATTS = 235;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_IMAGE = 236;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_MIPLEVEL = 237;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_FACE = 238;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_LAYER = 239;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_SLICE = 240;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_IMAGE_NO_RENDERATTACHMENT = 241;
-const LogItem VALIDATE_ATTACHMENTSDESC_COLOR_INV_PIXELFORMAT = 242;
-const LogItem VALIDATE_ATTACHMENTSDESC_IMAGE_SIZES = 243;
-const LogItem VALIDATE_ATTACHMENTSDESC_IMAGE_SAMPLE_COUNTS = 244;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_COLOR_IMAGE_MSAA = 245;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_IMAGE = 246;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_SAMPLE_COUNT = 247;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_MIPLEVEL = 248;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_FACE = 249;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_LAYER = 250;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_SLICE = 251;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_IMAGE_NO_RT = 252;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_IMAGE_SIZES = 253;
-const LogItem VALIDATE_ATTACHMENTSDESC_RESOLVE_IMAGE_FORMAT = 254;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_INV_PIXELFORMAT = 255;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_IMAGE = 256;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_MIPLEVEL = 257;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_FACE = 258;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_LAYER = 259;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_SLICE = 260;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_IMAGE_NO_RENDERATTACHMENT = 261;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_IMAGE_SIZES = 262;
-const LogItem VALIDATE_ATTACHMENTSDESC_DEPTH_IMAGE_SAMPLE_COUNT = 263;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_IMAGE = 264;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_MIPLEVEL = 265;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_FACE = 266;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_LAYER = 267;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_SLICE = 268;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_IMAGE_NO_STORAGEATTACHMENT = 269;
-const LogItem VALIDATE_ATTACHMENTSDESC_STORAGE_INV_PIXELFORMAT = 270;
-const LogItem VALIDATE_ATTACHMENTSDESC_RENDER_VS_STORAGE_ATTACHMENTS = 271;
-const LogItem VALIDATE_BEGINPASS_CANARY = 272;
-const LogItem VALIDATE_BEGINPASS_ATTACHMENTS_EXISTS = 273;
-const LogItem VALIDATE_BEGINPASS_ATTACHMENTS_VALID = 274;
-const LogItem VALIDATE_BEGINPASS_COMPUTEPASS_STORAGE_ATTACHMENTS_ONLY = 275;
-const LogItem VALIDATE_BEGINPASS_RENDERPASS_RENDER_ATTACHMENTS_ONLY = 276;
-const LogItem VALIDATE_BEGINPASS_COLOR_ATTACHMENT_IMAGE_ALIVE = 277;
-const LogItem VALIDATE_BEGINPASS_COLOR_ATTACHMENT_IMAGE_VALID = 278;
-const LogItem VALIDATE_BEGINPASS_RESOLVE_ATTACHMENT_IMAGE_ALIVE = 279;
-const LogItem VALIDATE_BEGINPASS_RESOLVE_ATTACHMENT_IMAGE_VALID = 280;
-const LogItem VALIDATE_BEGINPASS_DEPTHSTENCIL_ATTACHMENT_IMAGE_ALIVE = 281;
-const LogItem VALIDATE_BEGINPASS_DEPTHSTENCIL_ATTACHMENT_IMAGE_VALID = 282;
-const LogItem VALIDATE_BEGINPASS_STORAGE_ATTACHMENT_IMAGE_ALIVE = 283;
-const LogItem VALIDATE_BEGINPASS_STORAGE_ATTACHMENT_IMAGE_VALID = 284;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH = 285;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET = 286;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT = 287;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET = 288;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT = 289;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET = 290;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT = 291;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET = 292;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET = 293;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE = 294;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE_NOTSET = 295;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE = 296;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET = 297;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE = 298;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET = 299;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW = 300;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW_NOTSET = 301;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW = 302;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET = 303;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW = 304;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET = 305;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW = 306;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW_NOTSET = 307;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW = 308;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET = 309;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW = 310;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET = 311;
-const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET = 312;
-const LogItem VALIDATE_AVP_RENDERPASS_EXPECTED = 313;
-const LogItem VALIDATE_ASR_RENDERPASS_EXPECTED = 314;
-const LogItem VALIDATE_APIP_PIPELINE_VALID_ID = 315;
-const LogItem VALIDATE_APIP_PIPELINE_EXISTS = 316;
-const LogItem VALIDATE_APIP_PIPELINE_VALID = 317;
-const LogItem VALIDATE_APIP_PASS_EXPECTED = 318;
-const LogItem VALIDATE_APIP_PIPELINE_SHADER_ALIVE = 319;
-const LogItem VALIDATE_APIP_PIPELINE_SHADER_VALID = 320;
-const LogItem VALIDATE_APIP_COMPUTEPASS_EXPECTED = 321;
-const LogItem VALIDATE_APIP_RENDERPASS_EXPECTED = 322;
-const LogItem VALIDATE_APIP_CURPASS_ATTACHMENTS_ALIVE = 323;
-const LogItem VALIDATE_APIP_CURPASS_ATTACHMENTS_VALID = 324;
-const LogItem VALIDATE_APIP_ATT_COUNT = 325;
-const LogItem VALIDATE_APIP_COLOR_ATTACHMENT_IMAGE_ALIVE = 326;
-const LogItem VALIDATE_APIP_COLOR_ATTACHMENT_IMAGE_VALID = 327;
-const LogItem VALIDATE_APIP_DEPTHSTENCIL_ATTACHMENT_IMAGE_ALIVE = 328;
-const LogItem VALIDATE_APIP_DEPTHSTENCIL_ATTACHMENT_IMAGE_VALID = 329;
-const LogItem VALIDATE_APIP_COLOR_FORMAT = 330;
-const LogItem VALIDATE_APIP_DEPTH_FORMAT = 331;
-const LogItem VALIDATE_APIP_SAMPLE_COUNT = 332;
-const LogItem VALIDATE_APIP_EXPECTED_STORAGE_ATTACHMENT_IMAGE = 333;
-const LogItem VALIDATE_APIP_STORAGE_ATTACHMENT_IMAGE_ALIVE = 334;
-const LogItem VALIDATE_APIP_STORAGE_ATTACHMENT_IMAGE_VALID = 335;
-const LogItem VALIDATE_APIP_STORAGE_ATTACHMENT_PIXELFORMAT = 336;
-const LogItem VALIDATE_APIP_STORAGE_ATTACHMENT_IMAGE_TYPE = 337;
-const LogItem VALIDATE_ABND_PASS_EXPECTED = 338;
-const LogItem VALIDATE_ABND_EMPTY_BINDINGS = 339;
-const LogItem VALIDATE_ABND_NO_PIPELINE = 340;
-const LogItem VALIDATE_ABND_PIPELINE_ALIVE = 341;
-const LogItem VALIDATE_ABND_PIPELINE_VALID = 342;
-const LogItem VALIDATE_ABND_PIPELINE_SHADER_ALIVE = 343;
-const LogItem VALIDATE_ABND_PIPELINE_SHADER_VALID = 344;
-const LogItem VALIDATE_ABND_COMPUTE_EXPECTED_NO_VBS = 345;
-const LogItem VALIDATE_ABND_COMPUTE_EXPECTED_NO_IB = 346;
-const LogItem VALIDATE_ABND_EXPECTED_VB = 347;
-const LogItem VALIDATE_ABND_VB_ALIVE = 348;
-const LogItem VALIDATE_ABND_VB_TYPE = 349;
-const LogItem VALIDATE_ABND_VB_OVERFLOW = 350;
-const LogItem VALIDATE_ABND_NO_IB = 351;
-const LogItem VALIDATE_ABND_IB = 352;
-const LogItem VALIDATE_ABND_IB_ALIVE = 353;
-const LogItem VALIDATE_ABND_IB_TYPE = 354;
-const LogItem VALIDATE_ABND_IB_OVERFLOW = 355;
-const LogItem VALIDATE_ABND_EXPECTED_IMAGE_BINDING = 356;
-const LogItem VALIDATE_ABND_IMG_ALIVE = 357;
-const LogItem VALIDATE_ABND_IMAGE_TYPE_MISMATCH = 358;
-const LogItem VALIDATE_ABND_EXPECTED_MULTISAMPLED_IMAGE = 359;
-const LogItem VALIDATE_ABND_IMAGE_MSAA = 360;
-const LogItem VALIDATE_ABND_EXPECTED_FILTERABLE_IMAGE = 361;
-const LogItem VALIDATE_ABND_EXPECTED_DEPTH_IMAGE = 362;
-const LogItem VALIDATE_ABND_EXPECTED_SAMPLER_BINDING = 363;
-const LogItem VALIDATE_ABND_UNEXPECTED_SAMPLER_COMPARE_NEVER = 364;
-const LogItem VALIDATE_ABND_EXPECTED_SAMPLER_COMPARE_NEVER = 365;
-const LogItem VALIDATE_ABND_EXPECTED_NONFILTERING_SAMPLER = 366;
-const LogItem VALIDATE_ABND_SMP_ALIVE = 367;
-const LogItem VALIDATE_ABND_SMP_VALID = 368;
-const LogItem VALIDATE_ABND_EXPECTED_STORAGEBUFFER_BINDING = 369;
-const LogItem VALIDATE_ABND_STORAGEBUFFER_ALIVE = 370;
-const LogItem VALIDATE_ABND_STORAGEBUFFER_BINDING_BUFFERTYPE = 371;
-const LogItem VALIDATE_ABND_STORAGEBUFFER_READWRITE_IMMUTABLE = 372;
-const LogItem VALIDATE_ABND_IMAGE_BINDING_VS_DEPTHSTENCIL_ATTACHMENT = 373;
-const LogItem VALIDATE_ABND_IMAGE_BINDING_VS_COLOR_ATTACHMENT = 374;
-const LogItem VALIDATE_ABND_IMAGE_BINDING_VS_RESOLVE_ATTACHMENT = 375;
-const LogItem VALIDATE_ABND_IMAGE_BINDING_VS_STORAGE_ATTACHMENT = 376;
-const LogItem VALIDATE_AU_PASS_EXPECTED = 377;
-const LogItem VALIDATE_AU_NO_PIPELINE = 378;
-const LogItem VALIDATE_AU_PIPELINE_ALIVE = 379;
-const LogItem VALIDATE_AU_PIPELINE_VALID = 380;
-const LogItem VALIDATE_AU_PIPELINE_SHADER_ALIVE = 381;
-const LogItem VALIDATE_AU_PIPELINE_SHADER_VALID = 382;
-const LogItem VALIDATE_AU_NO_UNIFORMBLOCK_AT_SLOT = 383;
-const LogItem VALIDATE_AU_SIZE = 384;
-const LogItem VALIDATE_DRAW_RENDERPASS_EXPECTED = 385;
-const LogItem VALIDATE_DRAW_BASEELEMENT = 386;
-const LogItem VALIDATE_DRAW_NUMELEMENTS = 387;
-const LogItem VALIDATE_DRAW_NUMINSTANCES = 388;
-const LogItem VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 389;
-const LogItem VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED = 390;
-const LogItem VALIDATE_DISPATCH_NUMGROUPSX = 391;
-const LogItem VALIDATE_DISPATCH_NUMGROUPSY = 392;
-const LogItem VALIDATE_DISPATCH_NUMGROUPSZ = 393;
-const LogItem VALIDATE_DISPATCH_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 394;
-const LogItem VALIDATE_UPDATEBUF_USAGE = 395;
-const LogItem VALIDATE_UPDATEBUF_SIZE = 396;
-const LogItem VALIDATE_UPDATEBUF_ONCE = 397;
-const LogItem VALIDATE_UPDATEBUF_APPEND = 398;
-const LogItem VALIDATE_APPENDBUF_USAGE = 399;
-const LogItem VALIDATE_APPENDBUF_SIZE = 400;
-const LogItem VALIDATE_APPENDBUF_UPDATE = 401;
-const LogItem VALIDATE_UPDIMG_USAGE = 402;
-const LogItem VALIDATE_UPDIMG_ONCE = 403;
-const LogItem VALIDATION_FAILED = 404;
+const LogItem VALIDATE_VIEWDESC_CANARY = 233;
+const LogItem VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE = 234;
+const LogItem VALIDATE_VIEWDESC_ANY_VIEWTYPE = 235;
+const LogItem VALIDATE_VIEWDESC_RESOURCE_ALIVE = 236;
+const LogItem VALIDATE_VIEWDESC_RESOURCE_FAILED = 237;
+const LogItem VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_VS_BUFFER_SIZE = 238;
+const LogItem VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_MULTIPLE_256 = 239;
+const LogItem VALIDATE_VIEWDESC_STORAGEBUFFER_USAGE = 240;
+const LogItem VALIDATE_VIEWDESC_STORAGEIMAGE_USAGE = 241;
+const LogItem VALIDATE_VIEWDESC_COLORATTACHMENT_USAGE = 242;
+const LogItem VALIDATE_VIEWDESC_RESOLVEATTACHMENT_USAGE = 243;
+const LogItem VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_USAGE = 244;
+const LogItem VALIDATE_VIEWDESC_IMAGE_MIPLEVEL = 245;
+const LogItem VALIDATE_VIEWDESC_IMAGE_2D_SLICE = 246;
+const LogItem VALIDATE_VIEWDESC_IMAGE_CUBEMAP_SLICE = 247;
+const LogItem VALIDATE_VIEWDESC_IMAGE_ARRAY_SLICE = 248;
+const LogItem VALIDATE_VIEWDESC_IMAGE_3D_SLICE = 249;
+const LogItem VALIDATE_VIEWDESC_TEXTURE_EXPECT_NO_MSAA = 250;
+const LogItem VALIDATE_VIEWDESC_TEXTURE_MIPLEVELS = 251;
+const LogItem VALIDATE_VIEWDESC_TEXTURE_2D_SLICES = 252;
+const LogItem VALIDATE_VIEWDESC_TEXTURE_CUBEMAP_SLICES = 253;
+const LogItem VALIDATE_VIEWDESC_TEXTURE_ARRAY_SLICES = 254;
+const LogItem VALIDATE_VIEWDESC_TEXTURE_3D_SLICES = 255;
+const LogItem VALIDATE_VIEWDESC_STORAGEIMAGE_PIXELFORMAT = 256;
+const LogItem VALIDATE_VIEWDESC_COLORATTACHMENT_PIXELFORMAT = 257;
+const LogItem VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_PIXELFORMAT = 258;
+const LogItem VALIDATE_VIEWDESC_RESOLVEATTACHMENT_SAMPLECOUNT = 259;
+const LogItem VALIDATE_BEGINPASS_CANARY = 260;
+const LogItem VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS = 261;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH = 262;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET = 263;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT = 264;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET = 265;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT = 266;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET = 267;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT = 268;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET = 269;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET = 270;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE = 271;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE_NOTSET = 272;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE = 273;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET = 274;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE = 275;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET = 276;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW = 277;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW_NOTSET = 278;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW = 279;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET = 280;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW = 281;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET = 282;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW = 283;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW_NOTSET = 284;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW = 285;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET = 286;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW = 287;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET = 288;
+const LogItem VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET = 289;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS = 290;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE = 291;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID = 292;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE = 293;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE = 294;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID = 295;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES = 296;
+const LogItem VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS = 297;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW = 298;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE = 299;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID = 300;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE = 301;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE = 302;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID = 303;
+const LogItem VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES = 304;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEWS_CONTINUOUS = 305;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE = 306;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID = 307;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE = 308;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE = 309;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID = 310;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES = 311;
+const LogItem VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT = 312;
+const LogItem VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED = 313;
+const LogItem VALIDATE_AVP_RENDERPASS_EXPECTED = 314;
+const LogItem VALIDATE_ASR_RENDERPASS_EXPECTED = 315;
+const LogItem VALIDATE_APIP_PIPELINE_VALID_ID = 316;
+const LogItem VALIDATE_APIP_PIPELINE_EXISTS = 317;
+const LogItem VALIDATE_APIP_PIPELINE_VALID = 318;
+const LogItem VALIDATE_APIP_PASS_EXPECTED = 319;
+const LogItem VALIDATE_APIP_PIPELINE_SHADER_ALIVE = 320;
+const LogItem VALIDATE_APIP_PIPELINE_SHADER_VALID = 321;
+const LogItem VALIDATE_APIP_COMPUTEPASS_EXPECTED = 322;
+const LogItem VALIDATE_APIP_RENDERPASS_EXPECTED = 323;
+const LogItem VALIDATE_APIP_SWAPCHAIN_COLOR_COUNT = 324;
+const LogItem VALIDATE_APIP_SWAPCHAIN_COLOR_FORMAT = 325;
+const LogItem VALIDATE_APIP_SWAPCHAIN_DEPTH_FORMAT = 326;
+const LogItem VALIDATE_APIP_SWAPCHAIN_SAMPLE_COUNT = 327;
+const LogItem VALIDATE_APIP_ATTACHMENTS_ALIVE = 328;
+const LogItem VALIDATE_APIP_COLORATTACHMENTS_COUNT = 329;
+const LogItem VALIDATE_APIP_COLORATTACHMENTS_VIEW_VALID = 330;
+const LogItem VALIDATE_APIP_COLORATTACHMENTS_IMAGE_VALID = 331;
+const LogItem VALIDATE_APIP_COLORATTACHMENTS_FORMAT = 332;
+const LogItem VALIDATE_APIP_DEPTHSTENCILATTACHMENT_VIEW_VALID = 333;
+const LogItem VALIDATE_APIP_DEPTHSTENCILATTACHMENT_IMAGE_VALID = 334;
+const LogItem VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT = 335;
+const LogItem VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT = 336;
+const LogItem VALIDATE_ABND_PASS_EXPECTED = 337;
+const LogItem VALIDATE_ABND_EMPTY_BINDINGS = 338;
+const LogItem VALIDATE_ABND_NO_PIPELINE = 339;
+const LogItem VALIDATE_ABND_PIPELINE_ALIVE = 340;
+const LogItem VALIDATE_ABND_PIPELINE_VALID = 341;
+const LogItem VALIDATE_ABND_PIPELINE_SHADER_ALIVE = 342;
+const LogItem VALIDATE_ABND_PIPELINE_SHADER_VALID = 343;
+const LogItem VALIDATE_ABND_COMPUTE_EXPECTED_NO_VBUFS = 344;
+const LogItem VALIDATE_ABND_COMPUTE_EXPECTED_NO_IBUF = 345;
+const LogItem VALIDATE_ABND_EXPECTED_VBUF = 346;
+const LogItem VALIDATE_ABND_VBUF_ALIVE = 347;
+const LogItem VALIDATE_ABND_VBUF_USAGE = 348;
+const LogItem VALIDATE_ABND_VBUF_OVERFLOW = 349;
+const LogItem VALIDATE_ABND_EXPECTED_NO_IBUF = 350;
+const LogItem VALIDATE_ABND_EXPECTED_IBUF = 351;
+const LogItem VALIDATE_ABND_IBUF_ALIVE = 352;
+const LogItem VALIDATE_ABND_IBUF_USAGE = 353;
+const LogItem VALIDATE_ABND_IBUF_OVERFLOW = 354;
+const LogItem VALIDATE_ABND_EXPECTED_VIEW_BINDING = 355;
+const LogItem VALIDATE_ABND_VIEW_ALIVE = 356;
+const LogItem VALIDATE_ABND_EXPECT_TEXVIEW = 357;
+const LogItem VALIDATE_ABND_EXPECT_SBVIEW = 358;
+const LogItem VALIDATE_ABND_EXPECT_SIMGVIEW = 359;
+const LogItem VALIDATE_ABND_TEXVIEW_IMAGETYPE_MISMATCH = 360;
+const LogItem VALIDATE_ABND_TEXVIEW_EXPECTED_MULTISAMPLED_IMAGE = 361;
+const LogItem VALIDATE_ABND_TEXVIEW_EXPECTED_NON_MULTISAMPLED_IMAGE = 362;
+const LogItem VALIDATE_ABND_TEXVIEW_EXPECTED_FILTERABLE_IMAGE = 363;
+const LogItem VALIDATE_ABND_TEXVIEW_EXPECTED_DEPTH_IMAGE = 364;
+const LogItem VALIDATE_ABND_SBVIEW_READWRITE_IMMUTABLE = 365;
+const LogItem VALIDATE_ABND_SIMGVIEW_COMPUTE_PASS_EXPECTED = 366;
+const LogItem VALIDATE_ABND_SIMGVIEW_IMAGETYPE_MISMATCH = 367;
+const LogItem VALIDATE_ABND_SIMGVIEW_ACCESSFORMAT = 368;
+const LogItem VALIDATE_ABND_EXPECTED_SAMPLER_BINDING = 369;
+const LogItem VALIDATE_ABND_UNEXPECTED_SAMPLER_COMPARE_NEVER = 370;
+const LogItem VALIDATE_ABND_EXPECTED_SAMPLER_COMPARE_NEVER = 371;
+const LogItem VALIDATE_ABND_EXPECTED_NONFILTERING_SAMPLER = 372;
+const LogItem VALIDATE_ABND_SAMPLER_ALIVE = 373;
+const LogItem VALIDATE_ABND_SAMPLER_VALID = 374;
+const LogItem VALIDATE_ABND_TEXTURE_BINDING_VS_DEPTHSTENCIL_ATTACHMENT = 375;
+const LogItem VALIDATE_ABND_TEXTURE_BINDING_VS_COLOR_ATTACHMENT = 376;
+const LogItem VALIDATE_ABND_TEXTURE_BINDING_VS_RESOLVE_ATTACHMENT = 377;
+const LogItem VALIDATE_ABND_TEXTURE_BINDING_VS_STORAGE_ATTACHMENT = 378;
+const LogItem VALIDATE_AU_PASS_EXPECTED = 379;
+const LogItem VALIDATE_AU_NO_PIPELINE = 380;
+const LogItem VALIDATE_AU_PIPELINE_ALIVE = 381;
+const LogItem VALIDATE_AU_PIPELINE_VALID = 382;
+const LogItem VALIDATE_AU_PIPELINE_SHADER_ALIVE = 383;
+const LogItem VALIDATE_AU_PIPELINE_SHADER_VALID = 384;
+const LogItem VALIDATE_AU_NO_UNIFORMBLOCK_AT_SLOT = 385;
+const LogItem VALIDATE_AU_SIZE = 386;
+const LogItem VALIDATE_DRAW_RENDERPASS_EXPECTED = 387;
+const LogItem VALIDATE_DRAW_BASEELEMENT = 388;
+const LogItem VALIDATE_DRAW_NUMELEMENTS = 389;
+const LogItem VALIDATE_DRAW_NUMINSTANCES = 390;
+const LogItem VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 391;
+const LogItem VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED = 392;
+const LogItem VALIDATE_DISPATCH_NUMGROUPSX = 393;
+const LogItem VALIDATE_DISPATCH_NUMGROUPSY = 394;
+const LogItem VALIDATE_DISPATCH_NUMGROUPSZ = 395;
+const LogItem VALIDATE_DISPATCH_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 396;
+const LogItem VALIDATE_UPDATEBUF_USAGE = 397;
+const LogItem VALIDATE_UPDATEBUF_SIZE = 398;
+const LogItem VALIDATE_UPDATEBUF_ONCE = 399;
+const LogItem VALIDATE_UPDATEBUF_APPEND = 400;
+const LogItem VALIDATE_APPENDBUF_USAGE = 401;
+const LogItem VALIDATE_APPENDBUF_SIZE = 402;
+const LogItem VALIDATE_APPENDBUF_UPDATE = 403;
+const LogItem VALIDATE_UPDIMG_USAGE = 404;
+const LogItem VALIDATE_UPDIMG_ONCE = 405;
+const LogItem VALIDATION_FAILED = 406;
 module sokol::sg;
 import sokol;
 
@@ -1725,9 +1786,8 @@ struct Desc
     CInt sampler_pool_size;
     CInt shader_pool_size;
     CInt pipeline_pool_size;
-    CInt attachments_pool_size;
+    CInt view_pool_size;
     CInt uniform_buffer_size;
-    CInt max_dispatch_calls_per_pass;
     CInt max_commit_listeners;
     bool disable_validation;
     bool d3d11_shader_debugging;
@@ -1751,7 +1811,6 @@ struct D3d11ImageInfo
     void* tex2d;
     void* tex3d;
     void* res;
-    void* srv;
 }
 
 struct D3d11SamplerInfo
@@ -1774,9 +1833,11 @@ struct D3d11PipelineInfo
     void* bs;
 }
 
-struct D3d11AttachmentsInfo
+struct D3d11ViewInfo
 {
-    void*[4] color_rtv;
+    void* srv;
+    void* uav;
+    void* rtv;
     void* dsv;
 }
 
@@ -1819,7 +1880,6 @@ struct WgpuBufferInfo
 struct WgpuImageInfo
 {
     void* tex;
-    void* view;
 }
 
 struct WgpuSamplerInfo
@@ -1840,11 +1900,9 @@ struct WgpuPipelineInfo
     void* compute_pipeline;
 }
 
-struct WgpuAttachmentsInfo
+struct WgpuViewInfo
 {
-    void*[4] color_view;
-    void*[4] resolve_view;
-    void* ds_view;
+    void* view;
 }
 
 struct GlBufferInfo
@@ -1857,7 +1915,6 @@ struct GlImageInfo
 {
     uint[2] tex;
     uint tex_target;
-    uint msaa_render_buffer;
     CInt active_slot;
 }
 
@@ -1871,10 +1928,11 @@ struct GlShaderInfo
     uint prog;
 }
 
-struct GlAttachmentsInfo
+struct GlViewInfo
 {
-    uint framebuffer;
-    uint[4] msaa_resolve_framebuffer;
+    uint[2] tex_view;
+    uint msaa_render_buffer;
+    uint msaa_resolve_frame_buffer;
 }
 
 alias DataCb = fn void(void*);
