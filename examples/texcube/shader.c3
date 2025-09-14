@@ -24,12 +24,12 @@ import sokol;
             C3 struct: VsParams
             Bind slot: UB_VS_PARAMS => 0
         Texture 'tex':
-            Image type: image_type::TYPE_2D
-            Sample type: image_sample_type::FLOAT
+            Image type: SgImageType.TYPE_2D
+            Sample type: SgImageSampleType.FLOAT
             Multisampled: false
             Bind slot: VIEW_TEX => 0
         Sampler 'smp':
-            Type: sampler_type::FILTERING
+            Type: SgSamplerType.FILTERING
             Bind slot: SMP_SMP => 0
 */
 const int ATTR_TEXCUBE_POS = 0;
@@ -40,7 +40,7 @@ const int VIEW_TEX = 0;
 const int SMP_SMP = 0;
 struct VsParams @align(16) @packed
 {
-    sokol_math::Mat4 mvp;
+    Mat4 mvp;
 }
 /*
     #version 430
@@ -430,91 +430,91 @@ const char[436] FS_SOURCE_METAL_MACOS @private = {
     0x20,0x20,0x20,0x20,0x72,0x65,0x74,0x75,0x72,0x6e,0x20,0x6f,0x75,0x74,0x3b,0x0a,
     0x7d,0x0a,0x0a,0x00,
 };
-fn sg::ShaderDesc texcube_shader_desc(sg::Backend backend)
+fn SgShaderDesc texcube_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "texcube_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].glsl_name = "pos";
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].glsl_name = "color0";
-            desc.attrs[2].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[2].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[2].glsl_name = "texcoord0";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
-            desc.uniform_blocks[0].glsl_uniforms[0].type = uniform_type::FLOAT4;
+            desc.uniform_blocks[0].glsl_uniforms[0].type = SgUniformType.FLOAT4;
             desc.uniform_blocks[0].glsl_uniforms[0].array_count = 4;
             desc.uniform_blocks[0].glsl_uniforms[0].glsl_name = "vs_params";
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
             desc.texture_sampler_pairs[0].glsl_name = "tex_smp";
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].hlsl_sem_name = "TEXCOORD";
             desc.attrs[1].hlsl_sem_index = 1;
-            desc.attrs[2].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[2].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[2].hlsl_sem_name = "TEXCOORD";
             desc.attrs[2].hlsl_sem_index = 2;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].hlsl_register_b_n = 0;
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[0].texture.hlsl_register_t_n = 0;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
             desc.samplers[0].hlsl_register_s_n = 0;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
-            desc.attrs[2].base_type = shader_attr_base_type::FLOAT;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.attrs[2].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].msl_buffer_n = 0;
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[0].texture.msl_texture_n = 0;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
             desc.samplers[0].msl_sampler_n = 0;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
     }

@@ -3,26 +3,26 @@
 module sokol::sgl;
 import sokol;
 
-extern fn void setup(Desc* desc) @extern("sgl_setup");
+extern fn void setup(SglDesc* desc) @extern("sgl_setup");
 extern fn void shutdown() @extern("sgl_shutdown");
 extern fn float rad(float deg) @extern("sgl_rad");
 extern fn float deg(float rad) @extern("sgl_deg");
-extern fn Error error() @extern("sgl_error");
-extern fn Error context_error(Context ctx) @extern("sgl_context_error");
-extern fn Context make_context(ContextDesc* desc) @extern("sgl_make_context");
-extern fn void destroy_context(Context ctx) @extern("sgl_destroy_context");
-extern fn void set_context(Context ctx) @extern("sgl_set_context");
-extern fn Context get_context() @extern("sgl_get_context");
-extern fn Context default_context() @extern("sgl_default_context");
+extern fn SglError error() @extern("sgl_error");
+extern fn SglError context_error(SglContext ctx) @extern("sgl_context_error");
+extern fn SglContext make_context(SglContextDesc* desc) @extern("sgl_make_context");
+extern fn void destroy_context(SglContext ctx) @extern("sgl_destroy_context");
+extern fn void set_context(SglContext ctx) @extern("sgl_set_context");
+extern fn SglContext get_context() @extern("sgl_get_context");
+extern fn SglContext default_context() @extern("sgl_default_context");
 extern fn CInt num_vertices() @extern("sgl_num_vertices");
 extern fn CInt num_commands() @extern("sgl_num_commands");
 extern fn void draw() @extern("sgl_draw");
-extern fn void context_draw(Context ctx) @extern("sgl_context_draw");
+extern fn void context_draw(SglContext ctx) @extern("sgl_context_draw");
 extern fn void draw_layer(CInt layer_id) @extern("sgl_draw_layer");
-extern fn void context_draw_layer(Context ctx, CInt layer_id) @extern("sgl_context_draw_layer");
-extern fn Pipeline make_pipeline(sokol::sg::PipelineDesc* desc) @extern("sgl_make_pipeline");
-extern fn Pipeline context_make_pipeline(Context ctx, sokol::sg::PipelineDesc* desc) @extern("sgl_context_make_pipeline");
-extern fn void destroy_pipeline(Pipeline pip) @extern("sgl_destroy_pipeline");
+extern fn void context_draw_layer(SglContext ctx, CInt layer_id) @extern("sgl_context_draw_layer");
+extern fn SglPipeline make_pipeline(SgPipelineDesc* desc) @extern("sgl_make_pipeline");
+extern fn SglPipeline context_make_pipeline(SglContext ctx, SgPipelineDesc* desc) @extern("sgl_context_make_pipeline");
+extern fn void destroy_pipeline(SglPipeline pip) @extern("sgl_destroy_pipeline");
 extern fn void defaults() @extern("sgl_defaults");
 extern fn void viewport(CInt x, CInt y, CInt w, CInt h, bool origin_top_left) @extern("sgl_viewport");
 extern fn void viewportf(float x, float y, float w, float h, bool origin_top_left) @extern("sgl_viewportf");
@@ -30,10 +30,10 @@ extern fn void scissor_rect(CInt x, CInt y, CInt w, CInt h, bool origin_top_left
 extern fn void scissor_rectf(float x, float y, float w, float h, bool origin_top_left) @extern("sgl_scissor_rectf");
 extern fn void enable_texture() @extern("sgl_enable_texture");
 extern fn void disable_texture() @extern("sgl_disable_texture");
-extern fn void texture(sokol::sg::View tex_view, sokol::sg::Sampler smp) @extern("sgl_texture");
+extern fn void texture(SgView tex_view, SgSampler smp) @extern("sgl_texture");
 extern fn void layer(CInt layer_id) @extern("sgl_layer");
 extern fn void load_default_pipeline() @extern("sgl_load_default_pipeline");
-extern fn void load_pipeline(Pipeline pip) @extern("sgl_load_pipeline");
+extern fn void load_pipeline(SglPipeline pip) @extern("sgl_load_pipeline");
 extern fn void push_pipeline() @extern("sgl_push_pipeline");
 extern fn void pop_pipeline() @extern("sgl_pop_pipeline");
 extern fn void matrix_mode_modelview() @extern("sgl_matrix_mode_modelview");
@@ -92,35 +92,34 @@ extern fn void v3f_t2f_c4b(float x, float y, float z, float u, float v, char r, 
 extern fn void v3f_t2f_c1i(float x, float y, float z, float u, float v, uint rgba) @extern("sgl_v3f_t2f_c1i");
 extern fn void end() @extern("sgl_end");
 
-typedef LogItem = int;
-module sokol::sgl::log_item;
-const LogItem OK = 0;
-const LogItem MALLOC_FAILED = 1;
-const LogItem MAKE_PIPELINE_FAILED = 2;
-const LogItem PIPELINE_POOL_EXHAUSTED = 3;
-const LogItem ADD_COMMIT_LISTENER_FAILED = 4;
-const LogItem CONTEXT_POOL_EXHAUSTED = 5;
-const LogItem CANNOT_DESTROY_DEFAULT_CONTEXT = 6;
-module sokol::sgl;
-import sokol;
+enum SglLogItem : const int
+{
+    OK = 0,
+    MALLOC_FAILED = 1,
+    MAKE_PIPELINE_FAILED = 2,
+    PIPELINE_POOL_EXHAUSTED = 3,
+    ADD_COMMIT_LISTENER_FAILED = 4,
+    CONTEXT_POOL_EXHAUSTED = 5,
+    CANNOT_DESTROY_DEFAULT_CONTEXT = 6,
+}
 
-struct Logger
+struct SglLogger
 {
     LogCb func;
     void* user_data;
 }
 
-struct Pipeline
+struct SglPipeline
 {
     uint id;
 }
 
-struct Context
+struct SglContext
 {
     uint id;
 }
 
-struct Error
+struct SglError
 {
     bool _any;
     bool vertices_full;
@@ -131,34 +130,34 @@ struct Error
     bool no_context;
 }
 
-struct ContextDesc
+struct SglContextDesc
 {
     CInt max_vertices;
     CInt max_commands;
-    sokol::sg::PixelFormat color_format;
-    sokol::sg::PixelFormat depth_format;
+    SgPixelFormat color_format;
+    SgPixelFormat depth_format;
     CInt sample_count;
 }
 
-struct Allocator
+struct SglAllocator
 {
     AllocCb alloc_fn;
     FreeCb free_fn;
     void* user_data;
 }
 
-struct Desc
+struct SglDesc
 {
     CInt max_vertices;
     CInt max_commands;
     CInt context_pool_size;
     CInt pipeline_pool_size;
-    sokol::sg::PixelFormat color_format;
-    sokol::sg::PixelFormat depth_format;
+    SgPixelFormat color_format;
+    SgPixelFormat depth_format;
     CInt sample_count;
-    sokol::sg::FaceWinding face_winding;
-    Allocator allocator;
-    Logger logger;
+    SgFaceWinding face_winding;
+    SglAllocator allocator;
+    SglLogger logger;
 }
 
 alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);

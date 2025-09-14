@@ -1,7 +1,7 @@
 @header module main;
 @header import sokol_math;
 
-@ctype mat4 sokol_math::Mat4
+@ctype mat4 Mat4
 
 // shared code for all shaders
 @block uniforms

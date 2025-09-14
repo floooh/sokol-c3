@@ -3,23 +3,23 @@
 module sokol::sdtx;
 import sokol;
 
-extern fn void setup(Desc* desc) @extern("sdtx_setup");
+extern fn void setup(SdtxDesc* desc) @extern("sdtx_setup");
 extern fn void shutdown() @extern("sdtx_shutdown");
-extern fn FontDesc font_kc853() @extern("sdtx_font_kc853");
-extern fn FontDesc font_kc854() @extern("sdtx_font_kc854");
-extern fn FontDesc font_z1013() @extern("sdtx_font_z1013");
-extern fn FontDesc font_cpc() @extern("sdtx_font_cpc");
-extern fn FontDesc font_c64() @extern("sdtx_font_c64");
-extern fn FontDesc font_oric() @extern("sdtx_font_oric");
-extern fn Context make_context(ContextDesc* desc) @extern("sdtx_make_context");
-extern fn void destroy_context(Context ctx) @extern("sdtx_destroy_context");
-extern fn void set_context(Context ctx) @extern("sdtx_set_context");
-extern fn Context get_context() @extern("sdtx_get_context");
-extern fn Context default_context() @extern("sdtx_default_context");
+extern fn SdtxFontDesc font_kc853() @extern("sdtx_font_kc853");
+extern fn SdtxFontDesc font_kc854() @extern("sdtx_font_kc854");
+extern fn SdtxFontDesc font_z1013() @extern("sdtx_font_z1013");
+extern fn SdtxFontDesc font_cpc() @extern("sdtx_font_cpc");
+extern fn SdtxFontDesc font_c64() @extern("sdtx_font_c64");
+extern fn SdtxFontDesc font_oric() @extern("sdtx_font_oric");
+extern fn SdtxContext make_context(SdtxContextDesc* desc) @extern("sdtx_make_context");
+extern fn void destroy_context(SdtxContext ctx) @extern("sdtx_destroy_context");
+extern fn void set_context(SdtxContext ctx) @extern("sdtx_set_context");
+extern fn SdtxContext get_context() @extern("sdtx_get_context");
+extern fn SdtxContext default_context() @extern("sdtx_default_context");
 extern fn void draw() @extern("sdtx_draw");
-extern fn void context_draw(Context ctx) @extern("sdtx_context_draw");
+extern fn void context_draw(SdtxContext ctx) @extern("sdtx_context_draw");
 extern fn void draw_layer(CInt layer_id) @extern("sdtx_draw_layer");
-extern fn void context_draw_layer(Context ctx, CInt layer_id) @extern("sdtx_context_draw_layer");
+extern fn void context_draw_layer(SdtxContext ctx, CInt layer_id) @extern("sdtx_context_draw_layer");
 extern fn void layer(CInt layer_id) @extern("sdtx_layer");
 extern fn void font(CInt font_index) @extern("sdtx_font");
 extern fn void canvas(float w, float h) @extern("sdtx_canvas");
@@ -40,70 +40,69 @@ extern fn void color1i(uint rgba) @extern("sdtx_color1i");
 extern fn void putc(char c) @extern("sdtx_putc");
 extern fn void puts(ZString str) @extern("sdtx_puts");
 extern fn void putr(ZString str, CInt len) @extern("sdtx_putr");
-extern fn Range get_cleared_fmt_buffer() @extern("sdtx_get_cleared_fmt_buffer");
+extern fn SdtxRange get_cleared_fmt_buffer() @extern("sdtx_get_cleared_fmt_buffer");
 
-typedef LogItem = int;
-module sokol::sdtx::log_item;
-const LogItem OK = 0;
-const LogItem MALLOC_FAILED = 1;
-const LogItem ADD_COMMIT_LISTENER_FAILED = 2;
-const LogItem COMMAND_BUFFER_FULL = 3;
-const LogItem CONTEXT_POOL_EXHAUSTED = 4;
-const LogItem CANNOT_DESTROY_DEFAULT_CONTEXT = 5;
-module sokol::sdtx;
-import sokol;
+enum SdtxLogItem : const int
+{
+    OK = 0,
+    MALLOC_FAILED = 1,
+    ADD_COMMIT_LISTENER_FAILED = 2,
+    COMMAND_BUFFER_FULL = 3,
+    CONTEXT_POOL_EXHAUSTED = 4,
+    CANNOT_DESTROY_DEFAULT_CONTEXT = 5,
+}
 
-struct Logger
+struct SdtxLogger
 {
     LogCb func;
     void* user_data;
 }
 
-struct Context
+struct SdtxContext
 {
     uint id;
 }
 
-struct Range
+struct SdtxRange
 {
     void* ptr;
     usz size;
 }
 
-struct FontDesc
+struct SdtxFontDesc
 {
-    Range data;
+    SdtxRange data;
     char first_char;
     char last_char;
 }
 
-struct ContextDesc
+struct SdtxContextDesc
 {
     CInt max_commands;
     CInt char_buf_size;
     float canvas_width;
     float canvas_height;
     CInt tab_width;
-    sokol::sg::PixelFormat color_format;
-    sokol::sg::PixelFormat depth_format;
+    SgPixelFormat color_format;
+    SgPixelFormat depth_format;
     CInt sample_count;
 }
 
-struct Allocator
+struct SdtxAllocator
 {
     AllocCb alloc_fn;
     FreeCb free_fn;
     void* user_data;
 }
 
-struct Desc
+struct SdtxDesc
 {
     CInt context_pool_size;
     CInt printf_buf_size;
-    FontDesc[8] fonts;
-    ContextDesc context;
-    Allocator allocator;
-    Logger logger;
+    SdtxFontDesc[8] fonts;
+    SdtxContextDesc context;
+    SdtxAllocator allocator;
+    SdtxLogger logger;
 }
 
 alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);

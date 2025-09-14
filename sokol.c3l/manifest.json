@@ -25,7 +25,8 @@
                 "GL",
                 "asound",
                 "dl",
-                "pthread"
+                "pthread",
+                "m"
             ]
         },
         "windows-x64": {

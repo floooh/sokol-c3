@@ -29,7 +29,7 @@ const int UB_VS_PARAMS = 0;
 const int VIEW_SSBO = 0;
 struct VsParams @align(16) @packed
 {
-    sokol_math::Mat4 mvp;
+    Mat4 mvp;
 }
 struct SbVertex @align(16) @packed
 {
@@ -395,50 +395,50 @@ const char[315] FS_SOURCE_METAL_MACOS @private = {
     0x63,0x6f,0x6c,0x6f,0x72,0x3b,0x0a,0x20,0x20,0x20,0x20,0x72,0x65,0x74,0x75,0x72,
     0x6e,0x20,0x6f,0x75,0x74,0x3b,0x0a,0x7d,0x0a,0x0a,0x00,
 };
-fn sg::ShaderDesc vertexpull_shader_desc(sg::Backend backend)
+fn SgShaderDesc vertexpull_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "vertexpull_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
-            desc.uniform_blocks[0].glsl_uniforms[0].type = uniform_type::FLOAT4;
+            desc.uniform_blocks[0].glsl_uniforms[0].type = SgUniformType.FLOAT4;
             desc.uniform_blocks[0].glsl_uniforms[0].array_count = 4;
             desc.uniform_blocks[0].glsl_uniforms[0].glsl_name = "vs_params";
-            desc.views[0].storage_buffer.stage = shader_stage::VERTEX;
+            desc.views[0].storage_buffer.stage = SgShaderStage.VERTEX;
             desc.views[0].storage_buffer.readonly = true;
             desc.views[0].storage_buffer.glsl_binding_n = 0;
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].hlsl_register_b_n = 0;
-            desc.views[0].storage_buffer.stage = shader_stage::VERTEX;
+            desc.views[0].storage_buffer.stage = SgShaderStage.VERTEX;
             desc.views[0].storage_buffer.readonly = true;
             desc.views[0].storage_buffer.hlsl_register_t_n = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].msl_buffer_n = 0;
-            desc.views[0].storage_buffer.stage = shader_stage::VERTEX;
+            desc.views[0].storage_buffer.stage = SgShaderStage.VERTEX;
             desc.views[0].storage_buffer.readonly = true;
             desc.views[0].storage_buffer.msl_buffer_n = 8;
     }

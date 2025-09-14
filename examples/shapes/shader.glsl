@@ -1,7 +1,7 @@
 @header module main;
 @header import sokol_math;
 
-@ctype mat4 sokol_math::Mat4
+@ctype mat4 Mat4
 
 @vs vs
 layout(binding=0) uniform vs_params {
