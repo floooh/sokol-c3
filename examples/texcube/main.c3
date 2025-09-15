@@ -102,7 +102,7 @@ fn void init()
         .texture.image = sg::make_image(&&(sg::ImageDesc) {
             .width = 4,
             .height = 4,
-            .data.subimage[0][0] = { .ptr = &pixels, .size = $sizeof(pixels) },
+            .data.mip_levels[0] = { .ptr = &pixels, .size = $sizeof(pixels) },
         }),
     });
 
