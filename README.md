@@ -2,7 +2,7 @@
 
 Auto-generated [C3](https://github.com/c3lang/c3c) bindings for the [sokol headers](https://github.com/floooh/sokol).
 
-For C3 version 0.6.6
+For C3 version 0.7.5
 
 To include sokol in your project you can copy the [sokol.c3l](sokol.c3l/) directory.
 
@@ -32,6 +32,7 @@ On Linux install the following packages: libglu1-mesa-dev, mesa-common-dev, xorg
     c3c compile-run --libdir .. --lib sokol ../examples/shapes/*.c3 ../examples/math/*.c3 -o shapes
     c3c compile-run --libdir .. --lib sokol ../examples/offscreen/*.c3 ../examples/math/*.c3 -o offscreen
     c3c compile-run --libdir .. --lib sokol ../examples/instancing/*.c3 ../examples/math/*.c3 -o instancing
+    c3c compile-run --libdir .. --lib sokol ../examples/instancing-compute/*.c3 ../examples/math/*.c3 -o instancing-compute
     c3c compile-run --libdir .. --lib sokol ../examples/mrt/*.c3 ../examples/math/*.c3 -o mrt
     ```
 

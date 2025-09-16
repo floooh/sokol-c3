@@ -38,27 +38,27 @@ import sokol;
             C3 struct: OffscreenParams
             Bind slot: UB_OFFSCREEN_PARAMS => 0
         Texture 'tex':
-            Image type: image_type::TYPE_2D
-            Sample type: image_sample_type::FLOAT
+            Image type: SgImageType.TYPE_2D
+            Sample type: SgImageSampleType.FLOAT
             Multisampled: false
             Bind slot: VIEW_TEX => 0
         Texture 'tex0':
-            Image type: image_type::TYPE_2D
-            Sample type: image_sample_type::FLOAT
+            Image type: SgImageType.TYPE_2D
+            Sample type: SgImageSampleType.FLOAT
             Multisampled: false
             Bind slot: VIEW_TEX0 => 0
         Texture 'tex1':
-            Image type: image_type::TYPE_2D
-            Sample type: image_sample_type::FLOAT
+            Image type: SgImageType.TYPE_2D
+            Sample type: SgImageSampleType.FLOAT
             Multisampled: false
             Bind slot: VIEW_TEX1 => 1
         Texture 'tex2':
-            Image type: image_type::TYPE_2D
-            Sample type: image_sample_type::FLOAT
+            Image type: SgImageType.TYPE_2D
+            Sample type: SgImageSampleType.FLOAT
             Multisampled: false
             Bind slot: VIEW_TEX2 => 2
         Sampler 'smp':
-            Type: sampler_type::FILTERING
+            Type: SgSamplerType.FILTERING
             Bind slot: SMP_SMP => 0
 */
 const int ATTR_DBG_POS = 0;
@@ -79,7 +79,7 @@ struct FsqParams @align(16) @packed
 }
 struct OffscreenParams @align(16) @packed
 {
-    sokol_math::Mat4 mvp;
+    Mat4 mvp;
 }
 /*
     #version 430
@@ -1204,243 +1204,243 @@ const char[408] FS_DBG_SOURCE_METAL_MACOS @private = {
     0x30,0x29,0x3b,0x0a,0x20,0x20,0x20,0x20,0x72,0x65,0x74,0x75,0x72,0x6e,0x20,0x6f,
     0x75,0x74,0x3b,0x0a,0x7d,0x0a,0x0a,0x00,
 };
-fn sg::ShaderDesc dbg_shader_desc(sg::Backend backend)
+fn SgShaderDesc dbg_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "dbg_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_DBG_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_DBG_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].glsl_name = "pos";
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
             desc.texture_sampler_pairs[0].glsl_name = "tex_smp";
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_DBG_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_DBG_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[0].texture.hlsl_register_t_n = 0;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
             desc.samplers[0].hlsl_register_s_n = 0;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_DBG_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_DBG_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[0].texture.msl_texture_n = 0;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
             desc.samplers[0].msl_sampler_n = 0;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
     }
     return desc;
 }
-fn sg::ShaderDesc fsq_shader_desc(sg::Backend backend)
+fn SgShaderDesc fsq_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "fsq_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_FSQ_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_FSQ_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].glsl_name = "pos";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 16;
-            desc.uniform_blocks[0].glsl_uniforms[0].type = uniform_type::FLOAT4;
+            desc.uniform_blocks[0].glsl_uniforms[0].type = SgUniformType.FLOAT4;
             desc.uniform_blocks[0].glsl_uniforms[0].array_count = 1;
             desc.uniform_blocks[0].glsl_uniforms[0].glsl_name = "fsq_params";
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
-            desc.views[1].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
+            desc.views[1].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[1].texture.multisampled = false;
-            desc.views[1].texture.image_type = image_type::TYPE_2D;
-            desc.views[1].texture.sample_type = image_sample_type::FLOAT;
-            desc.views[2].texture.stage = shader_stage::FRAGMENT;
+            desc.views[1].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[1].texture.sample_type = SgImageSampleType.FLOAT;
+            desc.views[2].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[2].texture.multisampled = false;
-            desc.views[2].texture.image_type = image_type::TYPE_2D;
-            desc.views[2].texture.sample_type = image_sample_type::FLOAT;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.views[2].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[2].texture.sample_type = SgImageSampleType.FLOAT;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
             desc.texture_sampler_pairs[0].glsl_name = "tex0_smp";
-            desc.texture_sampler_pairs[1].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[1].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[1].view_slot = 1;
             desc.texture_sampler_pairs[1].sampler_slot = 0;
             desc.texture_sampler_pairs[1].glsl_name = "tex1_smp";
-            desc.texture_sampler_pairs[2].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[2].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[2].view_slot = 2;
             desc.texture_sampler_pairs[2].sampler_slot = 0;
             desc.texture_sampler_pairs[2].glsl_name = "tex2_smp";
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_FSQ_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_FSQ_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 16;
             desc.uniform_blocks[0].hlsl_register_b_n = 0;
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[0].texture.hlsl_register_t_n = 0;
-            desc.views[1].texture.stage = shader_stage::FRAGMENT;
+            desc.views[1].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[1].texture.multisampled = false;
-            desc.views[1].texture.image_type = image_type::TYPE_2D;
-            desc.views[1].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[1].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[1].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[1].texture.hlsl_register_t_n = 1;
-            desc.views[2].texture.stage = shader_stage::FRAGMENT;
+            desc.views[2].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[2].texture.multisampled = false;
-            desc.views[2].texture.image_type = image_type::TYPE_2D;
-            desc.views[2].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[2].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[2].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[2].texture.hlsl_register_t_n = 2;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
             desc.samplers[0].hlsl_register_s_n = 0;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
-            desc.texture_sampler_pairs[1].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[1].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[1].view_slot = 1;
             desc.texture_sampler_pairs[1].sampler_slot = 0;
-            desc.texture_sampler_pairs[2].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[2].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[2].view_slot = 2;
             desc.texture_sampler_pairs[2].sampler_slot = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_FSQ_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_FSQ_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 16;
             desc.uniform_blocks[0].msl_buffer_n = 0;
-            desc.views[0].texture.stage = shader_stage::FRAGMENT;
+            desc.views[0].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[0].texture.multisampled = false;
-            desc.views[0].texture.image_type = image_type::TYPE_2D;
-            desc.views[0].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[0].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[0].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[0].texture.msl_texture_n = 0;
-            desc.views[1].texture.stage = shader_stage::FRAGMENT;
+            desc.views[1].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[1].texture.multisampled = false;
-            desc.views[1].texture.image_type = image_type::TYPE_2D;
-            desc.views[1].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[1].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[1].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[1].texture.msl_texture_n = 1;
-            desc.views[2].texture.stage = shader_stage::FRAGMENT;
+            desc.views[2].texture.stage = SgShaderStage.FRAGMENT;
             desc.views[2].texture.multisampled = false;
-            desc.views[2].texture.image_type = image_type::TYPE_2D;
-            desc.views[2].texture.sample_type = image_sample_type::FLOAT;
+            desc.views[2].texture.image_type = SgImageType.TYPE_2D;
+            desc.views[2].texture.sample_type = SgImageSampleType.FLOAT;
             desc.views[2].texture.msl_texture_n = 2;
-            desc.samplers[0].stage = shader_stage::FRAGMENT;
-            desc.samplers[0].sampler_type = sampler_type::FILTERING;
+            desc.samplers[0].stage = SgShaderStage.FRAGMENT;
+            desc.samplers[0].sampler_type = SgSamplerType.FILTERING;
             desc.samplers[0].msl_sampler_n = 0;
-            desc.texture_sampler_pairs[0].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[0].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[0].view_slot = 0;
             desc.texture_sampler_pairs[0].sampler_slot = 0;
-            desc.texture_sampler_pairs[1].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[1].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[1].view_slot = 1;
             desc.texture_sampler_pairs[1].sampler_slot = 0;
-            desc.texture_sampler_pairs[2].stage = shader_stage::FRAGMENT;
+            desc.texture_sampler_pairs[2].stage = SgShaderStage.FRAGMENT;
             desc.texture_sampler_pairs[2].view_slot = 2;
             desc.texture_sampler_pairs[2].sampler_slot = 0;
     }
     return desc;
 }
-fn sg::ShaderDesc offscreen_shader_desc(sg::Backend backend)
+fn SgShaderDesc offscreen_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "offscreen_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_OFFSCREEN_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_OFFSCREEN_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].glsl_name = "pos";
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].glsl_name = "bright0";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
-            desc.uniform_blocks[0].glsl_uniforms[0].type = uniform_type::FLOAT4;
+            desc.uniform_blocks[0].glsl_uniforms[0].type = SgUniformType.FLOAT4;
             desc.uniform_blocks[0].glsl_uniforms[0].array_count = 4;
             desc.uniform_blocks[0].glsl_uniforms[0].glsl_name = "offscreen_params";
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_OFFSCREEN_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_OFFSCREEN_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].hlsl_sem_name = "TEXCOORD";
             desc.attrs[1].hlsl_sem_index = 1;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].hlsl_register_b_n = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_OFFSCREEN_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_OFFSCREEN_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].msl_buffer_n = 0;
     }

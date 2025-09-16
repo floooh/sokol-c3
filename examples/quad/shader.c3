@@ -311,41 +311,41 @@ const char[315] FS_SOURCE_METAL_MACOS @private = {
     0x63,0x6f,0x6c,0x6f,0x72,0x3b,0x0a,0x20,0x20,0x20,0x20,0x72,0x65,0x74,0x75,0x72,
     0x6e,0x20,0x6f,0x75,0x74,0x3b,0x0a,0x7d,0x0a,0x0a,0x00,
 };
-fn sg::ShaderDesc quad_shader_desc(sg::Backend backend)
+fn SgShaderDesc quad_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "quad_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].glsl_name = "position";
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].glsl_name = "color0";
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].hlsl_sem_name = "TEXCOORD";
             desc.attrs[1].hlsl_sem_index = 1;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
     }
     return desc;
 }

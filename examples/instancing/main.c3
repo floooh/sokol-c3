@@ -9,16 +9,14 @@ module main;
 import sokol;
 import sokol_math;
 
-alias Mat4 = sokol_math::Mat4;
-
 const int MAX_PARTICLES = 512 * 1024;
 const int NUM_PARTICLES_EMITTED_PER_FRAME = 10;
 
 struct State
 {
-    sg::PassAction pass_action;
-    sg::Pipeline pip;
-    sg::Bindings bind;
+    SgPassAction pass_action;
+    SgPipeline pip;
+    SgBindings bind;
     float ry;
     int cur_num_particles;
     Vec3[MAX_PARTICLES] pos;
@@ -29,13 +27,13 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&(sg::Desc) {
+    sg::setup(&&(SgDesc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
 
     // a pass action for the default render pass
-    state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0, 0, 0, 1 } };
+    state.pass_action.colors[0] = { .load_action = CLEAR, .clear_value = { 0, 0, 0, 1 } };
 
     // vertex buffer for static geometry, goes into vertex-buffer-slot 0
     float r = 0.05;
@@ -48,7 +46,7 @@ fn void init()
           -r, 0.0, r,       0.0, 1.0, 1.0, 1.0,
         0.0,    r, 0.0,     1.0, 0.0, 1.0, 1.0,
     };
-    state.bind.vertex_buffers[0] = sg::make_buffer(&&(BufferDesc) {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&(SgBufferDesc) {
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
@@ -57,37 +55,37 @@ fn void init()
         0, 1, 2,    0, 2, 3,    0, 3, 4,    0, 4, 1,
         5, 1, 2,    5, 2, 3,    5, 3, 4,    5, 4, 1,
     };
-    state.bind.index_buffer = sg::make_buffer(&&(BufferDesc) {
+    state.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // empty, dynamic instance-data vertex buffer, goes into vertex-buffer-slot 1
-    state.bind.vertex_buffers[1] = sg::make_buffer(&&(BufferDesc) {
+    state.bind.vertex_buffers[1] = sg::make_buffer(&&(SgBufferDesc) {
         .size = MAX_PARTICLES * Vec3.sizeof,
         .usage = { .stream_update = true },
     });
 
     // a shader and pipeline object
-    state.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
         .shader = sg::make_shader(&&instancing_shader_desc(sg::query_backend())),
         .layout = {
             .buffers = {
                 // vertex buffer at slot 1 must step per instance
                 // NOTE: We have to use `stride` because `Vec3` is C3 vector
                 //       which usually has size 16 bytes instead of 12 bytes.
-                [1] = { .stride = Vec3.sizeof, .step_func = vertex_step::PER_INSTANCE },
+                [1] = { .stride = Vec3.sizeof, .step_func = PER_INSTANCE },
             },
             .attrs = {
-                [ATTR_INSTANCING_POS]      = { .format = vertex_format::FLOAT3, .buffer_index = 0 },
-                [ATTR_INSTANCING_COLOR0]   = { .format = vertex_format::FLOAT4, .buffer_index = 0 },
-                [ATTR_INSTANCING_INST_POS] = { .format = vertex_format::FLOAT3, .buffer_index = 1 },
+                [ATTR_INSTANCING_POS]      = { .format = FLOAT3, .buffer_index = 0 },
+                [ATTR_INSTANCING_COLOR0]   = { .format = FLOAT4, .buffer_index = 0 },
+                [ATTR_INSTANCING_INST_POS] = { .format = FLOAT3, .buffer_index = 1 },
             },
         },
-        .index_type = index_type::UINT16,
-        .cull_mode = cull_mode::BACK,
+        .index_type = UINT16,
+        .cull_mode = BACK,
         .depth = {
-            .compare = compare_func::LESS_EQUAL,
+            .compare = LESS_EQUAL,
             .write_enabled = true,
         },
     });
@@ -120,7 +118,7 @@ fn void frame()
     }
 
     // update instance data
-    sg::update_buffer(state.bind.vertex_buffers[1], &&(sg::Range) {
+    sg::update_buffer(state.bind.vertex_buffers[1], &&(SgRange) {
         .ptr = &state.pos,
         .size = Vec3.sizeof * state.cur_num_particles,
     });
@@ -135,10 +133,10 @@ fn void frame()
     };
 
     // ...and draw
-    sg::begin_pass(&&(Pass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(SgPass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(0, 24, state.cur_num_particles);
     sg::end_pass();
     sg::commit();
@@ -151,7 +149,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(sapp::Desc) {
+    sapp::run(&&(SappDesc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

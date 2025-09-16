@@ -10,34 +10,32 @@ import std;
 import sokol;
 import sokol_math;
 
-alias Mat4 = sokol_math::Mat4;
-
 const int NUM_MRTS = 3;
 const int OFFSCREEN_SAMPLE_COUNT = 1;
 
 struct State
 {
     struct images {
-        sg::Image[NUM_MRTS] color;
-        sg::Image[NUM_MRTS] resolve;
-        sg::Image depth;
+        SgImage[NUM_MRTS] color;
+        SgImage[NUM_MRTS] resolve;
+        SgImage depth;
     }
     struct offscreen
     {
-        sg::Pipeline pip;
-        sg::Bindings bind;
-        sg::Pass pass;
+        SgPipeline pip;
+        SgBindings bind;
+        SgPass pass;
     }
     struct display
     {
-        sg::Pipeline pip;
-        sg::Bindings bind;
-        sg::PassAction pass_action;
+        SgPipeline pip;
+        SgBindings bind;
+        SgPassAction pass_action;
     }
     struct dbg
     {
-        sg::Pipeline pip;
-        sg::Bindings bind;
+        SgPipeline pip;
+        SgBindings bind;
     }
     float rx, ry;
 }
@@ -51,7 +49,7 @@ struct Vertex
 
 fn void init()
 {
-    sg::setup(&&(sg::Desc) {
+    sg::setup(&&(SgDesc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -62,16 +60,16 @@ fn void init()
     // a pass action for the default render pass (don't clear the frame buffer
     // since it will be completely overwritten anyway)
     state.display.pass_action = {
-        .colors[0].load_action = load_action::DONTCARE,
-        .depth.load_action = load_action::DONTCARE,
-        .stencil.load_action = load_action::DONTCARE,
+        .colors[0].load_action = DONTCARE,
+        .depth.load_action = DONTCARE,
+        .stencil.load_action = DONTCARE,
     };
 
     // pass action for offscreen pass
     state.offscreen.pass.action.colors = {
-        [0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.0, 0.0, 1.0 } },
-        [1] = { .load_action = load_action::CLEAR, .clear_value = { 0.0, 0.25, 0.0, 1.0 } },
-        [2] = { .load_action = load_action::CLEAR, .clear_value = { 0.0, 0.0, 0.25, 1.0 } },
+        [0] = { .load_action = CLEAR, .clear_value = { 0.25, 0.0, 0.0, 1.0 } },
+        [1] = { .load_action = CLEAR, .clear_value = { 0.0, 0.25, 0.0, 1.0 } },
+        [2] = { .load_action = CLEAR, .clear_value = { 0.0, 0.0, 0.25, 1.0 } },
     };
 
     // cube vertex buffer
@@ -107,7 +105,7 @@ fn void init()
         {  1.0,  1.0,  1.0,   0.7 },
         {  1.0,  1.0, -1.0,   0.7 },
     };
-    state.offscreen.bind.vertex_buffers[0] = sg::make_buffer(&&(BufferDesc) {
+    state.offscreen.bind.vertex_buffers[0] = sg::make_buffer(&&(SgBufferDesc) {
         .data = { .ptr = &cube_vertices, .size = $sizeof(cube_vertices) },
     });
 
@@ -120,27 +118,27 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    state.offscreen.bind.index_buffer = sg::make_buffer(&&(BufferDesc) {
+    state.offscreen.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &cube_indices, .size = $sizeof(cube_indices) },
     });
 
     // shader and pipeline object for offscreen-renderer cube
-    state.offscreen.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.offscreen.pip = sg::make_pipeline(&&(SgPipelineDesc) {
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0].stride = Vertex.sizeof,
             .attrs = {
-                [ATTR_OFFSCREEN_POS]     = { .offset = Vertex.x.offsetof, .format = vertex_format::FLOAT3 },
-                [ATTR_OFFSCREEN_BRIGHT0] = { .offset = Vertex.b.offsetof, .format = vertex_format::FLOAT },
+                [ATTR_OFFSCREEN_POS]     = { .offset = Vertex.x.offsetof, .format = FLOAT3 },
+                [ATTR_OFFSCREEN_BRIGHT0] = { .offset = Vertex.b.offsetof, .format = FLOAT },
             },
         },
-        .index_type = index_type::UINT16,
-        .cull_mode = cull_mode::BACK,
+        .index_type = UINT16,
+        .cull_mode = BACK,
         .sample_count = OFFSCREEN_SAMPLE_COUNT,
         .depth = {
-            .pixel_format = pixel_format::DEPTH,
-            .compare = compare_func::LESS_EQUAL,
+            .pixel_format = DEPTH,
+            .compare = LESS_EQUAL,
             .write_enabled = true,
         },
         .color_count = 3,
@@ -148,42 +146,42 @@ fn void init()
 
     // a vertex buffer to render a fullscreen rectangle
     float[*] quad_vertices = { 0.0, 0.0,  1.0, 0.0,  0.0, 1.0,  1.0, 1.0 };
-    sg::Buffer quad_vbuf = sg::make_buffer(&&(BufferDesc) {
+    SgBuffer quad_vbuf = sg::make_buffer(&&(SgBufferDesc) {
         .data = { .ptr = &quad_vertices, .size = $sizeof(quad_vertices) },
     });
     state.display.bind.vertex_buffers[0] = quad_vbuf;
     state.dbg.bind.vertex_buffers[0] = quad_vbuf;
 
     // shader and pipeline object to render the fullscreen quad
-    state.display.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.display.pip = sg::make_pipeline(&&(SgPipelineDesc) {
         .shader = sg::make_shader(&&fsq_shader_desc(sg::query_backend())),
         .layout = {
             .attrs = {
-                [ATTR_FSQ_POS] = { .format = vertex_format::FLOAT2 },
+                [ATTR_FSQ_POS] = { .format = FLOAT2 },
             },
         },
-        .primitive_type = primitive_type::TRIANGLE_STRIP,
+        .primitive_type = TRIANGLE_STRIP,
     });
 
     // a sampler object to sample the offscreen render target as texture
-    sg::Sampler smp = sg::make_sampler(&&(SamplerDesc) {
-        .min_filter = filter::LINEAR,
-        .mag_filter = filter::LINEAR,
-        .wrap_u = wrap::CLAMP_TO_EDGE,
-        .wrap_v = wrap::CLAMP_TO_EDGE,
+    SgSampler smp = sg::make_sampler(&&(SgSamplerDesc) {
+        .min_filter = LINEAR,
+        .mag_filter = LINEAR,
+        .wrap_u = CLAMP_TO_EDGE,
+        .wrap_v = CLAMP_TO_EDGE,
     });
     state.display.bind.samplers[SMP_SMP] = smp;
     state.dbg.bind.samplers[SMP_SMP] = smp;
 
     // pipeline and resource bindings to render debug-visualization quads
-    state.dbg.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.dbg.pip = sg::make_pipeline(&&(SgPipelineDesc) {
         .shader = sg::make_shader(&&dbg_shader_desc(sg::query_backend())),
         .layout = {
             .attrs = {
-                [ATTR_DBG_POS] = { .format = vertex_format::FLOAT2 },
+                [ATTR_DBG_POS] = { .format = FLOAT2 },
             },
         },
-        .primitive_type = primitive_type::TRIANGLE_STRIP,
+        .primitive_type = TRIANGLE_STRIP,
     });
 }
 
@@ -212,15 +210,15 @@ fn void frame()
     sg::begin_pass(&state.offscreen.pass);
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_OFFSCREEN_PARAMS, &&(sg::Range) { .ptr = &offscreen_params, .size = $sizeof(offscreen_params) });
+    sg::apply_uniforms(UB_OFFSCREEN_PARAMS, &&(SgRange) { .ptr = &offscreen_params, .size = $sizeof(offscreen_params) });
     sg::draw(0, 36, 1);
     sg::end_pass();
 
     // render fullscreen quad with the 'composed image', plus 3 small debug-view quads
-    sg::begin_pass(&&(Pass) { .action = state.display.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(SgPass) { .action = state.display.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.display.pip);
     sg::apply_bindings(&state.display.bind);
-    sg::apply_uniforms(UB_FSQ_PARAMS, &&(sg::Range) { .ptr = &fsq_params, .size = $sizeof(fsq_params) });
+    sg::apply_uniforms(UB_FSQ_PARAMS, &&(SgRange) { .ptr = &fsq_params, .size = $sizeof(fsq_params) });
     sg::draw(0, 4, 1);
     sg::apply_pipeline(state.dbg.pip);
     for (int i = 0; i < 3; i++)
@@ -236,9 +234,9 @@ fn void frame()
 }
 
 // listen for window-resize events and recreate offscreen rendertargets
-fn void event(sapp::Event* ev)
+fn void event(SappEvent* ev)
 {
-    if (ev.type == event_type::RESIZED)
+    if (ev.type == RESIZED)
     {
         recreate_offscreen_attachments(ev.framebuffer_width, ev.framebuffer_height);
     }
@@ -255,54 +253,54 @@ fn void recreate_offscreen_attachments(int width, int height)
     for (int i = 0; i < NUM_MRTS; i++) {
         // color-attachment images and views
         sg::destroy_image(state.images.color[i]);
-        state.images.color[i] = sg::make_image(&&(sg::ImageDesc) {
+        state.images.color[i] = sg::make_image(&&(SgImageDesc) {
             .usage = { .color_attachment = true },
             .width = width,
             .height = height,
             .sample_count = OFFSCREEN_SAMPLE_COUNT,
         });
         sg::destroy_view(state.offscreen.pass.attachments.colors[i]);
-        state.offscreen.pass.attachments.colors[i] = sg::make_view(&&(sg::ViewDesc) {
+        state.offscreen.pass.attachments.colors[i] = sg::make_view(&&(SgViewDesc) {
             .color_attachment = { .image = state.images.color[i] },
         });
         // resolve-attachments and views
         sg::destroy_image(state.images.resolve[i]);
-        state.images.resolve[i] = sg::make_image(&&(sg::ImageDesc) {
+        state.images.resolve[i] = sg::make_image(&&(SgImageDesc) {
             .usage = { .resolve_attachment = true },
             .width = width,
             .height = height,
             .sample_count = 1,
         });
         sg::destroy_view(state.offscreen.pass.attachments.resolves[i]);
-        state.offscreen.pass.attachments.resolves[i] = sg::make_view(&&(sg::ViewDesc) {
+        state.offscreen.pass.attachments.resolves[i] = sg::make_view(&&(SgViewDesc) {
             .resolve_attachment = { .image = state.images.resolve[i] },
         });
 
         // the resolve images are also sampled as texture, so need a texture view
         sg::destroy_view(state.display.bind.views[i]);
-        state.display.bind.views[i] = sg::make_view(&&(sg::ViewDesc) {
+        state.display.bind.views[i] = sg::make_view(&&(SgViewDesc) {
             .texture = { .image = state.images.resolve[i] },
         });
     }
 
     // depth-stencil-attachment image and view
     sg::destroy_image(state.images.depth);
-    state.images.depth = sg::make_image(&&(sg::ImageDesc) {
+    state.images.depth = sg::make_image(&&(SgImageDesc) {
         .usage = { .depth_stencil_attachment = true },
         .width = width,
         .height = height,
         .sample_count = OFFSCREEN_SAMPLE_COUNT,
-        .pixel_format = pixel_format::DEPTH,
+        .pixel_format = DEPTH,
     });
     sg::destroy_view(state.offscreen.pass.attachments.depth_stencil);
-    state.offscreen.pass.attachments.depth_stencil = sg::make_view(&&(sg::ViewDesc){
+    state.offscreen.pass.attachments.depth_stencil = sg::make_view(&&(SgViewDesc){
         .depth_stencil_attachment = { .image = state.images.depth },
     });
 }
 
 fn void main()
 {
-    sapp::run(&&(sapp::Desc) {
+    sapp::run(&&(SappDesc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .event_cb = &event,

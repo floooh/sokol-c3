@@ -48,7 +48,7 @@ const int VIEW_VS_SSBO = 0;
 const int VIEW_CS_SSBO = 0;
 struct VsParams @align(16) @packed
 {
-    sokol_math::Mat4 mvp;
+    Mat4 mvp;
 }
 struct CsParams @align(16) @packed
 {
@@ -1133,141 +1133,141 @@ const char[315] FS_SOURCE_METAL_MACOS @private = {
     0x63,0x6f,0x6c,0x6f,0x72,0x3b,0x0a,0x20,0x20,0x20,0x20,0x72,0x65,0x74,0x75,0x72,
     0x6e,0x20,0x6f,0x75,0x74,0x3b,0x0a,0x7d,0x0a,0x0a,0x00,
 };
-fn sg::ShaderDesc display_shader_desc(sg::Backend backend)
+fn SgShaderDesc display_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "display_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.vertex_func.source = (ZString)&VS_SOURCE_GLSL430;
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_GLSL430;
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].glsl_name = "pos";
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].glsl_name = "color0";
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
-            desc.uniform_blocks[0].glsl_uniforms[0].type = uniform_type::FLOAT4;
+            desc.uniform_blocks[0].glsl_uniforms[0].type = SgUniformType.FLOAT4;
             desc.uniform_blocks[0].glsl_uniforms[0].array_count = 4;
             desc.uniform_blocks[0].glsl_uniforms[0].glsl_name = "vs_params";
-            desc.views[0].storage_buffer.stage = shader_stage::VERTEX;
+            desc.views[0].storage_buffer.stage = SgShaderStage.VERTEX;
             desc.views[0].storage_buffer.readonly = true;
             desc.views[0].storage_buffer.glsl_binding_n = 0;
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.vertex_func.source = (ZString)&VS_SOURCE_HLSL5;
             desc.vertex_func.d3d11_target = "vs_5_0";
             desc.vertex_func.entry = "main";
             desc.fragment_func.source = (ZString)&FS_SOURCE_HLSL5;
             desc.fragment_func.d3d11_target = "ps_5_0";
             desc.fragment_func.entry = "main";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[0].hlsl_sem_name = "TEXCOORD";
             desc.attrs[0].hlsl_sem_index = 0;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
             desc.attrs[1].hlsl_sem_name = "TEXCOORD";
             desc.attrs[1].hlsl_sem_index = 1;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].hlsl_register_b_n = 0;
-            desc.views[0].storage_buffer.stage = shader_stage::VERTEX;
+            desc.views[0].storage_buffer.stage = SgShaderStage.VERTEX;
             desc.views[0].storage_buffer.readonly = true;
             desc.views[0].storage_buffer.hlsl_register_t_n = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.vertex_func.source = (ZString)&VS_SOURCE_METAL_MACOS;
             desc.vertex_func.entry = "main0";
             desc.fragment_func.source = (ZString)&FS_SOURCE_METAL_MACOS;
             desc.fragment_func.entry = "main0";
-            desc.attrs[0].base_type = shader_attr_base_type::FLOAT;
-            desc.attrs[1].base_type = shader_attr_base_type::FLOAT;
-            desc.uniform_blocks[0].stage = shader_stage::VERTEX;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.attrs[0].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.attrs[1].base_type = SgShaderAttrBaseType.FLOAT;
+            desc.uniform_blocks[0].stage = SgShaderStage.VERTEX;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 64;
             desc.uniform_blocks[0].msl_buffer_n = 0;
-            desc.views[0].storage_buffer.stage = shader_stage::VERTEX;
+            desc.views[0].storage_buffer.stage = SgShaderStage.VERTEX;
             desc.views[0].storage_buffer.readonly = true;
             desc.views[0].storage_buffer.msl_buffer_n = 8;
     }
     return desc;
 }
-fn sg::ShaderDesc init_shader_desc(sg::Backend backend)
+fn SgShaderDesc init_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "init_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.compute_func.source = (ZString)&CS_INIT_SOURCE_GLSL430;
             desc.compute_func.entry = "main";
-            desc.views[0].storage_buffer.stage = shader_stage::COMPUTE;
+            desc.views[0].storage_buffer.stage = SgShaderStage.COMPUTE;
             desc.views[0].storage_buffer.readonly = false;
             desc.views[0].storage_buffer.glsl_binding_n = 0;
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.compute_func.source = (ZString)&CS_INIT_SOURCE_HLSL5;
             desc.compute_func.d3d11_target = "cs_5_0";
             desc.compute_func.entry = "main";
-            desc.views[0].storage_buffer.stage = shader_stage::COMPUTE;
+            desc.views[0].storage_buffer.stage = SgShaderStage.COMPUTE;
             desc.views[0].storage_buffer.readonly = false;
             desc.views[0].storage_buffer.hlsl_register_u_n = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.compute_func.source = (ZString)&CS_INIT_SOURCE_METAL_MACOS;
             desc.compute_func.entry = "main0";
             desc.mtl_threads_per_threadgroup.x = 64;
             desc.mtl_threads_per_threadgroup.y = 1;
             desc.mtl_threads_per_threadgroup.z = 1;
-            desc.views[0].storage_buffer.stage = shader_stage::COMPUTE;
+            desc.views[0].storage_buffer.stage = SgShaderStage.COMPUTE;
             desc.views[0].storage_buffer.readonly = false;
             desc.views[0].storage_buffer.msl_buffer_n = 8;
     }
     return desc;
 }
-fn sg::ShaderDesc update_shader_desc(sg::Backend backend)
+fn SgShaderDesc update_shader_desc(SgBackend backend)
 {
-    sg::ShaderDesc desc;
+    SgShaderDesc desc;
     desc.label = "update_shader";
     switch (backend)
     {
-        case backend::GLCORE:
+        case SgBackend.GLCORE:
             desc.compute_func.source = (ZString)&CS_UPDATE_SOURCE_GLSL430;
             desc.compute_func.entry = "main";
-            desc.uniform_blocks[0].stage = shader_stage::COMPUTE;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.COMPUTE;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 16;
-            desc.uniform_blocks[0].glsl_uniforms[0].type = uniform_type::FLOAT;
+            desc.uniform_blocks[0].glsl_uniforms[0].type = SgUniformType.FLOAT;
             desc.uniform_blocks[0].glsl_uniforms[0].array_count = 0;
             desc.uniform_blocks[0].glsl_uniforms[0].glsl_name = "_21.dt";
-            desc.uniform_blocks[0].glsl_uniforms[1].type = uniform_type::INT;
+            desc.uniform_blocks[0].glsl_uniforms[1].type = SgUniformType.INT;
             desc.uniform_blocks[0].glsl_uniforms[1].array_count = 0;
             desc.uniform_blocks[0].glsl_uniforms[1].glsl_name = "_21.num_particles";
-            desc.views[0].storage_buffer.stage = shader_stage::COMPUTE;
+            desc.views[0].storage_buffer.stage = SgShaderStage.COMPUTE;
             desc.views[0].storage_buffer.readonly = false;
             desc.views[0].storage_buffer.glsl_binding_n = 0;
-        case backend::D3D11:
+        case SgBackend.D3D11:
             desc.compute_func.source = (ZString)&CS_UPDATE_SOURCE_HLSL5;
             desc.compute_func.d3d11_target = "cs_5_0";
             desc.compute_func.entry = "main";
-            desc.uniform_blocks[0].stage = shader_stage::COMPUTE;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.COMPUTE;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 16;
             desc.uniform_blocks[0].hlsl_register_b_n = 0;
-            desc.views[0].storage_buffer.stage = shader_stage::COMPUTE;
+            desc.views[0].storage_buffer.stage = SgShaderStage.COMPUTE;
             desc.views[0].storage_buffer.readonly = false;
             desc.views[0].storage_buffer.hlsl_register_u_n = 0;
-        case backend::METAL_MACOS:
+        case SgBackend.METAL_MACOS:
             desc.compute_func.source = (ZString)&CS_UPDATE_SOURCE_METAL_MACOS;
             desc.compute_func.entry = "main0";
             desc.mtl_threads_per_threadgroup.x = 64;
             desc.mtl_threads_per_threadgroup.y = 1;
             desc.mtl_threads_per_threadgroup.z = 1;
-            desc.uniform_blocks[0].stage = shader_stage::COMPUTE;
-            desc.uniform_blocks[0].layout = uniform_layout::STD140;
+            desc.uniform_blocks[0].stage = SgShaderStage.COMPUTE;
+            desc.uniform_blocks[0].layout = SgUniformLayout.STD140;
             desc.uniform_blocks[0].size = 16;
             desc.uniform_blocks[0].msl_buffer_n = 0;
-            desc.views[0].storage_buffer.stage = shader_stage::COMPUTE;
+            desc.views[0].storage_buffer.stage = SgShaderStage.COMPUTE;
             desc.views[0].storage_buffer.readonly = false;
             desc.views[0].storage_buffer.msl_buffer_n = 8;
     }

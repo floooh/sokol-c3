@@ -8,20 +8,18 @@ module main;
 import sokol;
 import sokol_math;
 
-alias Mat4 = sokol_math::Mat4;
-
 struct State
 {
     float rx, ry;
-    sg::Pipeline pip;
-    sg::Bindings bind;
+    SgPipeline pip;
+    SgBindings bind;
 }
 
 State state;
 
 fn void init()
 {
-    sg::setup(&&(sg::Desc) {
+    sg::setup(&&(SgDesc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -58,7 +56,7 @@ fn void init()
          1.0,  1.0,  1.0,   1.0, 0.0, 0.5, 1.0,
          1.0,  1.0, -1.0,   1.0, 0.0, 0.5, 1.0,
     };
-    state.bind.vertex_buffers[0] = sg::make_buffer(&&(BufferDesc) {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&(SgBufferDesc) {
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
@@ -71,27 +69,27 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    state.bind.index_buffer = sg::make_buffer(&&(BufferDesc) {
+    state.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // shader and pipeline object
-    state.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
         .shader = sg::make_shader(&&cube_shader_desc(sg::query_backend())),
-        .index_type = index_type::UINT16,
+        .index_type = UINT16,
         .layout = {
             // test to provide buffer stride, but no attr offsets
             .buffers[0].stride = 28,
             .attrs = {
-                [ATTR_CUBE_POSITION] = { .format = vertex_format::FLOAT3 },
-                [ATTR_CUBE_COLOR0] = { .format = vertex_format::FLOAT4 },
+                [ATTR_CUBE_POSITION] = { .format = FLOAT3 },
+                [ATTR_CUBE_COLOR0] = { .format = FLOAT4 },
             },
         },
-        .cull_mode = cull_mode::BACK,
+        .cull_mode = BACK,
         .depth = {
             .write_enabled = true,
-            .compare = compare_func::LESS_EQUAL,
+            .compare = LESS_EQUAL,
         },
     });
 }
@@ -106,13 +104,13 @@ fn void frame()
     VsParams vs_params = {
         .mvp = compute_mvp(state.rx, state.ry),
     };
-    sg::PassAction pass_action = {
-        .colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
+    SgPassAction pass_action = {
+        .colors[0] = { .load_action = CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
     };
-    sg::begin_pass(&&(Pass) { .action = pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(SgPass) { .action = pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -136,7 +134,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(sapp::Desc) {
+    sapp::run(&&(SappDesc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

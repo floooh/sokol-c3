@@ -9,21 +9,19 @@ module main;
 import sokol;
 import sokol_math;
 
-alias Mat4 = sokol_math::Mat4;
-
 struct State
 {
     float rx, ry;
-    sg::PassAction pass_action;
-    sg::Pipeline pip;
-    sg::Bindings bind;
+    SgPassAction pass_action;
+    SgPipeline pip;
+    SgBindings bind;
 }
 
 State state;
 
 fn void init()
 {
-    sg::setup(&&(sg::Desc) {
+    sg::setup(&&(SgDesc) {
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -32,11 +30,11 @@ fn void init()
     // render a red screen
     if (!sg::query_features().compute)
     {
-        state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 1, 0, 0, 1 } };
+        state.pass_action.colors[0] = { .load_action = CLEAR, .clear_value = { 1, 0, 0, 1 } };
         return;
     }
     // otherwise use a regular clear color...
-    state.pass_action.colors[0] = { .load_action = load_action::CLEAR, .clear_value = { 0.75, 0.5, 0.25, 1 } };
+    state.pass_action.colors[0] = { .load_action = CLEAR, .clear_value = { 0.75, 0.5, 0.25, 1 } };
 
     // a buffer with cube vertices and a storage buffer view, this is using the code-generated
     // per-vertex struct from the shader
@@ -66,8 +64,8 @@ fn void init()
         { .pos = {  1.0,  1.0,  1.0 }, .color = { 1.0, 0.0, 0.5, 1.0} },
         { .pos = {  1.0,  1.0, -1.0 }, .color = { 1.0, 0.0, 0.5, 1.0} },
     };
-    state.bind.views[VIEW_SSBO] = sg::make_view(&&(ViewDesc){
-        .storage_buffer.buffer = sg::make_buffer(&&(BufferDesc){
+    state.bind.views[VIEW_SSBO] = sg::make_view(&&(SgViewDesc){
+        .storage_buffer.buffer = sg::make_buffer(&&(SgBufferDesc){
             .usage = { .storage_buffer = true },
             .data = { .ptr = &vertices, .size = $sizeof(vertices) },
         }),
@@ -82,19 +80,19 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    state.bind.index_buffer = sg::make_buffer(&&(BufferDesc) {
+    state.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline object, not that there is no vertex layout definition
-    state.pip = sg::make_pipeline(&&(PipelineDesc) {
+    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
         .shader = sg::make_shader(&&vertexpull_shader_desc(sg::query_backend())),
-        .index_type = index_type::UINT16,
-        .cull_mode = cull_mode::BACK,
+        .index_type = UINT16,
+        .cull_mode = BACK,
         .depth = {
             .write_enabled = true,
-            .compare = compare_func::LESS_EQUAL,
+            .compare = LESS_EQUAL,
         }
     });
 }
@@ -110,11 +108,11 @@ fn void frame()
         .mvp = compute_mvp(state.rx, state.ry),
     };
 
-    sg::begin_pass(&&(Pass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&(SgPass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
     if (sg::query_features().compute) {
         sg::apply_pipeline(state.pip);
         sg::apply_bindings(&state.bind);
-        sg::apply_uniforms(UB_VS_PARAMS, &&(sg::Range) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
+        sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
         sg::draw(0, 36, 1);
     }
     sg::end_pass();
@@ -139,7 +137,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(sapp::Desc) {
+    sapp::run(&&(SappDesc) {
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
