@@ -1252,6 +1252,16 @@ struct SgFrameStatsWgpu
     SgFrameStatsWgpuBindings bindings;
 }
 
+struct SgResourceStats
+{
+    uint total_alive;
+    uint total_free;
+    uint allocated;
+    uint deallocated;
+    uint inited;
+    uint uninited;
+}
+
 struct SgFrameStats
 {
     uint frame_index;
@@ -1270,6 +1280,12 @@ struct SgFrameStats
     uint size_update_buffer;
     uint size_append_buffer;
     uint size_update_image;
+    SgResourceStats buffers;
+    SgResourceStats images;
+    SgResourceStats samplers;
+    SgResourceStats views;
+    SgResourceStats shaders;
+    SgResourceStats pipelines;
     SgFrameStatsGl gl;
     SgFrameStatsD3d11 d3d11;
     SgFrameStatsMetal metal;
