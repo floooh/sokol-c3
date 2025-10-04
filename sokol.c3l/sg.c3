@@ -37,6 +37,7 @@ extern fn void apply_pipeline(SgPipeline pip) @extern("sg_apply_pipeline");
 extern fn void apply_bindings(SgBindings* bindings) @extern("sg_apply_bindings");
 extern fn void apply_uniforms(CInt ub_slot, SgRange* data) @extern("sg_apply_uniforms");
 extern fn void draw(CInt base_element, CInt num_elements, CInt num_instances) @extern("sg_draw");
+extern fn void draw_ex(CInt base_element, CInt num_elements, CInt num_instances, CInt base_vertex, CInt base_instance) @extern("sg_draw_ex");
 extern fn void dispatch(CInt num_groups_x, CInt num_groups_y, CInt num_groups_z) @extern("sg_dispatch");
 extern fn void end_pass() @extern("sg_end_pass");
 extern fn void commit() @extern("sg_commit");
@@ -319,6 +320,8 @@ struct SgFeatures
     bool compute;
     bool msaa_texture_bindings;
     bool separate_buffer_types;
+    bool draw_base_vertex;
+    bool draw_base_instance;
     bool gl_texture_views;
 }
 
@@ -1281,6 +1284,7 @@ struct SgFrameStats
     uint num_apply_bindings;
     uint num_apply_uniforms;
     uint num_draw;
+    uint num_draw_ex;
     uint num_dispatch;
     uint num_update_buffer;
     uint num_append_buffer;
@@ -1693,25 +1697,34 @@ enum SgLogItem : const int
     VALIDATE_AU_NO_UNIFORMBLOCK_AT_SLOT = 387,
     VALIDATE_AU_SIZE = 388,
     VALIDATE_DRAW_RENDERPASS_EXPECTED = 389,
-    VALIDATE_DRAW_BASEELEMENT = 390,
-    VALIDATE_DRAW_NUMELEMENTS = 391,
-    VALIDATE_DRAW_NUMINSTANCES = 392,
-    VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 393,
-    VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED = 394,
-    VALIDATE_DISPATCH_NUMGROUPSX = 395,
-    VALIDATE_DISPATCH_NUMGROUPSY = 396,
-    VALIDATE_DISPATCH_NUMGROUPSZ = 397,
-    VALIDATE_DISPATCH_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 398,
-    VALIDATE_UPDATEBUF_USAGE = 399,
-    VALIDATE_UPDATEBUF_SIZE = 400,
-    VALIDATE_UPDATEBUF_ONCE = 401,
-    VALIDATE_UPDATEBUF_APPEND = 402,
-    VALIDATE_APPENDBUF_USAGE = 403,
-    VALIDATE_APPENDBUF_SIZE = 404,
-    VALIDATE_APPENDBUF_UPDATE = 405,
-    VALIDATE_UPDIMG_USAGE = 406,
-    VALIDATE_UPDIMG_ONCE = 407,
-    VALIDATION_FAILED = 408,
+    VALIDATE_DRAW_BASEELEMENT_GE_ZERO = 390,
+    VALIDATE_DRAW_NUMELEMENTS_GE_ZERO = 391,
+    VALIDATE_DRAW_NUMINSTANCES_GE_ZERO = 392,
+    VALIDATE_DRAW_EX_RENDERPASS_EXPECTED = 393,
+    VALIDATE_DRAW_EX_BASEELEMENT_GE_ZERO = 394,
+    VALIDATE_DRAW_EX_NUMELEMENTS_GE_ZERO = 395,
+    VALIDATE_DRAW_EX_NUMINSTANCES_GE_ZERO = 396,
+    VALIDATE_DRAW_EX_BASEINSTANCE_GE_ZERO = 397,
+    VALIDATE_DRAW_EX_BASEVERTEX_VS_INDEXED = 398,
+    VALIDATE_DRAW_EX_BASEINSTANCE_VS_INSTANCED = 399,
+    VALIDATE_DRAW_EX_BASEVERTEX_NOT_SUPPORTED = 400,
+    VALIDATE_DRAW_EX_BASEINSTANCE_NOT_SUPPORTED = 401,
+    VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 402,
+    VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED = 403,
+    VALIDATE_DISPATCH_NUMGROUPSX = 404,
+    VALIDATE_DISPATCH_NUMGROUPSY = 405,
+    VALIDATE_DISPATCH_NUMGROUPSZ = 406,
+    VALIDATE_DISPATCH_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING = 407,
+    VALIDATE_UPDATEBUF_USAGE = 408,
+    VALIDATE_UPDATEBUF_SIZE = 409,
+    VALIDATE_UPDATEBUF_ONCE = 410,
+    VALIDATE_UPDATEBUF_APPEND = 411,
+    VALIDATE_APPENDBUF_USAGE = 412,
+    VALIDATE_APPENDBUF_SIZE = 413,
+    VALIDATE_APPENDBUF_UPDATE = 414,
+    VALIDATE_UPDIMG_USAGE = 415,
+    VALIDATE_UPDIMG_ONCE = 416,
+    VALIDATION_FAILED = 417,
 }
 
 struct SgEnvironmentDefaults
