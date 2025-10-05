@@ -24,7 +24,7 @@ struct Vertex
 
 fn void init()
 {
-    sg::setup(&&(SgDesc) {
+    sg::setup(&&{
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -47,16 +47,16 @@ fn void init()
         0, 1, 2, 0, 2, 3,
     };
 
-    state.bind.vertex_buffers[0] = sg::make_buffer(&&(SgBufferDesc) {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&{
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
-    state.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
+    state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline to render 2D shapes
-    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
+    state.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&bufferoffsets_shader_desc(sg::query_backend())),
         .index_type = UINT16,
         .layout = {
@@ -73,7 +73,7 @@ fn void init()
 
 fn void frame()
 {
-    sg::begin_pass(&&(SgPass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&{ .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
 
     // render the triangle
@@ -99,7 +99,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(SappDesc) {
+    sapp::run(&&{
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

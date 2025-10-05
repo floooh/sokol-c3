@@ -36,11 +36,11 @@ SshapeVertex[6 * 1024] vertices;
 
 fn void init()
 {
-    sg::setup(&&(SgDesc) {
+    sg::setup(&&{
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
-    sdtx::setup(&&(SdtxDesc) {
+    sdtx::setup(&&{
         .fonts = { [0] = sdtx::font_oric() },
         .logger = { .func = &slog::func },
     });
@@ -49,7 +49,7 @@ fn void init()
     state.pass_action.colors[0] = { .load_action = CLEAR, .clear_value = { 0, 0, 0, 1 } };
 
     // shader and pipeline object
-    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
+    state.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&shapes_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -82,7 +82,7 @@ fn void init()
         .indices  = { .buffer = { .ptr = &indices, .size = $sizeof(indices) } },
     };
 
-    buf = sshape::build_box(&buf, &&(SshapeBox) {
+    buf = sshape::build_box(&buf, &&{
         .width = 1.0,
         .height = 1.0,
         .depth = 1.0,
@@ -91,7 +91,7 @@ fn void init()
     });
     state.shapes[BOX].draw = sshape::element_range(&buf);
 
-    buf = sshape::build_plane(&buf, &&(SshapePlane) {
+    buf = sshape::build_plane(&buf, &&{
         .width = 1.0,
         .depth = 1.0,
         .tiles = 10,
@@ -99,7 +99,7 @@ fn void init()
     });
     state.shapes[PLANE].draw = sshape::element_range(&buf);
 
-    buf = sshape::build_sphere(&buf, &&(SshapeSphere) {
+    buf = sshape::build_sphere(&buf, &&{
         .radius = 0.75,
         .slices = 36,
         .stacks = 20,
@@ -107,7 +107,7 @@ fn void init()
     });
     state.shapes[SPHERE].draw = sshape::element_range(&buf);
 
-    buf = sshape::build_cylinder(&buf, &&(SshapeCylinder) {
+    buf = sshape::build_cylinder(&buf, &&{
         .radius = 0.5,
         .height = 1.5,
         .slices = 36,
@@ -116,7 +116,7 @@ fn void init()
     });
     state.shapes[CYLINDER].draw = sshape::element_range(&buf);
 
-    buf = sshape::build_torus(&buf, &&(SshapeTorus) {
+    buf = sshape::build_torus(&buf, &&{
         .radius = 0.5,
         .ring_radius = 0.3,
         .rings = 36,
@@ -154,9 +154,9 @@ fn void frame()
     Mat4 rm = sokol_math::mul(rxm, rym);
 
     // render shapes
-    sg::begin_pass(&&(SgPass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&{ .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
-    sg::apply_bindings(&&(SgBindings) {
+    sg::apply_bindings(&&{
         .vertex_buffers = { [0] = state.vbuf },
         .index_buffer = state.ibuf,
     });
@@ -165,7 +165,7 @@ fn void frame()
         // per shape model-view-projection matrix
         Mat4 model = sokol_math::mul(sokol_math::translate(state.shapes[i].pos), rm);
         state.vs_params.mvp = sokol_math::mul(view_proj, model);
-        sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &state.vs_params, .size = $sizeof(state.vs_params) });
+        sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &state.vs_params, .size = $sizeof(state.vs_params) });
         sg::draw(state.shapes[i].draw.base_element, state.shapes[i].draw.num_elements, 1);
     }
     sdtx::draw();
@@ -197,7 +197,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(SappDesc) {
+    sapp::run(&&{
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

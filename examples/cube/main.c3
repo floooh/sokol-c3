@@ -19,7 +19,7 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&(SgDesc) {
+    sg::setup(&&{
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -56,7 +56,7 @@ fn void init()
          1.0,  1.0,  1.0,   1.0, 0.0, 0.5, 1.0,
          1.0,  1.0, -1.0,   1.0, 0.0, 0.5, 1.0,
     };
-    state.bind.vertex_buffers[0] = sg::make_buffer(&&(SgBufferDesc) {
+    state.bind.vertex_buffers[0] = sg::make_buffer(&&{
         .data = { .ptr = &vertices, .size = $sizeof(vertices) },
     });
 
@@ -69,13 +69,13 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    state.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
+    state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // shader and pipeline object
-    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
+    state.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&cube_shader_desc(sg::query_backend())),
         .index_type = UINT16,
         .layout = {
@@ -107,10 +107,10 @@ fn void frame()
     SgPassAction pass_action = {
         .colors[0] = { .load_action = CLEAR, .clear_value = { 0.25, 0.5, 0.75, 1.0 } },
     };
-    sg::begin_pass(&&(SgPass) { .action = pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&{ .action = pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
@@ -134,7 +134,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(SappDesc) {
+    sapp::run(&&{
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

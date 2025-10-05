@@ -21,7 +21,7 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&(SgDesc) {
+    sg::setup(&&{
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -64,8 +64,8 @@ fn void init()
         { .pos = {  1.0,  1.0,  1.0 }, .color = { 1.0, 0.0, 0.5, 1.0} },
         { .pos = {  1.0,  1.0, -1.0 }, .color = { 1.0, 0.0, 0.5, 1.0} },
     };
-    state.bind.views[VIEW_SSBO] = sg::make_view(&&(SgViewDesc){
-        .storage_buffer.buffer = sg::make_buffer(&&(SgBufferDesc){
+    state.bind.views[VIEW_SSBO] = sg::make_view(&&{
+        .storage_buffer.buffer = sg::make_buffer(&&{
             .usage = { .storage_buffer = true },
             .data = { .ptr = &vertices, .size = $sizeof(vertices) },
         }),
@@ -80,13 +80,13 @@ fn void init()
         16, 17, 18,  16, 18, 19,
         22, 21, 20,  23, 22, 20,
     };
-    state.bind.index_buffer = sg::make_buffer(&&(SgBufferDesc) {
+    state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
         .data = { .ptr = &indices, .size = $sizeof(indices) },
     });
 
     // a shader and pipeline object, not that there is no vertex layout definition
-    state.pip = sg::make_pipeline(&&(SgPipelineDesc) {
+    state.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&vertexpull_shader_desc(sg::query_backend())),
         .index_type = UINT16,
         .cull_mode = BACK,
@@ -108,11 +108,11 @@ fn void frame()
         .mvp = compute_mvp(state.rx, state.ry),
     };
 
-    sg::begin_pass(&&(SgPass) { .action = state.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&{ .action = state.pass_action, .swapchain = sglue::swapchain() });
     if (sg::query_features().compute) {
         sg::apply_pipeline(state.pip);
         sg::apply_bindings(&state.bind);
-        sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) } );
+        sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) } );
         sg::draw(0, 36, 1);
     }
     sg::end_pass();
@@ -137,7 +137,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(SappDesc) {
+    sapp::run(&&{
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,

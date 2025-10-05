@@ -34,7 +34,7 @@ State state;
 
 fn void init()
 {
-    sg::setup(&&(SgDesc) {
+    sg::setup(&&{
         .environment = sglue::environment(),
         .logger.func = &slog::func,
     });
@@ -49,14 +49,14 @@ fn void init()
     const int OFFSCREEN_WIDTH = 256;
     const int OFFSCREEN_HEIGHT = 256;
     const int OFFSCREEN_SAMPLE_COUNT = 1;
-    SgImage color_img = sg::make_image(&&(SgImageDesc){
+    SgImage color_img = sg::make_image(&&{
         .usage = { .color_attachment = true },
         .width = OFFSCREEN_WIDTH,
         .height = OFFSCREEN_HEIGHT,
         .sample_count = OFFSCREEN_SAMPLE_COUNT,
         .pixel_format = RGBA8,
     });
-    SgImage depth_img = sg::make_image(&&(SgImageDesc){
+    SgImage depth_img = sg::make_image(&&{
         .usage = { .depth_stencil_attachment = true },
         .width = OFFSCREEN_WIDTH,
         .height = OFFSCREEN_HEIGHT,
@@ -65,15 +65,15 @@ fn void init()
     });
 
     // the offscreen render pass needs a color- and depth-stencil-attachment view
-    state.offscreen.pass.attachments.colors[0] = sg::make_view(&&(SgViewDesc){
+    state.offscreen.pass.attachments.colors[0] = sg::make_view(&&{
         .color_attachment = { .image = color_img },
     });
-    state.offscreen.pass.attachments.depth_stencil = sg::make_view(&&(SgViewDesc){
+    state.offscreen.pass.attachments.depth_stencil = sg::make_view(&&{
         .depth_stencil_attachment = { .image = depth_img },
     });
 
     // the display render pass needs a texture view on the color image
-    state.display.bind.views[VIEW_TEX] = sg::make_view(&&(SgViewDesc){
+    state.display.bind.views[VIEW_TEX] = sg::make_view(&&{
         .texture = { .image = color_img },
     });
 
@@ -84,7 +84,7 @@ fn void init()
         .indices  = { .buffer = { .ptr = &state.indices, .size = $sizeof(state.indices) } },
     };
 
-    buf = sshape::build_torus(&buf, &&(SshapeTorus) {
+    buf = sshape::build_torus(&buf, &&{
         .radius = 0.5,
         .ring_radius = 0.3,
         .sides = 20,
@@ -92,7 +92,7 @@ fn void init()
     });
     state.donut = sshape::element_range(&buf);
 
-    buf = sshape::build_sphere(&buf, &&(SshapeSphere) {
+    buf = sshape::build_sphere(&buf, &&{
         .radius = 0.5,
         .slices = 72,
         .stacks = 40,
@@ -107,7 +107,7 @@ fn void init()
     state.display.bind.index_buffer = ibuf;
 
     // pipeline-state-object for offscreen-rendered donut, don't need texture coord here
-    state.offscreen.pip = sg::make_pipeline(&&(SgPipelineDesc) {
+    state.offscreen.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -128,7 +128,7 @@ fn void init()
     });
 
     // and another pipeline-state-object for the default pass
-    state.display.pip = sg::make_pipeline(&&(SgPipelineDesc) {
+    state.display.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&default_shader_desc(sg::query_backend())),
         .layout = {
             .buffers[0] = sshape::vertex_buffer_layout_state(),
@@ -147,7 +147,7 @@ fn void init()
     });
 
     // a sampler object for sampling the render target as texture
-    state.display.bind.samplers[SMP_SMP] = sg::make_sampler(&&(SgSamplerDesc) {
+    state.display.bind.samplers[SMP_SMP] = sg::make_sampler(&&{
         .min_filter = LINEAR,
         .mag_filter = LINEAR,
         .wrap_u = REPEAT,
@@ -174,7 +174,7 @@ fn void frame()
     sg::begin_pass(&state.offscreen.pass);
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.donut.base_element, state.donut.num_elements, 1);
     sg::end_pass();
 
@@ -186,10 +186,10 @@ fn void frame()
         aspect: sapp::widthf() / sapp::heightf(),
         eye_dist: 2.0,
     );
-    sg::begin_pass(&&(SgPass) { .action = state.display.pass_action, .swapchain = sglue::swapchain() });
+    sg::begin_pass(&&{ .action = state.display.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.display.pip);
     sg::apply_bindings(&state.display.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&(SgRange) { .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) });
     sg::draw(state.sphere.base_element, state.sphere.num_elements, 1);
     sg::end_pass();
 
@@ -214,7 +214,7 @@ fn void cleanup()
 
 fn void main()
 {
-    sapp::run(&&(SappDesc) {
+    sapp::run(&&{
         .init_cb = &init,
         .frame_cb = &frame,
         .cleanup_cb = &cleanup,
