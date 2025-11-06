@@ -3,17 +3,17 @@
 module sokol::saudio;
 import sokol;
 
-extern fn void setup(SaudioDesc* desc) @extern("saudio_setup");
-extern fn void shutdown() @extern("saudio_shutdown");
-extern fn bool isvalid() @extern("saudio_isvalid");
-extern fn void* userdata() @extern("saudio_userdata");
-extern fn SaudioDesc query_desc() @extern("saudio_query_desc");
-extern fn CInt sample_rate() @extern("saudio_sample_rate");
-extern fn CInt buffer_frames() @extern("saudio_buffer_frames");
-extern fn CInt channels() @extern("saudio_channels");
-extern fn bool suspended() @extern("saudio_suspended");
-extern fn CInt expect() @extern("saudio_expect");
-extern fn CInt push(float* frames, CInt num_frames) @extern("saudio_push");
+extern fn void setup(SaudioDesc* desc) @cname("saudio_setup");
+extern fn void shutdown() @cname("saudio_shutdown");
+extern fn bool isvalid() @cname("saudio_isvalid");
+extern fn void* userdata() @cname("saudio_userdata");
+extern fn SaudioDesc query_desc() @cname("saudio_query_desc");
+extern fn CInt sample_rate() @cname("saudio_sample_rate");
+extern fn CInt buffer_frames() @cname("saudio_buffer_frames");
+extern fn CInt channels() @cname("saudio_channels");
+extern fn bool suspended() @cname("saudio_suspended");
+extern fn CInt expect() @cname("saudio_expect");
+extern fn CInt push(float* frames, CInt num_frames) @cname("saudio_push");
 
 enum SaudioLogItem : const int
 {
