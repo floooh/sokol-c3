@@ -46,6 +46,7 @@ enum SaudioLogItem : const int
     BACKEND_BUFFER_SIZE_ISNT_MULTIPLE_OF_PACKET_SIZE = 26,
     VITA_SCEAUDIO_OPEN_FAILED = 27,
     VITA_PTHREAD_CREATE_FAILED = 28,
+    N3DS_NDSP_OPEN_FAILED = 29,
 }
 
 struct SaudioLogger
@@ -61,6 +62,20 @@ struct SaudioAllocator
     void* user_data;
 }
 
+enum SaudioN3dsNdspinterptype : const int
+{
+    DSP_INTERP_POLYPHASE = 0,
+    DSP_INTERP_LINEAR = 1,
+    DSP_INTERP_NONE = 2,
+}
+
+struct SaudioN3dsDesc
+{
+    CInt queue_count;
+    SaudioN3dsNdspinterptype interpolation_type;
+    CInt channel_id;
+}
+
 struct SaudioDesc
 {
     CInt sample_rate;
@@ -71,6 +86,7 @@ struct SaudioDesc
     StreamCb stream_cb;
     StreamDataCb stream_userdata_cb;
     void* user_data;
+    SaudioN3dsDesc n3ds;
     SaudioAllocator allocator;
     SaudioLogger logger;
 }
