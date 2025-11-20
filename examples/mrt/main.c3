@@ -11,7 +11,7 @@ import sokol;
 import sokol_math;
 
 const int NUM_MRTS = 3;
-const int OFFSCREEN_SAMPLE_COUNT = 1;
+const int OFFSCREEN_SAMPLE_COUNT = 4;
 
 struct State
 {

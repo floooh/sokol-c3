@@ -32,6 +32,8 @@ fn void init()
             io::printfn(">> using Metal backend");
         case WGPU:
             io::printfn(">> using WebGPU backend");
+        case VULKAN:
+            io::printfn(">> using Vulkan backend");
         case DUMMY:
             io::printfn(">> using dummy backend");
     }

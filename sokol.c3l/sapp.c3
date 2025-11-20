@@ -8,8 +8,8 @@ extern fn CInt width() @cname("sapp_width");
 extern fn float widthf() @cname("sapp_widthf");
 extern fn CInt height() @cname("sapp_height");
 extern fn float heightf() @cname("sapp_heightf");
-extern fn CInt color_format() @cname("sapp_color_format");
-extern fn CInt depth_format() @cname("sapp_depth_format");
+extern fn SappPixelFormat color_format() @cname("sapp_color_format");
+extern fn SappPixelFormat depth_format() @cname("sapp_depth_format");
 extern fn CInt sample_count() @cname("sapp_sample_count");
 extern fn bool high_dpi() @cname("sapp_high_dpi");
 extern fn float dpi_scale() @cname("sapp_dpi_scale");
@@ -40,29 +40,17 @@ extern fn void set_icon(SappIconDesc* icon_desc) @cname("sapp_set_icon");
 extern fn CInt get_num_dropped_files() @cname("sapp_get_num_dropped_files");
 extern fn ZString get_dropped_file_path(CInt index) @cname("sapp_get_dropped_file_path");
 extern fn void run(SappDesc* desc) @cname("sapp_run");
+extern fn SappEnvironment get_environment() @cname("sapp_get_environment");
+extern fn SappSwapchain get_swapchain() @cname("sapp_get_swapchain");
 extern fn void* egl_get_display() @cname("sapp_egl_get_display");
 extern fn void* egl_get_context() @cname("sapp_egl_get_context");
 extern fn void html5_ask_leave_site(bool ask) @cname("sapp_html5_ask_leave_site");
 extern fn uint html5_get_dropped_file_size(CInt index) @cname("sapp_html5_get_dropped_file_size");
 extern fn void html5_fetch_dropped_file(SappHtml5FetchRequest* request) @cname("sapp_html5_fetch_dropped_file");
-extern fn void* metal_get_device() @cname("sapp_metal_get_device");
-extern fn void* metal_get_current_drawable() @cname("sapp_metal_get_current_drawable");
-extern fn void* metal_get_depth_stencil_texture() @cname("sapp_metal_get_depth_stencil_texture");
-extern fn void* metal_get_msaa_color_texture() @cname("sapp_metal_get_msaa_color_texture");
 extern fn void* macos_get_window() @cname("sapp_macos_get_window");
 extern fn void* ios_get_window() @cname("sapp_ios_get_window");
-extern fn void* d3d11_get_device() @cname("sapp_d3d11_get_device");
-extern fn void* d3d11_get_device_context() @cname("sapp_d3d11_get_device_context");
 extern fn void* d3d11_get_swap_chain() @cname("sapp_d3d11_get_swap_chain");
-extern fn void* d3d11_get_render_view() @cname("sapp_d3d11_get_render_view");
-extern fn void* d3d11_get_resolve_view() @cname("sapp_d3d11_get_resolve_view");
-extern fn void* d3d11_get_depth_stencil_view() @cname("sapp_d3d11_get_depth_stencil_view");
 extern fn void* win32_get_hwnd() @cname("sapp_win32_get_hwnd");
-extern fn void* wgpu_get_device() @cname("sapp_wgpu_get_device");
-extern fn void* wgpu_get_render_view() @cname("sapp_wgpu_get_render_view");
-extern fn void* wgpu_get_resolve_view() @cname("sapp_wgpu_get_resolve_view");
-extern fn void* wgpu_get_depth_stencil_view() @cname("sapp_wgpu_get_depth_stencil_view");
-extern fn uint gl_get_framebuffer() @cname("sapp_gl_get_framebuffer");
 extern fn CInt gl_get_major_version() @cname("sapp_gl_get_major_version");
 extern fn CInt gl_get_minor_version() @cname("sapp_gl_get_minor_version");
 extern fn bool gl_is_gles() @cname("sapp_gl_is_gles");
@@ -416,15 +404,172 @@ enum SappLogItem : const int
     WGPU_REQUEST_ADAPTER_STATUS_ERROR = 98,
     WGPU_REQUEST_ADAPTER_STATUS_UNKNOWN = 99,
     WGPU_CREATE_INSTANCE_FAILED = 100,
-    IMAGE_DATA_SIZE_MISMATCH = 101,
-    DROPPED_FILE_PATH_TOO_LONG = 102,
-    CLIPBOARD_STRING_TOO_BIG = 103,
+    VULKAN_ALLOC_DEVICE_MEMORY_NO_SUITABLE_MEMORY_TYPE = 101,
+    VULKAN_ALLOCATE_MEMORY_FAILED = 102,
+    VULKAN_CREATE_INSTANCE_FAILED = 103,
+    VULKAN_ENUMERATE_PHYSICAL_DEVICES_FAILED = 104,
+    VULKAN_NO_PHYSICAL_DEVICES_FOUND = 105,
+    VULKAN_NO_SUITABLE_PHYSICAL_DEVICE_FOUND = 106,
+    VULKAN_CREATE_DEVICE_FAILED_EXTENSION_NOT_PRESENT = 107,
+    VULKAN_CREATE_DEVICE_FAILED_FEATURE_NOT_PRESENT = 108,
+    VULKAN_CREATE_DEVICE_FAILED_INITIALIZATION_FAILED = 109,
+    VULKAN_CREATE_DEVICE_FAILED_OTHER = 110,
+    VULKAN_CREATE_SURFACE_FAILED = 111,
+    VULKAN_CREATE_SWAPCHAIN_FAILED = 112,
+    VULKAN_SWAPCHAIN_CREATE_IMAGE_VIEW_FAILED = 113,
+    VULKAN_SWAPCHAIN_CREATE_IMAGE_FAILED = 114,
+    VULKAN_SWAPCHAIN_ALLOC_IMAGE_DEVICE_MEMORY_FAILED = 115,
+    VULKAN_SWAPCHAIN_BIND_IMAGE_MEMORY_FAILED = 116,
+    VULKAN_ACQUIRE_NEXT_IMAGE_FAILED = 117,
+    VULKAN_QUEUE_PRESENT_FAILED = 118,
+    IMAGE_DATA_SIZE_MISMATCH = 119,
+    DROPPED_FILE_PATH_TOO_LONG = 120,
+    CLIPBOARD_STRING_TOO_BIG = 121,
+}
+
+enum SappPixelFormat : const uint
+{
+    DEFAULT = 0,
+    NONE = 1,
+    RGBA8 = 2,
+    SRGB8A8 = 3,
+    BGRA8 = 4,
+    SBGRA8 = 5,
+    DEPTH = 6,
+    DEPTH_STENCIL = 7,
+}
+
+struct SappEnvironmentDefaults
+{
+    SappPixelFormat color_format;
+    SappPixelFormat depth_format;
+    CInt sample_count;
+}
+
+struct SappMetalEnvironment
+{
+    void* device;
+}
+
+struct SappD3d11Environment
+{
+    void* device;
+    void* device_context;
+}
+
+struct SappWgpuEnvironment
+{
+    void* device;
+}
+
+struct SappVulkanEnvironment
+{
+    void* physical_device;
+    void* device;
+    void* queue;
+    uint queue_family_index;
+}
+
+struct SappEnvironment
+{
+    SappEnvironmentDefaults defaults;
+    SappMetalEnvironment metal;
+    SappD3d11Environment d3d11;
+    SappWgpuEnvironment wgpu;
+    SappVulkanEnvironment vulkan;
+}
+
+struct SappMetalSwapchain
+{
+    void* current_drawable;
+    void* depth_stencil_texture;
+    void* msaa_color_texture;
+}
+
+struct SappD3d11Swapchain
+{
+    void* render_view;
+    void* resolve_view;
+    void* depth_stencil_view;
+}
+
+struct SappWgpuSwapchain
+{
+    void* render_view;
+    void* resolve_view;
+    void* depth_stencil_view;
+}
+
+struct SappVulkanSwapchain
+{
+    void* render_image;
+    void* render_view;
+    void* resolve_image;
+    void* resolve_view;
+    void* depth_stencil_image;
+    void* depth_stencil_view;
+    void* render_finished_semaphore;
+    void* present_complete_semaphore;
+}
+
+struct SappGlSwapchain
+{
+    uint framebuffer;
+}
+
+struct SappSwapchain
+{
+    CInt width;
+    CInt height;
+    CInt sample_count;
+    SappPixelFormat color_format;
+    SappPixelFormat depth_format;
+    SappMetalSwapchain metal;
+    SappD3d11Swapchain d3d11;
+    SappWgpuSwapchain wgpu;
+    SappVulkanSwapchain vulkan;
+    SappGlSwapchain gl;
 }
 
 struct SappLogger
 {
     LogCb func;
     void* user_data;
+}
+
+struct SappGlDesc
+{
+    CInt major_version;
+    CInt minor_version;
+}
+
+struct SappWin32Desc
+{
+    bool console_utf8;
+    bool console_create;
+    bool console_attach;
+}
+
+struct SappHtml5Desc
+{
+    ZString canvas_selector;
+    bool canvas_resize;
+    bool preserve_drawing_buffer;
+    bool premultiplied_alpha;
+    bool ask_leave_site;
+    bool update_document_title;
+    bool bubble_mouse_events;
+    bool bubble_touch_events;
+    bool bubble_wheel_events;
+    bool bubble_key_events;
+    bool bubble_char_events;
+    bool use_emsc_set_main_loop;
+    bool emsc_set_main_loop_simulate_infinite_loop;
+}
+
+struct SappIosDesc
+{
+    bool keyboard_resizes_canvas;
 }
 
 struct SappDesc
@@ -454,25 +599,10 @@ struct SappDesc
     SappIconDesc icon;
     SappAllocator allocator;
     SappLogger logger;
-    CInt gl_major_version;
-    CInt gl_minor_version;
-    bool win32_console_utf8;
-    bool win32_console_create;
-    bool win32_console_attach;
-    ZString html5_canvas_selector;
-    bool html5_canvas_resize;
-    bool html5_preserve_drawing_buffer;
-    bool html5_premultiplied_alpha;
-    bool html5_ask_leave_site;
-    bool html5_update_document_title;
-    bool html5_bubble_mouse_events;
-    bool html5_bubble_touch_events;
-    bool html5_bubble_wheel_events;
-    bool html5_bubble_key_events;
-    bool html5_bubble_char_events;
-    bool html5_use_emsc_set_main_loop;
-    bool html5_emsc_set_main_loop_simulate_infinite_loop;
-    bool ios_keyboard_resizes_canvas;
+    SappGlDesc gl;
+    SappWin32Desc win32;
+    SappHtml5Desc html5;
+    SappIosDesc ios;
 }
 
 enum SappHtml5FetchError : const int
