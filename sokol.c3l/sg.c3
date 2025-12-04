@@ -115,10 +115,10 @@ extern fn void fail_sampler(SgSampler smp) @cname("sg_fail_sampler");
 extern fn void fail_shader(SgShader shd) @cname("sg_fail_shader");
 extern fn void fail_pipeline(SgPipeline pip) @cname("sg_fail_pipeline");
 extern fn void fail_view(SgView view) @cname("sg_fail_view");
-extern fn void enable_frame_stats() @cname("sg_enable_frame_stats");
-extern fn void disable_frame_stats() @cname("sg_disable_frame_stats");
-extern fn bool frame_stats_enabled() @cname("sg_frame_stats_enabled");
-extern fn SgFrameStats query_frame_stats() @cname("sg_query_frame_stats");
+extern fn void enable_stats() @cname("sg_enable_stats");
+extern fn void disable_stats() @cname("sg_disable_stats");
+extern fn bool stats_enabled() @cname("sg_stats_enabled");
+extern fn SgStats query_stats() @cname("sg_query_stats");
 extern fn void* d3d11_device() @cname("sg_d3d11_device");
 extern fn void* d3d11_device_context() @cname("sg_d3d11_device_context");
 extern fn SgD3d11BufferInfo d3d11_query_buffer_info(SgBuffer buf) @cname("sg_d3d11_query_buffer_info");
@@ -1298,14 +1298,32 @@ struct SgFrameStatsVk
     uint size_descriptor_buffer_writes;
 }
 
-struct SgResourceStats
+struct SgFrameResourceStats
 {
-    uint total_alive;
-    uint total_free;
     uint allocated;
     uint deallocated;
     uint inited;
     uint uninited;
+}
+
+struct SgTotalResourceStats
+{
+    uint alive;
+    uint free;
+    uint allocated;
+    uint deallocated;
+    uint inited;
+    uint uninited;
+}
+
+struct SgTotalStats
+{
+    SgTotalResourceStats buffers;
+    SgTotalResourceStats images;
+    SgTotalResourceStats samplers;
+    SgTotalResourceStats views;
+    SgTotalResourceStats shaders;
+    SgTotalResourceStats pipelines;
 }
 
 struct SgFrameStats
@@ -1327,17 +1345,24 @@ struct SgFrameStats
     uint size_update_buffer;
     uint size_append_buffer;
     uint size_update_image;
-    SgResourceStats buffers;
-    SgResourceStats images;
-    SgResourceStats samplers;
-    SgResourceStats views;
-    SgResourceStats shaders;
-    SgResourceStats pipelines;
+    SgFrameResourceStats buffers;
+    SgFrameResourceStats images;
+    SgFrameResourceStats samplers;
+    SgFrameResourceStats views;
+    SgFrameResourceStats shaders;
+    SgFrameResourceStats pipelines;
     SgFrameStatsGl gl;
     SgFrameStatsD3d11 d3d11;
     SgFrameStatsMetal metal;
     SgFrameStatsWgpu wgpu;
     SgFrameStatsVk vk;
+}
+
+struct SgStats
+{
+    SgFrameStats prev_frame;
+    SgFrameStats cur_frame;
+    SgTotalStats total;
 }
 
 enum SgLogItem : const int
