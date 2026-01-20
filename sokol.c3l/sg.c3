@@ -130,6 +130,7 @@ extern fn SgD3d11ViewInfo d3d11_query_view_info(SgView view) @cname("sg_d3d11_qu
 extern fn void* mtl_device() @cname("sg_mtl_device");
 extern fn void* mtl_render_command_encoder() @cname("sg_mtl_render_command_encoder");
 extern fn void* mtl_compute_command_encoder() @cname("sg_mtl_compute_command_encoder");
+extern fn void* mtl_command_queue() @cname("sg_mtl_command_queue");
 extern fn SgMtlBufferInfo mtl_query_buffer_info(SgBuffer buf) @cname("sg_mtl_query_buffer_info");
 extern fn SgMtlImageInfo mtl_query_image_info(SgImage img) @cname("sg_mtl_query_image_info");
 extern fn SgMtlSamplerInfo mtl_query_sampler_info(SgSampler smp) @cname("sg_mtl_query_sampler_info");
