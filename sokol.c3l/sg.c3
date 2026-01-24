@@ -1854,6 +1854,7 @@ struct SgWgpuEnvironment
 
 struct SgVulkanEnvironment
 {
+    void* instance;
     void* physical_device;
     void* device;
     void* queue;
