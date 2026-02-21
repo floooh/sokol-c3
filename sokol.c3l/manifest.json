@@ -3,7 +3,7 @@
     "c-sources": ["c/sokol.c"],
     "targets": {
         "macos-aarch64": {
-            "cflags-override": "-DIMPL -mmacos-version-min=11.0 -x objective-c -DSOKOL_METAL",
+            "cflags-override": "-DIMPL -mmacos-version-min=14.0 -x objective-c -DSOKOL_METAL",
             "linked-libraries": [
                 "Foundation.framework",
                 "CoreGraphics.framework",
