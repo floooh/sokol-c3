@@ -33,6 +33,7 @@ extern fn void quit() @cname("sapp_quit");
 extern fn void consume_event() @cname("sapp_consume_event");
 extern fn ulong frame_count() @cname("sapp_frame_count");
 extern fn double frame_duration() @cname("sapp_frame_duration");
+extern fn double frame_duration_unfiltered() @cname("sapp_frame_duration_unfiltered");
 extern fn void set_clipboard_string(ZString str) @cname("sapp_set_clipboard_string");
 extern fn ZString get_clipboard_string() @cname("sapp_get_clipboard_string");
 extern fn void set_window_title(ZString str) @cname("sapp_set_window_title");
