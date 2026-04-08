@@ -76,6 +76,11 @@ struct SaudioN3dsDesc
     CInt channel_id;
 }
 
+struct SaudioWin32Desc
+{
+    bool skip_coinitialize;
+}
+
 struct SaudioDesc
 {
     CInt sample_rate;
@@ -86,6 +91,7 @@ struct SaudioDesc
     StreamCb stream_cb;
     StreamDataCb stream_userdata_cb;
     void* user_data;
+    SaudioWin32Desc win32;
     SaudioN3dsDesc n3ds;
     SaudioAllocator allocator;
     SaudioLogger logger;
