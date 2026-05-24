@@ -526,6 +526,7 @@ struct SappGlSwapchain
 
 struct SappSwapchain
 {
+    bool invalid;
     CInt width;
     CInt height;
     CInt sample_count;
