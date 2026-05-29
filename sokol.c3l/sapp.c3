@@ -58,6 +58,7 @@ extern fn bool gl_is_gles() @cname("sapp_gl_is_gles");
 extern fn void* x11_get_window() @cname("sapp_x11_get_window");
 extern fn void* x11_get_display() @cname("sapp_x11_get_display");
 extern fn void* android_get_native_activity() @cname("sapp_android_get_native_activity");
+extern fn void* android_get_native_window() @cname("sapp_android_get_native_window");
 
 const usz MAX_TOUCHPOINTS = 8;
 const usz MAX_MOUSEBUTTONS = 3;
