@@ -47,7 +47,7 @@ fn void init()
         0.0,    r, 0.0,     1.0, 0.0, 1.0, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * float::size },
     });
 
     // index buffer for static geometry
@@ -57,12 +57,12 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // empty, dynamic instance-data vertex buffer, goes into vertex-buffer-slot 1
     state.bind.vertex_buffers[1] = sg::make_buffer(&&{
-        .size = MAX_PARTICLES * Vec3.sizeof,
+        .size = MAX_PARTICLES * Vec3::size,
         .usage = { .stream_update = true },
     });
 
@@ -74,7 +74,7 @@ fn void init()
                 // vertex buffer at slot 1 must step per instance
                 // NOTE: We have to use `stride` because `Vec3` is C3 vector
                 //       which usually has size 16 bytes instead of 12 bytes.
-                [1] = { .stride = Vec3.sizeof, .step_func = PER_INSTANCE },
+                [1] = { .stride = Vec3::size, .step_func = PER_INSTANCE },
             },
             .attrs = {
                 [ATTR_INSTANCING_POS]      = { .format = FLOAT3, .buffer_index = 0 },
@@ -120,7 +120,7 @@ fn void frame()
     // update instance data
     sg::update_buffer(state.bind.vertex_buffers[1], &&{
         .ptr = &state.pos,
-        .size = Vec3.sizeof * state.cur_num_particles,
+        .size = Vec3::size * (ulong)state.cur_num_particles,
     });
 
     // vertex shader uniform data with model-view-projection matrix
@@ -136,7 +136,7 @@ fn void frame()
     sg::begin_pass(&&{ .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size});
     sg::draw(0, 24, state.cur_num_particles);
     sg::end_pass();
     sg::commit();

@@ -15,7 +15,7 @@ extern fn bool suspended() @cname("saudio_suspended");
 extern fn CInt expect() @cname("saudio_expect");
 extern fn CInt push(float* frames, CInt num_frames) @cname("saudio_push");
 
-enum SaudioLogItem : const int
+constdef SaudioLogItem : int
 {
     OK = 0,
     MALLOC_FAILED = 1,
@@ -62,7 +62,7 @@ struct SaudioAllocator
     void* user_data;
 }
 
-enum SaudioN3dsNdspinterptype : const int
+constdef SaudioN3dsNdspinterptype : int
 {
     DSP_INTERP_POLYPHASE = 0,
     DSP_INTERP_LINEAR = 1,

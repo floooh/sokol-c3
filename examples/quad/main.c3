@@ -32,14 +32,14 @@ fn void init()
         -0.5, -0.5, 0.5,     1.0, 1.0, 0.0, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * float::size },
     });
 
     // an index buffer
     ushort[*] indices = { 0, 1, 2,  0, 2, 3 };
     state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // a shader and pipeline object

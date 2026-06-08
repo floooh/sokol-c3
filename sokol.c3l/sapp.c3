@@ -65,7 +65,7 @@ const usz MAX_MOUSEBUTTONS = 3;
 const usz MAX_KEYCODES = 512;
 const usz MAX_ICONIMAGES = 8;
 
-enum SappEventType : const uint
+constdef SappEventType : uint
 {
     INVALID = 0,
     KEY_DOWN = 1,
@@ -94,7 +94,7 @@ enum SappEventType : const uint
     NUM = 24,
 }
 
-enum SappKeycode : const int
+constdef SappKeycode : int
 {
     INVALID = 0,
     SPACE = 32,
@@ -219,7 +219,7 @@ enum SappKeycode : const int
     MENU = 348,
 }
 
-enum SappAndroidTooltype : const int
+constdef SappAndroidTooltype : int
 {
     UNKNOWN = 0,
     FINGER = 1,
@@ -236,7 +236,7 @@ struct SappTouchpoint
     bool changed;
 }
 
-enum SappMousebutton : const int
+constdef SappMousebutton : int
 {
     LEFT = 0,
     RIGHT = 1,
@@ -303,7 +303,7 @@ struct SappAllocator
     void* user_data;
 }
 
-enum SappLogItem : const int
+constdef SappLogItem : int
 {
     OK = 0,
     MALLOC_FAILED = 1,
@@ -434,7 +434,7 @@ enum SappLogItem : const int
     CLIPBOARD_STRING_TOO_BIG = 126,
 }
 
-enum SappPixelFormat : const uint
+constdef SappPixelFormat : uint
 {
     DEFAULT = 0,
     NONE = 1,
@@ -614,7 +614,7 @@ struct SappDesc
     SappIosDesc ios;
 }
 
-enum SappHtml5FetchError : const int
+constdef SappHtml5FetchError : int
 {
     FETCH_ERROR_NO_ERROR = 0,
     FETCH_ERROR_BUFFER_TOO_SMALL = 1,
@@ -639,7 +639,7 @@ struct SappHtml5FetchRequest
     void* user_data;
 }
 
-enum SappMouseCursor : const int
+constdef SappMouseCursor : int
 {
     DEFAULT = 0,
     ARROW = 1,

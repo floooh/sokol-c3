@@ -47,7 +47,7 @@ fn void init()
          1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,  1.0, 1.0, 0.5, 1.0,
     };
     SgBuffer vbuf = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * float::size },
     });
 
     // create an index buffer for the cube
@@ -61,7 +61,7 @@ fn void init()
     };
     SgBuffer ibuf = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // shader and pipeline object
@@ -96,7 +96,7 @@ fn void init()
             // position components are at start of buffer
             [0] = 0,
             // byte offset of color components in buffer
-            [1] = 24 * 3 * float.sizeof,
+            [1] = 24 * 3 * float::size,
         },
         .index_buffer = ibuf,
     };
@@ -117,7 +117,7 @@ fn void frame()
     sg::begin_pass(&&{ .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size });
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();

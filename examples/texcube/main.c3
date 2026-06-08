@@ -72,7 +72,7 @@ fn void init()
         {  1.0,  1.0, -1.0,  0xFF007FFF,     0, 32767 },
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * Vertex::size },
     });
 
     // create an index buffer for the cube
@@ -86,7 +86,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // create a checkerboard image and texture view
@@ -100,7 +100,7 @@ fn void init()
         .texture.image = sg::make_image(&&{
             .width = 4,
             .height = 4,
-            .data.mip_levels[0] = { .ptr = &pixels, .size = $sizeof(pixels) },
+            .data.mip_levels[0] = { .ptr = &pixels, .size = pixels.len * uint::size },
         }),
     });
 
@@ -142,7 +142,7 @@ fn void frame()
     sg::begin_pass(&&{ .action = state.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();

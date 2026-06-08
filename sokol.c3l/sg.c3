@@ -213,7 +213,7 @@ struct SgColor
     float a;
 }
 
-enum SgBackend : const int
+constdef SgBackend : int
 {
     GLCORE = 0,
     GLES3 = 1,
@@ -226,7 +226,7 @@ enum SgBackend : const int
     DUMMY = 8,
 }
 
-enum SgPixelFormat : const uint
+constdef SgPixelFormat : uint
 {
     DEFAULT = 0,
     NONE = 1,
@@ -347,7 +347,7 @@ struct SgLimits
     CInt vk_min_uniform_buffer_offset_alignment;
 }
 
-enum SgResourceState : const uint
+constdef SgResourceState : uint
 {
     INITIAL = 0,
     ALLOC = 1,
@@ -356,7 +356,7 @@ enum SgResourceState : const uint
     INVALID = 4,
 }
 
-enum SgIndexType : const uint
+constdef SgIndexType : uint
 {
     DEFAULT = 0,
     NONE = 1,
@@ -365,7 +365,7 @@ enum SgIndexType : const uint
     NUM = 4,
 }
 
-enum SgImageType : const uint
+constdef SgImageType : uint
 {
     DEFAULT = 0,
     TYPE_2D = 1,
@@ -375,7 +375,7 @@ enum SgImageType : const uint
     NUM = 5,
 }
 
-enum SgImageSampleType : const uint
+constdef SgImageSampleType : uint
 {
     DEFAULT = 0,
     FLOAT = 1,
@@ -386,7 +386,7 @@ enum SgImageSampleType : const uint
     NUM = 6,
 }
 
-enum SgSamplerType : const uint
+constdef SgSamplerType : uint
 {
     DEFAULT = 0,
     FILTERING = 1,
@@ -395,7 +395,7 @@ enum SgSamplerType : const uint
     NUM = 4,
 }
 
-enum SgPrimitiveType : const uint
+constdef SgPrimitiveType : uint
 {
     DEFAULT = 0,
     POINTS = 1,
@@ -406,7 +406,7 @@ enum SgPrimitiveType : const uint
     NUM = 6,
 }
 
-enum SgFilter : const uint
+constdef SgFilter : uint
 {
     DEFAULT = 0,
     NEAREST = 1,
@@ -414,7 +414,7 @@ enum SgFilter : const uint
     NUM = 3,
 }
 
-enum SgWrap : const uint
+constdef SgWrap : uint
 {
     DEFAULT = 0,
     REPEAT = 1,
@@ -424,7 +424,7 @@ enum SgWrap : const uint
     NUM = 5,
 }
 
-enum SgBorderColor : const uint
+constdef SgBorderColor : uint
 {
     DEFAULT = 0,
     TRANSPARENT_BLACK = 1,
@@ -433,7 +433,7 @@ enum SgBorderColor : const uint
     NUM = 4,
 }
 
-enum SgVertexFormat : const uint
+constdef SgVertexFormat : uint
 {
     INVALID = 0,
     FLOAT = 1,
@@ -467,7 +467,7 @@ enum SgVertexFormat : const uint
     NUM = 29,
 }
 
-enum SgVertexStep : const uint
+constdef SgVertexStep : uint
 {
     DEFAULT = 0,
     PER_VERTEX = 1,
@@ -475,7 +475,7 @@ enum SgVertexStep : const uint
     NUM = 3,
 }
 
-enum SgUniformType : const uint
+constdef SgUniformType : uint
 {
     INVALID = 0,
     FLOAT = 1,
@@ -490,7 +490,7 @@ enum SgUniformType : const uint
     NUM = 10,
 }
 
-enum SgUniformLayout : const uint
+constdef SgUniformLayout : uint
 {
     DEFAULT = 0,
     NATIVE = 1,
@@ -498,7 +498,7 @@ enum SgUniformLayout : const uint
     NUM = 3,
 }
 
-enum SgCullMode : const uint
+constdef SgCullMode : uint
 {
     DEFAULT = 0,
     NONE = 1,
@@ -507,7 +507,7 @@ enum SgCullMode : const uint
     NUM = 4,
 }
 
-enum SgFaceWinding : const uint
+constdef SgFaceWinding : uint
 {
     DEFAULT = 0,
     CCW = 1,
@@ -515,7 +515,7 @@ enum SgFaceWinding : const uint
     NUM = 3,
 }
 
-enum SgCompareFunc : const uint
+constdef SgCompareFunc : uint
 {
     DEFAULT = 0,
     NEVER = 1,
@@ -529,7 +529,7 @@ enum SgCompareFunc : const uint
     NUM = 9,
 }
 
-enum SgStencilOp : const uint
+constdef SgStencilOp : uint
 {
     DEFAULT = 0,
     KEEP = 1,
@@ -543,7 +543,7 @@ enum SgStencilOp : const uint
     NUM = 9,
 }
 
-enum SgBlendFactor : const uint
+constdef SgBlendFactor : uint
 {
     DEFAULT = 0,
     ZERO = 1,
@@ -568,7 +568,7 @@ enum SgBlendFactor : const uint
     NUM = 20,
 }
 
-enum SgBlendOp : const uint
+constdef SgBlendOp : uint
 {
     DEFAULT = 0,
     ADD = 1,
@@ -579,7 +579,7 @@ enum SgBlendOp : const uint
     NUM = 6,
 }
 
-enum SgColorMask : const uint
+constdef SgColorMask : uint
 {
     DEFAULT = 0,
     NONE = 16,
@@ -600,7 +600,7 @@ enum SgColorMask : const uint
     RGBA = 15,
 }
 
-enum SgLoadAction : const uint
+constdef SgLoadAction : uint
 {
     DEFAULT = 0,
     CLEAR = 1,
@@ -608,7 +608,7 @@ enum SgLoadAction : const uint
     DONTCARE = 3,
 }
 
-enum SgStoreAction : const uint
+constdef SgStoreAction : uint
 {
     DEFAULT = 0,
     STORE = 1,
@@ -761,7 +761,7 @@ struct SgImageUsage
     bool stream_update;
 }
 
-enum SgViewType : const uint
+constdef SgViewType : uint
 {
     INVALID = 0,
     STORAGEBUFFER = 1,
@@ -820,7 +820,7 @@ struct SgSamplerDesc
     uint _end_canary;
 }
 
-enum SgShaderStage : const uint
+constdef SgShaderStage : uint
 {
     NONE = 0,
     VERTEX = 1,
@@ -837,7 +837,7 @@ struct SgShaderFunction
     ZString d3d11_filepath;
 }
 
-enum SgShaderAttrBaseType : const uint
+constdef SgShaderAttrBaseType : uint
 {
     UNDEFINED = 0,
     FLOAT = 1,
@@ -1374,7 +1374,7 @@ struct SgStats
     SgTotalStats total;
 }
 
-enum SgLogItem : const int
+constdef SgLogItem : int
 {
     OK = 0,
     MALLOC_FAILED = 1,

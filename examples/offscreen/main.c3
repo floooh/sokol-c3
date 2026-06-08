@@ -80,8 +80,8 @@ fn void init()
     // a donut shape which is rendered into the offscreen render target, and
     // a sphere shape which is rendered into the default framebuffer
     SshapeBuffer buf = {
-        .vertices = { .buffer = { .ptr = &state.vertices, .size = $sizeof(state.vertices) } },
-        .indices  = { .buffer = { .ptr = &state.indices, .size = $sizeof(state.indices) } },
+        .vertices = { .buffer = { .ptr = &state.vertices, .size = state.vertices.len * SshapeVertex::size } },
+        .indices  = { .buffer = { .ptr = &state.indices, .size = state.indices.len * ushort::size } },
     };
 
     buf = sshape::build_torus(&buf, &&{
@@ -174,7 +174,7 @@ fn void frame()
     sg::begin_pass(&state.offscreen.pass);
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size });
     sg::draw(state.donut.base_element, state.donut.num_elements, 1);
     sg::end_pass();
 
@@ -189,7 +189,7 @@ fn void frame()
     sg::begin_pass(&&{ .action = state.display.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.display.pip);
     sg::apply_bindings(&state.display.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) });
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size });
     sg::draw(state.sphere.base_element, state.sphere.num_elements, 1);
     sg::end_pass();
 
