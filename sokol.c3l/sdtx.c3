@@ -42,7 +42,7 @@ extern fn void puts(ZString str) @cname("sdtx_puts");
 extern fn void putr(ZString str, CInt len) @cname("sdtx_putr");
 extern fn SdtxRange get_cleared_fmt_buffer() @cname("sdtx_get_cleared_fmt_buffer");
 
-enum SdtxLogItem : const int
+constdef SdtxLogItem : int
 {
     OK = 0,
     MALLOC_FAILED = 1,

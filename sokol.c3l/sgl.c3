@@ -92,7 +92,7 @@ extern fn void v3f_t2f_c4b(float x, float y, float z, float u, float v, char r, 
 extern fn void v3f_t2f_c1i(float x, float y, float z, float u, float v, uint rgba) @cname("sgl_v3f_t2f_c1i");
 extern fn void end() @cname("sgl_end");
 
-enum SglLogItem : const int
+constdef SglLogItem : int
 {
     OK = 0,
     MALLOC_FAILED = 1,
