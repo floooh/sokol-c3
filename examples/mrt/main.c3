@@ -106,7 +106,7 @@ fn void init()
         {  1.0,  1.0, -1.0,   0.7 },
     };
     state.offscreen.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &cube_vertices, .size = $sizeof(cube_vertices) },
+        .data = { .ptr = &cube_vertices, .size = cube_vertices.len * Vertex::size },
     });
 
     // index buffer for the cube
@@ -120,17 +120,17 @@ fn void init()
     };
     state.offscreen.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &cube_indices, .size = $sizeof(cube_indices) },
+        .data = { .ptr = &cube_indices, .size = cube_indices.len * ushort::size },
     });
 
     // shader and pipeline object for offscreen-renderer cube
     state.offscreen.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers[0].stride = Vertex.sizeof,
+            .buffers[0].stride = Vertex::size,
             .attrs = {
-                [ATTR_OFFSCREEN_POS]     = { .offset = Vertex.x.offsetof, .format = FLOAT3 },
-                [ATTR_OFFSCREEN_BRIGHT0] = { .offset = Vertex.b.offsetof, .format = FLOAT },
+                [ATTR_OFFSCREEN_POS]     = { .offset = $reflect(Vertex.x).offset, .format = FLOAT3 },
+                [ATTR_OFFSCREEN_BRIGHT0] = { .offset = $reflect(Vertex.b).offset, .format = FLOAT },
             },
         },
         .index_type = UINT16,
@@ -147,7 +147,7 @@ fn void init()
     // a vertex buffer to render a fullscreen rectangle
     float[*] quad_vertices = { 0.0, 0.0,  1.0, 0.0,  0.0, 1.0,  1.0, 1.0 };
     SgBuffer quad_vbuf = sg::make_buffer(&&{
-        .data = { .ptr = &quad_vertices, .size = $sizeof(quad_vertices) },
+        .data = { .ptr = &quad_vertices, .size = quad_vertices.len * float::size },
     });
     state.display.bind.vertex_buffers[0] = quad_vbuf;
     state.dbg.bind.vertex_buffers[0] = quad_vbuf;
@@ -188,9 +188,9 @@ fn void init()
 fn void frame()
 {
     // view-projection matrix
-    Mat4 proj = sokol_math::persp(fov: 60.0, aspect: sapp::widthf() / sapp::heightf(), near: 0.01, far: 10.0);
-    Mat4 view = sokol_math::lookat(eye: {0.0, 1.5, 6.0}, center: {}, up: sokol_math::up());
-    Mat4 view_proj = sokol_math::mul(proj, view);
+    sokol_math::Mat4 proj = sokol_math::persp(fov: 60.0, aspect: sapp::widthf() / sapp::heightf(), near: 0.01, far: 10.0);
+    sokol_math::Mat4 view = sokol_math::lookat(eye: {0.0, 1.5, 6.0}, center: {}, up: sokol_math::up());
+    sokol_math::Mat4 view_proj = sokol_math::mul(proj, view);
 
     // shader parameters
     float t = (float)sapp::frame_duration() * 60.0;
@@ -199,9 +199,9 @@ fn void frame()
     FsqParams fsq_params = {
         .offset = { (float)math::sin(state.rx * 0.01) * 0.1, (float)math::sin(state.ry * 0.01) * 0.1 },
     };
-    Mat4 rxm = sokol_math::rotate(state.rx, { 1.0, 0.0, 0.0 });
-    Mat4 rym = sokol_math::rotate(state.ry, { 0.0, 1.0, 0.0 });
-    Mat4 model = sokol_math::mul(rxm, rym);
+    sokol_math::Mat4 rxm = sokol_math::rotate(state.rx, { 1.0, 0.0, 0.0 });
+    sokol_math::Mat4 rym = sokol_math::rotate(state.ry, { 0.0, 1.0, 0.0 });
+    sokol_math::Mat4 model = sokol_math::mul(rxm, rym);
     OffscreenParams offscreen_params = {
         .mvp = sokol_math::mul(view_proj, model),
     };
@@ -210,7 +210,7 @@ fn void frame()
     sg::begin_pass(&state.offscreen.pass);
     sg::apply_pipeline(state.offscreen.pip);
     sg::apply_bindings(&state.offscreen.bind);
-    sg::apply_uniforms(UB_OFFSCREEN_PARAMS, &&{ .ptr = &offscreen_params, .size = $sizeof(offscreen_params) });
+    sg::apply_uniforms(UB_OFFSCREEN_PARAMS, &&{ .ptr = &offscreen_params, .size = OffscreenParams::size });
     sg::draw(0, 36, 1);
     sg::end_pass();
 
@@ -218,7 +218,7 @@ fn void frame()
     sg::begin_pass(&&{ .action = state.display.pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.display.pip);
     sg::apply_bindings(&state.display.bind);
-    sg::apply_uniforms(UB_FSQ_PARAMS, &&{ .ptr = &fsq_params, .size = $sizeof(fsq_params) });
+    sg::apply_uniforms(UB_FSQ_PARAMS, &&{ .ptr = &fsq_params, .size = FsqParams::size });
     sg::draw(0, 4, 1);
     sg::apply_pipeline(state.dbg.pip);
     for (int i = 0; i < 3; i++)

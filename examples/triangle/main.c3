@@ -31,7 +31,7 @@ fn void init()
         -0.5, -0.5, 0.5,     0.0, 0.0, 1.0, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * float::size },
     });
 
     // create a shader and pipeline object (default render states are fine for triangle)

@@ -67,7 +67,7 @@ fn void init()
     state.bind.views[VIEW_SSBO] = sg::make_view(&&{
         .storage_buffer.buffer = sg::make_buffer(&&{
             .usage = { .storage_buffer = true },
-            .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+            .data = { .ptr = &vertices, .size = vertices.len * SbVertex::size },
         }),
     });
 
@@ -82,7 +82,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // a shader and pipeline object, not that there is no vertex layout definition
@@ -112,7 +112,7 @@ fn void frame()
     if (sg::query_features().compute) {
         sg::apply_pipeline(state.pip);
         sg::apply_bindings(&state.bind);
-        sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) } );
+        sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size } );
         sg::draw(0, 36, 1);
     }
     sg::end_pass();

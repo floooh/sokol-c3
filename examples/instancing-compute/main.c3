@@ -50,7 +50,7 @@ fn void init() {
     // a buffer for the particle state with a storage buffer view
     SgBuffer sbuf = sg::make_buffer(&&{
         .usage = { .storage_buffer = true },
-        .size = Particle.sizeof * MAX_PARTICLES,
+        .size = Particle::size * MAX_PARTICLES,
         .label = "particle-buffer",
     });
     SgView sbuf_view = sg::make_view(&&{
@@ -78,7 +78,7 @@ fn void init() {
         0.0,    r, 0.0,     1.0, 0.0, 1.0, 1.0,
     };
     state.display.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * float::size },
     });
     ushort[*] indices = {
         0, 1, 2,    0, 2, 3,    0, 3, 4,    0, 4, 1,
@@ -86,7 +86,7 @@ fn void init() {
     };
     state.display.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // shader and pipeline for rendering the particles, this uses
@@ -141,7 +141,7 @@ fn void frame() {
     sg::begin_pass(&&{ .compute = true, .label = "compute-pass" });
     sg::apply_pipeline(state.compute.pip);
     sg::apply_bindings(&state.compute.bind);
-    sg::apply_uniforms(UB_CS_PARAMS, &&{ .ptr = &cs_params, .size = $sizeof(cs_params)});
+    sg::apply_uniforms(UB_CS_PARAMS, &&{ .ptr = &cs_params, .size = CsParams::size});
     sg::dispatch((state.num_particles + 63) / 64, 1, 1);
     sg::end_pass();
 
@@ -155,7 +155,7 @@ fn void frame() {
     });
     sg::apply_pipeline(state.display.pip);
     sg::apply_bindings(&state.display.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params)});
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size});
     sg::draw(0, 24, state.num_particles);
     sg::end_pass();
     sg::commit();

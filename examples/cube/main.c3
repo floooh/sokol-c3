@@ -57,7 +57,7 @@ fn void init()
          1.0,  1.0, -1.0,   1.0, 0.0, 0.5, 1.0,
     };
     state.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * float::size },
     });
 
     // create an index buffer for the cube
@@ -71,7 +71,7 @@ fn void init()
     };
     state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // shader and pipeline object
@@ -110,7 +110,7 @@ fn void frame()
     sg::begin_pass(&&{ .action = pass_action, .swapchain = sglue::swapchain() });
     sg::apply_pipeline(state.pip);
     sg::apply_bindings(&state.bind);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = $sizeof(vs_params) } );
+    sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &vs_params, .size = VsParams::size } );
     sg::draw(0, 36, 1);
     sg::end_pass();
     sg::commit();
