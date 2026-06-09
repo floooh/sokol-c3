@@ -78,8 +78,8 @@ fn void init()
     // generate shape geometries
     ushort[16 * 1024] indices;
     SshapeBuffer buf = {
-        .vertices = { .buffer = { .ptr = &vertices, .size = $sizeof(vertices) } },
-        .indices  = { .buffer = { .ptr = &indices, .size = $sizeof(indices) } },
+        .vertices = { .buffer = { .ptr = &vertices, .size = vertices.len * SshapeVertex::size } },
+        .indices  = { .buffer = { .ptr = &indices, .size = indices.len * ushort::size } },
     };
 
     buf = sshape::build_box(&buf, &&{
@@ -165,7 +165,7 @@ fn void frame()
         // per shape model-view-projection matrix
         Mat4 model = sokol_math::mul(sokol_math::translate(state.shapes[i].pos), rm);
         state.vs_params.mvp = sokol_math::mul(view_proj, model);
-        sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &state.vs_params, .size = $sizeof(state.vs_params) });
+        sg::apply_uniforms(UB_VS_PARAMS, &&{ .ptr = &state.vs_params, .size = VsParams::size });
         sg::draw(state.shapes[i].draw.base_element, state.shapes[i].draw.num_elements, 1);
     }
     sdtx::draw();

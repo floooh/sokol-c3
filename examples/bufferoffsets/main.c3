@@ -48,11 +48,11 @@ fn void init()
     };
 
     state.bind.vertex_buffers[0] = sg::make_buffer(&&{
-        .data = { .ptr = &vertices, .size = $sizeof(vertices) },
+        .data = { .ptr = &vertices, .size = vertices.len * Vertex::size },
     });
     state.bind.index_buffer = sg::make_buffer(&&{
         .usage = { .index_buffer = true },
-        .data = { .ptr = &indices, .size = $sizeof(indices) },
+        .data = { .ptr = &indices, .size = indices.len * ushort::size },
     });
 
     // a shader and pipeline to render 2D shapes
@@ -83,8 +83,8 @@ fn void frame()
     sg::draw(0, 3, 1);
 
     // render the quad
-    state.bind.vertex_buffer_offsets[0] = 3 * Vertex.sizeof;
-    state.bind.index_buffer_offset = 3 * ushort.sizeof;
+    state.bind.vertex_buffer_offsets[0] = 3 * Vertex::size;
+    state.bind.index_buffer_offset = 3 * ushort::size;
     sg::apply_bindings(&state.bind);
     sg::draw(0, 6, 1);
 
