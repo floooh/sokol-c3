@@ -19,7 +19,7 @@ jobs:
     name: Build and run
     steps:
       - uses: actions/checkout@v4
-      - uses: radekm/setup-c3@v2
+      - uses: floooh/setup-c3@v3
         with:
           version: v0.8.0
       - if: runner.os == 'Linux'
