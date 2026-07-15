@@ -594,6 +594,11 @@ struct SappMetalDesc
     bool disable_display_sync;
 }
 
+struct SappAndroidDesc
+{
+    NativeEventCb native_event_cb;
+}
+
 struct SappDesc
 {
     Cb init_cb;
@@ -630,6 +635,7 @@ struct SappDesc
     SappWin32Desc win32;
     SappHtml5Desc html5;
     SappIosDesc ios;
+    SappAndroidDesc android;
 }
 
 constdef SappHtml5FetchError : uint
@@ -692,6 +698,7 @@ constdef SappMouseCursor : uint
 alias AllocCb = fn void*(usz, void*);
 alias FreeCb = fn void*(usz, void*);
 alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
+alias NativeEventCb = fn bool(void*);
 alias Cb = fn void();
 alias EventCb = fn void(SappEvent*);
 alias DataCb = fn void(void*);
