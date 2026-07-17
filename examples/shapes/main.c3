@@ -32,7 +32,8 @@ struct State
 
 State state;
 // Too large to be on the stack.
-SshapeVertex[6 * 1024] vertices;
+char[6 * 1024 * sshape::MAX_VERTEX_SIZE] vertices;
+ushort[16 * 1024] indices;
 
 fn void init()
 {
@@ -48,16 +49,76 @@ fn void init()
     // clear to black
     state.pass_action.colors[0] = { .load_action = CLEAR, .clear_value = { 0, 0, 0, 1 } };
 
+    // shape positions
+    state.shapes[BOX].pos = { -1.0, 1.0, 0.0 };
+    state.shapes[PLANE].pos = { 1.0, 1.0, 0.0 };
+    state.shapes[SPHERE].pos = { -2.0, -1.0, 0.0 };
+    state.shapes[CYLINDER].pos = { 2.0, -1.0, 0.0 };
+    state.shapes[TORUS].pos = { 0.0, -1.0, 0.0 };
+
+    // generate shape geometries
+    SshapeState shp = {
+        .vertices = { .buffer = { .ptr = &vertices, .size = vertices.len * char::size } },
+        .indices  = { .buffer = { .ptr = &indices, .size = indices.len * ushort::size } },
+    };
+
+    sshape::build_box(&shp, &&{
+        .width = 1.0,
+        .height = 1.0,
+        .depth = 1.0,
+        .tiles = 10,
+        .random_colors = true,
+    });
+    state.shapes[BOX].draw = sshape::element_range(&shp);
+
+    sshape::build_plane(&shp, &&{
+        .width = 1.0,
+        .depth = 1.0,
+        .tiles = 10,
+        .random_colors = true,
+    });
+    state.shapes[PLANE].draw = sshape::element_range(&shp);
+
+    sshape::build_sphere(&shp, &&{
+        .radius = 0.75,
+        .slices = 36,
+        .stacks = 20,
+        .random_colors = true,
+    });
+    state.shapes[SPHERE].draw = sshape::element_range(&shp);
+
+    sshape::build_cylinder(&shp, &&{
+        .radius = 0.5,
+        .height = 1.5,
+        .slices = 36,
+        .stacks = 10,
+        .random_colors = true,
+    });
+    state.shapes[CYLINDER].draw = sshape::element_range(&shp);
+
+    sshape::build_torus(&shp, &&{
+        .radius = 0.5,
+        .ring_radius = 0.3,
+        .rings = 36,
+        .sides = 18,
+        .random_colors = true,
+    });
+    state.shapes[TORUS].draw = sshape::element_range(&shp);
+
+    // one vertex-/index-buffer pair for all shapes
+    state.vbuf = sg::make_buffer(&&sshape::vertex_buffer_desc(&shp));
+    state.ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&shp));
+
     // shader and pipeline object
     state.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&shapes_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers[0] = sshape::vertex_buffer_layout_state(),
+            .buffers[0] = sshape::vertex_buffer_layout_state(&shp),
             .attrs = {
-                [ATTR_SHAPES_POSITION] = sshape::position_vertex_attr_state(),
-                [ATTR_SHAPES_NORMAL]   = sshape::normal_vertex_attr_state(),
-                [ATTR_SHAPES_TEXCOORD] = sshape::texcoord_vertex_attr_state(),
-                [ATTR_SHAPES_COLOR0]   = sshape::color_vertex_attr_state(),
+                [ATTR_SHAPES_POSITION] = sshape::position_vertex_attr_state(&shp),
+                [ATTR_SHAPES_NORMAL]   = sshape::normal_vertex_attr_state(&shp),
+                [ATTR_SHAPES_TEXCOORD] = sshape::texcoord_vertex_attr_state(&shp),
+                [ATTR_SHAPES_COLOR0]   = sshape::color_vertex_attr_state(&shp),
             },
         },
         .index_type = UINT16,
@@ -68,66 +129,6 @@ fn void init()
         },
     });
 
-    // shape positions
-    state.shapes[BOX].pos = { -1.0, 1.0, 0.0 };
-    state.shapes[PLANE].pos = { 1.0, 1.0, 0.0 };
-    state.shapes[SPHERE].pos = { -2.0, -1.0, 0.0 };
-    state.shapes[CYLINDER].pos = { 2.0, -1.0, 0.0 };
-    state.shapes[TORUS].pos = { 0.0, -1.0, 0.0 };
-
-    // generate shape geometries
-    ushort[16 * 1024] indices;
-    SshapeBuffer buf = {
-        .vertices = { .buffer = { .ptr = &vertices, .size = vertices.len * SshapeVertex::size } },
-        .indices  = { .buffer = { .ptr = &indices, .size = indices.len * ushort::size } },
-    };
-
-    buf = sshape::build_box(&buf, &&{
-        .width = 1.0,
-        .height = 1.0,
-        .depth = 1.0,
-        .tiles = 10,
-        .random_colors = true,
-    });
-    state.shapes[BOX].draw = sshape::element_range(&buf);
-
-    buf = sshape::build_plane(&buf, &&{
-        .width = 1.0,
-        .depth = 1.0,
-        .tiles = 10,
-        .random_colors = true,
-    });
-    state.shapes[PLANE].draw = sshape::element_range(&buf);
-
-    buf = sshape::build_sphere(&buf, &&{
-        .radius = 0.75,
-        .slices = 36,
-        .stacks = 20,
-        .random_colors = true,
-    });
-    state.shapes[SPHERE].draw = sshape::element_range(&buf);
-
-    buf = sshape::build_cylinder(&buf, &&{
-        .radius = 0.5,
-        .height = 1.5,
-        .slices = 36,
-        .stacks = 10,
-        .random_colors = true,
-    });
-    state.shapes[CYLINDER].draw = sshape::element_range(&buf);
-
-    buf = sshape::build_torus(&buf, &&{
-        .radius = 0.5,
-        .ring_radius = 0.3,
-        .rings = 36,
-        .sides = 18,
-        .random_colors = true,
-    });
-    state.shapes[TORUS].draw = sshape::element_range(&buf);
-
-    // one vertex-/index-buffer pair for all shapes
-    state.vbuf = sg::make_buffer(&&sshape::vertex_buffer_desc(&buf));
-    state.ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&buf));
 }
 
 fn void frame()

@@ -26,7 +26,7 @@ struct State
     }
     SshapeElementRange donut, sphere;
     float rx, ry;
-    SshapeVertex[4000] vertices;
+    char[4000 * sshape::MAX_VERTEX_SIZE] vertices;
     ushort[24_000] indices;
 }
 
@@ -79,30 +79,30 @@ fn void init()
 
     // a donut shape which is rendered into the offscreen render target, and
     // a sphere shape which is rendered into the default framebuffer
-    SshapeBuffer buf = {
-        .vertices = { .buffer = { .ptr = &state.vertices, .size = state.vertices.len * SshapeVertex::size } },
+    SshapeState shp = {
+        .vertices = { .buffer = { .ptr = &state.vertices, .size = state.vertices.len * char::size } },
         .indices  = { .buffer = { .ptr = &state.indices, .size = state.indices.len * ushort::size } },
     };
 
-    buf = sshape::build_torus(&buf, &&{
+    sshape::build_torus(&shp, &&{
         .radius = 0.5,
         .ring_radius = 0.3,
         .sides = 20,
         .rings = 30,
     });
-    state.donut = sshape::element_range(&buf);
+    state.donut = sshape::element_range(&shp);
 
-    buf = sshape::build_sphere(&buf, &&{
+    sshape::build_sphere(&shp, &&{
         .radius = 0.5,
         .slices = 72,
         .stacks = 40,
     });
-    state.sphere = sshape::element_range(&buf);
+    state.sphere = sshape::element_range(&shp);
 
-    SgBuffer vbuf = sg::make_buffer(&&sshape::vertex_buffer_desc(&buf));
+    SgBuffer vbuf = sg::make_buffer(&&sshape::vertex_buffer_desc(&shp));
     state.offscreen.bind.vertex_buffers[0] = vbuf;
     state.display.bind.vertex_buffers[0] = vbuf;
-    SgBuffer ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&buf));
+    SgBuffer ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&shp));
     state.offscreen.bind.index_buffer = ibuf;
     state.display.bind.index_buffer = ibuf;
 
@@ -110,10 +110,10 @@ fn void init()
     state.offscreen.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&offscreen_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers[0] = sshape::vertex_buffer_layout_state(),
+            .buffers[0] = sshape::vertex_buffer_layout_state(&shp),
             .attrs = {
-                [ATTR_OFFSCREEN_POSITION] = sshape::position_vertex_attr_state(),
-                [ATTR_OFFSCREEN_NORMAL] = sshape::normal_vertex_attr_state(),
+                [ATTR_OFFSCREEN_POSITION] = sshape::position_vertex_attr_state(&shp),
+                [ATTR_OFFSCREEN_NORMAL] = sshape::normal_vertex_attr_state(&shp),
             },
         },
         .index_type = UINT16,
@@ -131,11 +131,11 @@ fn void init()
     state.display.pip = sg::make_pipeline(&&{
         .shader = sg::make_shader(&&default_shader_desc(sg::query_backend())),
         .layout = {
-            .buffers[0] = sshape::vertex_buffer_layout_state(),
+            .buffers[0] = sshape::vertex_buffer_layout_state(&shp),
             .attrs = {
-                [ATTR_DEFAULT_POSITION] = sshape::position_vertex_attr_state(),
-                [ATTR_DEFAULT_NORMAL] = sshape::normal_vertex_attr_state(),
-                [ATTR_DEFAULT_TEXCOORD0] = sshape::texcoord_vertex_attr_state(),
+                [ATTR_DEFAULT_POSITION] = sshape::position_vertex_attr_state(&shp),
+                [ATTR_DEFAULT_NORMAL] = sshape::normal_vertex_attr_state(&shp),
+                [ATTR_DEFAULT_TEXCOORD0] = sshape::texcoord_vertex_attr_state(&shp),
             },
         },
         .index_type = UINT16,

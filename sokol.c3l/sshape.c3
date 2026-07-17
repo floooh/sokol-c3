@@ -3,24 +3,25 @@
 module sokol::sshape;
 import sokol;
 
-extern fn SshapeBuffer build_plane(SshapeBuffer* buf, SshapePlane* params) @cname("sshape_build_plane");
-extern fn SshapeBuffer build_box(SshapeBuffer* buf, SshapeBox* params) @cname("sshape_build_box");
-extern fn SshapeBuffer build_sphere(SshapeBuffer* buf, SshapeSphere* params) @cname("sshape_build_sphere");
-extern fn SshapeBuffer build_cylinder(SshapeBuffer* buf, SshapeCylinder* params) @cname("sshape_build_cylinder");
-extern fn SshapeBuffer build_torus(SshapeBuffer* buf, SshapeTorus* params) @cname("sshape_build_torus");
-extern fn SshapeSizes plane_sizes(uint tiles) @cname("sshape_plane_sizes");
-extern fn SshapeSizes box_sizes(uint tiles) @cname("sshape_box_sizes");
-extern fn SshapeSizes sphere_sizes(uint slices, uint stacks) @cname("sshape_sphere_sizes");
-extern fn SshapeSizes cylinder_sizes(uint slices, uint stacks) @cname("sshape_cylinder_sizes");
-extern fn SshapeSizes torus_sizes(uint sides, uint rings) @cname("sshape_torus_sizes");
-extern fn SshapeElementRange element_range(SshapeBuffer* buf) @cname("sshape_element_range");
-extern fn SgBufferDesc vertex_buffer_desc(SshapeBuffer* buf) @cname("sshape_vertex_buffer_desc");
-extern fn SgBufferDesc index_buffer_desc(SshapeBuffer* buf) @cname("sshape_index_buffer_desc");
-extern fn SgVertexBufferLayoutState vertex_buffer_layout_state() @cname("sshape_vertex_buffer_layout_state");
-extern fn SgVertexAttrState position_vertex_attr_state() @cname("sshape_position_vertex_attr_state");
-extern fn SgVertexAttrState normal_vertex_attr_state() @cname("sshape_normal_vertex_attr_state");
-extern fn SgVertexAttrState texcoord_vertex_attr_state() @cname("sshape_texcoord_vertex_attr_state");
-extern fn SgVertexAttrState color_vertex_attr_state() @cname("sshape_color_vertex_attr_state");
+extern fn void build_plane(SshapeState* state, SshapePlane* params) @cname("sshape_build_plane");
+extern fn void build_box(SshapeState* state, SshapeBox* params) @cname("sshape_build_box");
+extern fn void build_sphere(SshapeState* state, SshapeSphere* params) @cname("sshape_build_sphere");
+extern fn void build_cylinder(SshapeState* state, SshapeCylinder* params) @cname("sshape_build_cylinder");
+extern fn void build_torus(SshapeState* state, SshapeTorus* params) @cname("sshape_build_torus");
+extern fn usz vertex_size(SshapeOptionalComponents* components) @cname("sshape_vertex_size");
+extern fn SshapeSizes plane_sizes(uint tiles, usz vertex_size) @cname("sshape_plane_sizes");
+extern fn SshapeSizes box_sizes(uint tiles, usz vetrex_size) @cname("sshape_box_sizes");
+extern fn SshapeSizes sphere_sizes(uint slices, uint stacks, usz vertex_size) @cname("sshape_sphere_sizes");
+extern fn SshapeSizes cylinder_sizes(uint slices, uint stacks, usz vertex_size) @cname("sshape_cylinder_sizes");
+extern fn SshapeSizes torus_sizes(uint sides, uint rings, usz vertex_size) @cname("sshape_torus_sizes");
+extern fn SshapeElementRange element_range(SshapeState* state) @cname("sshape_element_range");
+extern fn SgBufferDesc vertex_buffer_desc(SshapeState* state) @cname("sshape_vertex_buffer_desc");
+extern fn SgBufferDesc index_buffer_desc(SshapeState* state) @cname("sshape_index_buffer_desc");
+extern fn SgVertexBufferLayoutState vertex_buffer_layout_state(SshapeState* state) @cname("sshape_vertex_buffer_layout_state");
+extern fn SgVertexAttrState position_vertex_attr_state(SshapeState* state) @cname("sshape_position_vertex_attr_state");
+extern fn SgVertexAttrState normal_vertex_attr_state(SshapeState* state) @cname("sshape_normal_vertex_attr_state");
+extern fn SgVertexAttrState texcoord_vertex_attr_state(SshapeState* state) @cname("sshape_texcoord_vertex_attr_state");
+extern fn SgVertexAttrState color_vertex_attr_state(SshapeState* state) @cname("sshape_color_vertex_attr_state");
 extern fn uint color_4f(float r, float g, float b, float a) @cname("sshape_color_4f");
 extern fn uint color_3f(float r, float g, float b) @cname("sshape_color_3f");
 extern fn uint color_4b(char r, char g, char b, char a) @cname("sshape_color_4b");
@@ -34,20 +35,19 @@ struct SshapeRange
     usz size;
 }
 
+const usz MIN_VERTEX_SIZE = 12;
+const usz MAX_VERTEX_SIZE = 24;
+
 struct SshapeMat4
 {
     float[4][4] m;
 }
 
-struct SshapeVertex
+struct SshapeOptionalComponents
 {
-    float x;
-    float y;
-    float z;
-    uint normal;
-    ushort u;
-    ushort v;
-    uint color;
+    bool normals;
+    bool texcoords;
+    bool colors;
 }
 
 struct SshapeElementRange
@@ -75,9 +75,10 @@ struct SshapeBufferItem
     usz shape_offset;
 }
 
-struct SshapeBuffer
+struct SshapeState
 {
     bool valid;
+    SshapeOptionalComponents disable;
     SshapeBufferItem vertices;
     SshapeBufferItem indices;
 }
