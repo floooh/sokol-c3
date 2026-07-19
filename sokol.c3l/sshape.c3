@@ -10,7 +10,7 @@ extern fn void build_cylinder(SshapeState* state, SshapeCylinder* params) @cname
 extern fn void build_torus(SshapeState* state, SshapeTorus* params) @cname("sshape_build_torus");
 extern fn usz vertex_size(SshapeOptionalComponents* components) @cname("sshape_vertex_size");
 extern fn SshapeSizes plane_sizes(uint tiles, usz vertex_size) @cname("sshape_plane_sizes");
-extern fn SshapeSizes box_sizes(uint tiles, usz vetrex_size) @cname("sshape_box_sizes");
+extern fn SshapeSizes box_sizes(uint tiles, usz vertex_size) @cname("sshape_box_sizes");
 extern fn SshapeSizes sphere_sizes(uint slices, uint stacks, usz vertex_size) @cname("sshape_sphere_sizes");
 extern fn SshapeSizes cylinder_sizes(uint slices, uint stacks, usz vertex_size) @cname("sshape_cylinder_sizes");
 extern fn SshapeSizes torus_sizes(uint sides, uint rings, usz vertex_size) @cname("sshape_torus_sizes");
@@ -68,7 +68,7 @@ struct SshapeSizes
     SshapeSizesItem indices;
 }
 
-struct SshapeBufferItem
+struct SshapeBufferState
 {
     SshapeRange buffer;
     usz data_size;
@@ -79,8 +79,8 @@ struct SshapeState
 {
     bool valid;
     SshapeOptionalComponents disable;
-    SshapeBufferItem vertices;
-    SshapeBufferItem indices;
+    SshapeBufferState vertices;
+    SshapeBufferState indices;
 }
 
 struct SshapePlane
