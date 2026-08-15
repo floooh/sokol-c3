@@ -19,9 +19,7 @@ jobs:
     name: Build and run
     steps:
       - uses: actions/checkout@v4
-      - uses: floooh/setup-c3@v3
-        with:
-          version: v0.8.0
+      - uses: ManuLinares/setup-c3
       - if: runner.os == 'Linux'
         name: Install Linux Dependencies
         run: |
