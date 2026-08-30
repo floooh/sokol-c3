@@ -63,7 +63,7 @@ fn void init()
     // empty, dynamic instance-data vertex buffer, goes into vertex-buffer-slot 1
     state.bind.vertex_buffers[1] = sg::make_buffer(&&{
         .size = MAX_PARTICLES * Vec3::size,
-        .usage = { .stream_update = true },
+        .usage = { .write_transient = true },
     });
 
     // a shader and pipeline object
@@ -118,8 +118,9 @@ fn void frame()
     }
 
     // update instance data
-    sg::update_buffer(state.bind.vertex_buffers[1], &&{
-        .ptr = &state.pos,
+    sg::write_buffer_transient(&&{
+        .dst = { .buffer = state.bind.vertex_buffers[1] },
+        .src = { .data = { .ptr = &state.pos, .size = state.pos.len * Vec3::size } },
         .size = Vec3::size * (ulong)state.cur_num_particles,
     });
 
