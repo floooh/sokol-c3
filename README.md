@@ -43,3 +43,39 @@ On Linux install the following packages: libglu1-mesa-dev, mesa-common-dev, xorg
     - Linux: GL
 
     To change the default backend edit `sokol.c3l/manifest.json`.
+
+## Dear ImGui integration
+
+> _The section below is LLM-generated._
+
+sokol-c3 ships bindings for `sokol_imgui.h`, `sokol_gfx_imgui.h` and
+`sokol_app_imgui.h` as the C3 modules `sokol::simgui`, `sokol::sgimgui` and
+`sokol::sappimgui`. `sokol.c3l/c/sokol.c` does **not** `#include` these
+headers — Dear ImGui (C++) is not part of the library and must be supplied
+by your project.
+
+To use them:
+
+1. Clone [dcimgui](https://github.com/floooh/dcimgui) (an all-in-one Dear
+   ImGui + `cimgui.h` C-API drop) into your project. Use `src/` for the
+   regular flavour or `src-docking/` for the docking flavour.
+
+2. Compile `sokol.c3l/c/sokol_imgui.c` (and the other stubs as needed)
+   against your dcimgui checkout. Example (macOS arm64 Metal):
+
+    ```bash
+    c++ -c -O2 -std=c++17 -I path/to/dcimgui/src \
+        path/to/dcimgui/src/*.cpp
+    ar rcs libimgui.a *.o
+    MACOSX_DEPLOYMENT_TARGET=14.0 cc -c -O2 -x objective-c -arch arm64 \
+        -std=c11 -DIMPL -DSOKOL_METAL \
+        -I path/to/dcimgui/src \
+        path/to/sokol-c3/sokol.c3l/c/sokol_imgui.c
+    ar rcs libsokol_imgui.a sokol_imgui.o
+    ```
+
+3. `import sokol::simgui;` in your C3 code. Add `libimgui.a`,
+   `libsokol_imgui.a` and `-lc++` (or `-lstdc++` on Linux) to your
+   program's link options.
+
+The same flow applies to `sokol_gfx_imgui.h` and `sokol_app_imgui.h`.
