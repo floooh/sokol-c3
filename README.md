@@ -61,7 +61,11 @@ To use them:
    regular flavour or `src-docking/` for the docking flavour.
 
 2. Compile `sokol.c3l/c/sokol_imgui.c` (and the other stubs as needed)
-   against your dcimgui checkout. Example (macOS arm64 Metal):
+   against your dcimgui checkout. The backend define (`-DSOKOL_METAL`
+   below, or `-DSOKOL_D3D11`/`-DSOKOL_GLCORE`/`-DSOKOL_GLES3`) must
+   match the one sokol-gfx was built with — otherwise the imgui
+   renderer picks a different backend than sokol-gfx. Example (macOS
+   arm64 Metal):
 
     ```bash
     c++ -c -O2 -std=c++17 -I path/to/dcimgui/src \
