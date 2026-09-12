@@ -26,15 +26,7 @@ extern fn void shutdown() @cname("simgui_shutdown");
 constdef SimguiLogItem : int
 {
     OK = 0,
-    MALLOC_FAILED = 1,
-    BUFFER_OVERFLOW = 2,
-}
-
-struct SimguiAllocator
-{
-    AllocCb alloc_fn;
-    FreeCb free_fn;
-    void* user_data;
+    BUFFER_OVERFLOW = 1,
 }
 
 struct SimguiLogger
@@ -55,7 +47,6 @@ struct SimguiDesc
     bool disable_set_mouse_cursor;
     bool disable_windows_resize_from_edges;
     bool write_alpha_channel;
-    SimguiAllocator allocator;
     SimguiLogger logger;
 }
 
@@ -73,7 +64,5 @@ struct SimguiFontTexDesc
     SgFilter mag_filter;
 }
 
-alias AllocCb = fn void*(usz, void*);
-alias FreeCb = fn void*(usz, void*);
 alias LogCb = fn void(ZString, uint, uint, ZString, uint, ZString, void*);
 
