@@ -5,7 +5,8 @@ import sokol;
 
 extern fn void setup(SimguiDesc* desc) @cname("simgui_setup");
 extern fn void new_frame(SimguiFrameDesc* desc) @cname("simgui_new_frame");
-extern fn void render() @cname("simgui_render");
+extern fn void flush() @cname("simgui_flush");
+extern fn void draw() @cname("simgui_draw");
 extern fn ulong imtextureid(SgView tex_view) @cname("simgui_imtextureid");
 extern fn ulong imtextureid_with_sampler(SgView tex_view, SgSampler smp) @cname("simgui_imtextureid_with_sampler");
 extern fn SgView texture_view_from_imtextureid(ulong imtex_id) @cname("simgui_texture_view_from_imtextureid");
@@ -27,6 +28,10 @@ constdef SimguiLogItem : int
 {
     OK = 0,
     BUFFER_OVERFLOW = 1,
+    NEW_FRAME_NOT_CALLED_BEFORE_FLUSH = 2,
+    FLUSH_CALLED_IN_SOKOLGFX_PASS = 3,
+    FLUSH_NOT_CALLED_BEFORE_DRAW = 4,
+    DRAW_CALLED_OUTSIDE_SOKOLGFX_RENDER_PASS = 5,
 }
 
 struct SimguiLogger
