@@ -100,7 +100,7 @@ fn void init()
         .texture.image = sg::make_image(&&{
             .width = 4,
             .height = 4,
-            .data.mip_levels[0] = { .ptr = &pixels, .size = pixels.len * uint::size },
+            .data = { .ptr = &pixels, .size = pixels.len * uint::size },
         }),
     });
 
