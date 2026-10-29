@@ -10,8 +10,8 @@ To include sokol in your project you can copy the [sokol.c3l](sokol.c3l/) direct
 
 Supported platforms are: Windows, macOS, Linux (with X11)
 
-On Linux install the following packages: libglu1-mesa-dev, mesa-common-dev, xorg-dev, libasound-dev
-(or generally: the dev packages required for X11, GL and ALSA development)
+On Linux install the following packages: libglu1-mesa-dev, mesa-common-dev, xorg-dev, libpulse-dev
+(or generally: the dev packages required for X11, GL and PulseAudio development)
 
 1. Create a build directory and cd into it:
     ```bash

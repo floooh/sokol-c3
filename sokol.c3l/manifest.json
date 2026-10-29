@@ -23,7 +23,8 @@
                 "Xi",
                 "Xcursor",
                 "GL",
-                "asound",
+                "pulse-simple",
+                "pulse",
                 "dl",
                 "pthread",
                 "m"
