@@ -91,7 +91,8 @@ constdef SappEventType : uint
     QUIT_REQUESTED = 21,
     CLIPBOARD_PASTED = 22,
     FILES_DROPPED = 23,
-    NUM = 24,
+    ANDROID_BACK = 24,
+    NUM = 25,
 }
 
 constdef SappKeycode : uint
