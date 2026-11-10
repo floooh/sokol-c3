@@ -202,7 +202,7 @@ const usz MAX_VERTEX_ATTRIBUTES = 16;
 const usz MAX_VERTEXBUFFER_BINDSLOTS = 8;
 const usz MAX_UNIFORMBLOCK_BINDSLOTS = 8;
 const usz MAX_VIEW_BINDSLOTS = 32;
-const usz MAX_SAMPLER_BINDSLOTS = 12;
+const usz MAX_SAMPLER_BINDSLOTS = 14;
 const usz MAX_TEXTURE_SAMPLER_PAIRS = 32;
 const usz MAX_PORTABLE_COLOR_ATTACHMENTS = 4;
 const usz MAX_PORTABLE_TEXTURE_BINDINGS_PER_STAGE = 16;
@@ -733,14 +733,12 @@ constdef SgPassState : uint
 
 struct SgBindings
 {
-    uint _start_canary;
     SgBuffer[8] vertex_buffers;
     CInt[8] vertex_buffer_offsets;
     SgBuffer index_buffer;
     CInt index_buffer_offset;
     SgView[32] views;
-    SgSampler[12] samplers;
-    uint _end_canary;
+    SgSampler[14] samplers;
 }
 
 struct SgBufferUsage
@@ -1045,7 +1043,7 @@ struct SgShaderDesc
     SgShaderVertexAttr[16] attrs;
     SgShaderUniformBlock[8] uniform_blocks;
     SgShaderView[32] views;
-    SgShaderSampler[12] samplers;
+    SgShaderSampler[14] samplers;
     SgShaderTextureSamplerPair[32] texture_sampler_pairs;
     SgMtlShaderThreadsPerThreadgroup mtl_threads_per_threadgroup;
     ZString label;

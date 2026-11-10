@@ -83,7 +83,7 @@ struct SfbRenderDesc
     bool use_nearest_filter;
     SgPipeline pip;
     SgView[32] views;
-    SgSampler[12] samplers;
+    SgSampler[14] samplers;
     SgRange[8] uniforms;
 }
 
