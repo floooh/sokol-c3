@@ -18,7 +18,9 @@ extern fn void apply_bindings(ScbCmdbuf cb, SgBindings* bindings) @cname("scb_ap
 extern fn void apply_uniforms(ScbCmdbuf cb, CInt ub_slot, SgRange* data) @cname("scb_apply_uniforms");
 extern fn void draw(ScbCmdbuf cb, CInt base_element, CInt num_elements, CInt num_instances) @cname("scb_draw");
 extern fn void draw_ex(ScbCmdbuf cb, CInt base_element, CInt num_elements, CInt num_instances, CInt base_vertex, CInt base_instance) @cname("scb_draw_ex");
+extern fn void draw_indirect(ScbCmdbuf cb, SgBuffer buf, CInt offset) @cname("scb_draw_indirect");
 extern fn void dispatch(ScbCmdbuf cb, CInt num_groups_x, CInt num_groups_y, CInt num_groups_z) @cname("scb_dispatch");
+extern fn void dispatch_indirect(ScbCmdbuf cb, SgBuffer buf, CInt offset) @cname("scb_dispatch_indirect");
 extern fn ScbResourceState query_cmdbuf_state(ScbCmdbuf cb) @cname("scb_query_cmdbuf_state");
 extern fn ScbCmdbufInfo query_cmdbuf_info(ScbCmdbuf cb) @cname("scb_query_cmdbuf_info");
 
